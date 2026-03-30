@@ -1,11 +1,1280 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// Yathin Gnaneshwar — Portfolio
+// Single-file version, no components needed
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Yathin Gnaneshwar | AI Builder & CS Student</title>
+		<meta
+			name="description"
+			content="Portfolio of Yathin Gnaneshwar — CS Engineering student at VCE, building AI assistants and intelligent systems."
+		/>
+		<meta name="theme-color" content="#f97316" />
+
+		<!-- Google Fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Syne:wght@400;500;700&display=swap"
+			rel="stylesheet"
+		/>
+
+		<!-- Typed.js -->
+		<script
+			src="https://cdn.jsdelivr.net/npm/typed.js@2.1.0/dist/typed.umd.js"
+		></script>
+
+		<!-- tsParticles -->
+		<script
+			src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"
+		></script>
+
+		<!-- Vanilla Tilt -->
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"
+		></script>
+
+		<style>
+			*,
+			*::before,
+			*::after {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+
+			:root {
+				--accent: #f97316;
+				--accent-glow: rgba(249, 115, 22, 0.35);
+				--bg: #0a0a0a;
+				--glass: rgba(255, 255, 255, 0.05);
+				--glass-border: rgba(255, 255, 255, 0.1);
+			}
+
+			html {
+				scroll-behavior: smooth;
+			}
+
+			body {
+				background: var(--bg);
+				color: #fff;
+				font-family: "Syne", sans-serif;
+				overflow-x: hidden;
+			}
+
+			/* Scrollbar */
+			::-webkit-scrollbar {
+				width: 6px;
+			}
+			::-webkit-scrollbar-track {
+				background: #111;
+			}
+			::-webkit-scrollbar-thumb {
+				background: var(--accent);
+				border-radius: 3px;
+			}
+			::selection {
+				background: var(--accent);
+				color: #000;
+			}
+
+			/* Particles */
+			#tsparticles {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				z-index: -1;
+			}
+
+			/* Glass utility */
+			.glass {
+				background: var(--glass);
+				backdrop-filter: blur(12px);
+				-webkit-backdrop-filter: blur(12px);
+				border: 1px solid var(--glass-border);
+				border-radius: 16px;
+			}
+
+			/* NAVBAR */
+			nav {
+				position: sticky;
+				top: 0;
+				z-index: 100;
+				background: rgba(0, 0, 0, 0.2);
+				backdrop-filter: blur(20px);
+				border-bottom: 1px solid var(--glass-border);
+				padding: 1rem 2rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				animation: slideDown 0.6s ease-out;
+			}
+
+			@keyframes slideDown {
+				from {
+					transform: translateY(-100%);
+					opacity: 0;
+				}
+				to {
+					transform: translateY(0);
+					opacity: 1;
+				}
+			}
+
+			.nav-logo {
+				font-family: "Orbitron", sans-serif;
+				font-weight: 900;
+				font-size: 1.3rem;
+				color: var(--accent);
+				text-decoration: none;
+			}
+
+			.nav-links {
+				display: flex;
+				gap: 2rem;
+				list-style: none;
+			}
+			.nav-links a {
+				color: #ccc;
+				text-decoration: none;
+				font-size: 0.9rem;
+				letter-spacing: 0.05em;
+				transition: color 0.2s;
+			}
+			.nav-links a:hover {
+				color: var(--accent);
+			}
+
+			.hamburger {
+				display: none;
+				flex-direction: column;
+				gap: 5px;
+				cursor: pointer;
+				background: none;
+				border: none;
+			}
+			.hamburger span {
+				display: block;
+				width: 24px;
+				height: 2px;
+				background: #fff;
+				border-radius: 2px;
+				transition: 0.3s;
+			}
+
+			.mobile-menu {
+				display: none;
+				position: fixed;
+				inset: 0;
+				background: rgba(0, 0, 0, 0.95);
+				backdrop-filter: blur(20px);
+				z-index: 200;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: 2.5rem;
+			}
+			.mobile-menu.open {
+				display: flex;
+			}
+			.mobile-menu a {
+				color: #fff;
+				text-decoration: none;
+				font-family: "Orbitron", sans-serif;
+				font-size: 1.5rem;
+				transition: color 0.2s;
+			}
+			.mobile-menu a:hover {
+				color: var(--accent);
+			}
+			.mobile-close {
+				position: absolute;
+				top: 1.5rem;
+				right: 2rem;
+				background: none;
+				border: none;
+				color: #fff;
+				font-size: 2rem;
+				cursor: pointer;
+			}
+
+			@media (max-width: 768px) {
+				.nav-links {
+					display: none;
+				}
+				.hamburger {
+					display: flex;
+				}
+			}
+
+			/* SECTIONS */
+			section {
+				padding: 6rem 2rem;
+				max-width: 1100px;
+				margin: 0 auto;
+			}
+
+			.section-title {
+				font-family: "Orbitron", sans-serif;
+				font-size: clamp(1.8rem, 4vw, 2.8rem);
+				font-weight: 700;
+				margin-bottom: 0.5rem;
+			}
+			.section-title span {
+				color: var(--accent);
+			}
+
+			.title-bar {
+				width: 60px;
+				height: 3px;
+				background: var(--accent);
+				border-radius: 2px;
+				margin-bottom: 3rem;
+				box-shadow: 0 0 10px var(--accent-glow);
+			}
+
+			/* HERO */
+			#home {
+				min-height: 100vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				text-align: center;
+				flex-direction: column;
+				padding: 2rem;
+				max-width: 100%;
+			}
+
+			.hero-greeting {
+				color: var(--accent);
+				font-size: 0.9rem;
+				letter-spacing: 0.3em;
+				text-transform: uppercase;
+				margin-bottom: 1rem;
+				opacity: 0;
+				animation: fadeUp 0.6s ease-out 0.1s forwards;
+			}
+
+			.hero-name {
+				font-family: "Orbitron", sans-serif;
+				font-size: clamp(2.5rem, 8vw, 6rem);
+				font-weight: 900;
+				line-height: 1.1;
+				margin-bottom: 1.5rem;
+				opacity: 0;
+				animation: fadeUp 0.6s ease-out 0.3s forwards;
+			}
+
+			.hero-name .gradient {
+				background: linear-gradient(135deg, #f97316, #fbbf24);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+			}
+
+			.hero-typewriter {
+				font-size: clamp(1rem, 3vw, 1.4rem);
+				color: var(--accent);
+				margin-bottom: 1rem;
+				min-height: 2rem;
+				opacity: 0;
+				animation: fadeUp 0.6s ease-out 0.5s forwards;
+			}
+
+			.hero-sub {
+				color: #888;
+				font-size: 0.95rem;
+				margin-bottom: 2.5rem;
+				opacity: 0;
+				animation: fadeUp 0.6s ease-out 0.6s forwards;
+			}
+
+			.hero-btns {
+				display: flex;
+				gap: 1rem;
+				flex-wrap: wrap;
+				justify-content: center;
+				margin-bottom: 3rem;
+				opacity: 0;
+				animation: fadeUp 0.6s ease-out 0.7s forwards;
+			}
+
+			.btn-primary {
+				padding: 0.75rem 2rem;
+				border: 1px solid var(--accent);
+				background: rgba(249, 115, 22, 0.1);
+				color: var(--accent);
+				border-radius: 8px;
+				text-decoration: none;
+				font-family: "Syne", sans-serif;
+				font-weight: 600;
+				transition: all 0.3s;
+				box-shadow: 0 0 15px transparent;
+				cursor: pointer;
+			}
+			.btn-primary:hover {
+				background: rgba(249, 115, 22, 0.2);
+				box-shadow: 0 0 20px var(--accent-glow);
+			}
+
+			.btn-ghost {
+				padding: 0.75rem 2rem;
+				border: 1px solid var(--glass-border);
+				background: transparent;
+				color: #ccc;
+				border-radius: 8px;
+				text-decoration: none;
+				font-family: "Syne", sans-serif;
+				font-weight: 600;
+				transition: all 0.3s;
+			}
+			.btn-ghost:hover {
+				border-color: var(--accent);
+				color: var(--accent);
+			}
+
+			.hero-avatar {
+				width: 150px;
+				height: 150px;
+				border-radius: 50%;
+				background: var(--glass);
+				backdrop-filter: blur(12px);
+				border: 3px solid transparent;
+				background-clip: padding-box;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-family: "Orbitron", sans-serif;
+				font-size: 2.5rem;
+				font-weight: 900;
+				color: var(--accent);
+				position: relative;
+				animation:
+					pulse 3s ease-in-out infinite,
+					fadeUp 0.6s ease-out 0.2s both;
+				box-shadow:
+					0 0 0 3px var(--accent),
+					0 0 30px var(--accent-glow);
+				margin-bottom: 2rem;
+			}
+
+			@keyframes pulse {
+				0%,
+				100% {
+					box-shadow:
+						0 0 0 3px var(--accent),
+						0 0 30px var(--accent-glow);
+				}
+				50% {
+					box-shadow:
+						0 0 0 3px var(--accent),
+						0 0 50px var(--accent-glow);
+				}
+			}
+
+			.scroll-indicator {
+				position: absolute;
+				bottom: 2rem;
+				left: 50%;
+				transform: translateX(-50%);
+				color: var(--accent);
+				animation: bounce 2s infinite;
+				font-size: 1.5rem;
+			}
+
+			@keyframes bounce {
+				0%,
+				100% {
+					transform: translateX(-50%) translateY(0);
+				}
+				50% {
+					transform: translateX(-50%) translateY(8px);
+				}
+			}
+
+			@keyframes fadeUp {
+				from {
+					opacity: 0;
+					transform: translateY(30px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			/* ABOUT */
+			.about-grid {
+				display: grid;
+				grid-template-columns: 1fr 2fr;
+				gap: 4rem;
+				align-items: start;
+			}
+
+			.about-avatar-wrap {
+				text-align: center;
+			}
+
+			.about-avatar {
+				width: 180px;
+				height: 180px;
+				border-radius: 50%;
+				background: var(--glass);
+				backdrop-filter: blur(12px);
+				box-shadow:
+					0 0 0 3px var(--accent),
+					0 0 30px var(--accent-glow);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-family: "Orbitron", sans-serif;
+				font-size: 2.8rem;
+				font-weight: 900;
+				color: var(--accent);
+				margin: 0 auto 1.5rem;
+			}
+
+			.about-name {
+				font-family: "Orbitron", sans-serif;
+				font-weight: 700;
+				font-size: 1rem;
+				margin-bottom: 0.3rem;
+			}
+
+			.about-role {
+				color: var(--accent);
+				font-size: 0.85rem;
+				margin-bottom: 0.3rem;
+			}
+			.about-uni {
+				color: #666;
+				font-size: 0.8rem;
+				margin-bottom: 0.2rem;
+			}
+			.about-loc {
+				color: #555;
+				font-size: 0.75rem;
+			}
+
+			.about-bio {
+				line-height: 1.9;
+				color: #ccc;
+				margin-bottom: 2rem;
+				font-size: 0.95rem;
+			}
+
+			.stats-grid {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 1rem;
+				margin-bottom: 2rem;
+			}
+
+			.stat-card {
+				padding: 1.2rem;
+				text-align: center;
+				border-radius: 12px;
+			}
+
+			.stat-number {
+				font-family: "Orbitron", sans-serif;
+				font-size: 1.8rem;
+				font-weight: 900;
+				color: var(--accent);
+				display: block;
+			}
+
+			.stat-label {
+				font-size: 0.75rem;
+				color: #888;
+				margin-top: 0.3rem;
+			}
+
+			.quote {
+				border-left: 3px solid var(--accent);
+				padding-left: 1rem;
+				color: #888;
+				font-style: italic;
+				font-size: 0.9rem;
+			}
+
+			@media (max-width: 768px) {
+				.about-grid {
+					grid-template-columns: 1fr;
+					gap: 2rem;
+				}
+				.stats-grid {
+					grid-template-columns: repeat(3, 1fr);
+				}
+			}
+
+			/* PROJECTS */
+			.projects-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+				gap: 2rem;
+			}
+
+			.project-card {
+				padding: 1.8rem;
+				transition: all 0.3s ease;
+				cursor: default;
+			}
+
+			.project-card:hover {
+				border-color: rgba(249, 115, 22, 0.3);
+				box-shadow: 0 0 30px var(--accent-glow);
+				transform: translateY(-4px);
+			}
+
+			.project-top {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+				margin-bottom: 0.5rem;
+			}
+
+			.project-icon {
+				font-size: 2rem;
+			}
+
+			.project-name {
+				font-family: "Orbitron", sans-serif;
+				font-size: 1.1rem;
+				font-weight: 700;
+			}
+
+			.project-badge {
+				margin-left: auto;
+				background: var(--accent);
+				color: #000;
+				font-size: 0.65rem;
+				padding: 0.2rem 0.6rem;
+				border-radius: 999px;
+				font-weight: 700;
+			}
+
+			.project-fullname {
+				color: #666;
+				font-size: 0.75rem;
+				margin-bottom: 1rem;
+			}
+
+			.project-desc {
+				color: #aaa;
+				font-size: 0.875rem;
+				line-height: 1.7;
+				margin-bottom: 1.2rem;
+			}
+
+			.tech-stack {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem;
+				margin-bottom: 1.5rem;
+			}
+
+			.tech-badge {
+				background: rgba(249, 115, 22, 0.1);
+				border: 1px solid rgba(249, 115, 22, 0.3);
+				color: #fb923c;
+				font-size: 0.7rem;
+				padding: 0.25rem 0.7rem;
+				border-radius: 999px;
+			}
+
+			.project-link {
+				display: inline-block;
+				padding: 0.5rem 1.2rem;
+				border: 1px solid var(--glass-border);
+				border-radius: 8px;
+				color: #ccc;
+				text-decoration: none;
+				font-size: 0.85rem;
+				transition: all 0.3s;
+			}
+			.project-link:hover {
+				border-color: var(--accent);
+				color: var(--accent);
+				box-shadow: 0 0 12px var(--accent-glow);
+			}
+
+			/* SKILLS */
+			.skills-categories {
+				display: flex;
+				flex-direction: column;
+				gap: 2.5rem;
+			}
+
+			.skill-cat-label {
+				font-size: 0.75rem;
+				color: var(--accent);
+				text-transform: uppercase;
+				letter-spacing: 0.15em;
+				margin-bottom: 1rem;
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+			}
+			.skill-cat-label::after {
+				content: "";
+				flex: 1;
+				height: 1px;
+				background: var(--glass-border);
+			}
+
+			.skill-badges {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.75rem;
+			}
+
+			.skill-badge {
+				background: var(--glass);
+				border: 1px solid var(--glass-border);
+				padding: 0.4rem 1rem;
+				border-radius: 999px;
+				font-size: 0.85rem;
+				color: #ccc;
+				transition: all 0.2s;
+				cursor: default;
+			}
+			.skill-badge:hover {
+				transform: scale(1.08);
+				border-color: rgba(249, 115, 22, 0.5);
+				background: rgba(249, 115, 22, 0.1);
+				color: #fb923c;
+			}
+
+			/* ACHIEVEMENTS */
+			.achievements-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+				gap: 1.5rem;
+			}
+
+			.achievement-card {
+				padding: 1.8rem;
+				transition: all 0.3s;
+			}
+			.achievement-card:hover {
+				border-color: rgba(249, 115, 22, 0.3);
+				box-shadow: 0 0 25px var(--accent-glow);
+				transform: translateY(-4px);
+			}
+
+			.achievement-icon {
+				font-size: 2.2rem;
+				margin-bottom: 1rem;
+				display: block;
+			}
+
+			.achievement-title {
+				font-family: "Orbitron", sans-serif;
+				font-size: 0.95rem;
+				font-weight: 700;
+				margin-bottom: 0.6rem;
+			}
+
+			.achievement-desc {
+				color: #888;
+				font-size: 0.85rem;
+				line-height: 1.7;
+			}
+
+			.achievement-card.soon {
+				border-style: dashed;
+				opacity: 0.7;
+			}
+
+			/* CONTACT */
+			#contact {
+				text-align: center;
+			}
+
+			.contact-heading {
+				font-family: "Orbitron", sans-serif;
+				font-size: clamp(1.3rem, 3vw, 2rem);
+				font-weight: 700;
+				margin-bottom: 1rem;
+			}
+
+			.contact-sub {
+				color: #888;
+				max-width: 550px;
+				margin: 0 auto 3rem;
+				line-height: 1.7;
+				font-size: 0.95rem;
+			}
+
+			.contact-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+				gap: 1.5rem;
+				max-width: 800px;
+				margin: 0 auto 2.5rem;
+			}
+
+			.contact-card {
+				padding: 1.8rem 1rem;
+				text-align: center;
+				text-decoration: none;
+				color: inherit;
+				transition: all 0.3s;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 0.6rem;
+			}
+			.contact-card:hover {
+				border-color: rgba(249, 115, 22, 0.4);
+				box-shadow: 0 0 25px var(--accent-glow);
+				transform: translateY(-4px);
+			}
+
+			.contact-icon {
+				font-size: 2.2rem;
+			}
+			.contact-label {
+				font-family: "Orbitron", sans-serif;
+				font-size: 0.85rem;
+				font-weight: 700;
+			}
+			.contact-sub-label {
+				color: #666;
+				font-size: 0.75rem;
+			}
+
+			.contact-location {
+				color: #666;
+				font-size: 0.85rem;
+				line-height: 1.8;
+			}
+
+			/* FOOTER */
+			footer {
+				text-align: center;
+				padding: 2.5rem 2rem;
+				border-top: 1px solid var(--glass-border);
+				color: #555;
+				font-size: 0.85rem;
+			}
+			footer .footer-name {
+				color: var(--accent);
+			}
+			footer .footer-stack {
+				margin-top: 0.4rem;
+				font-size: 0.75rem;
+			}
+			footer .footer-copy {
+				margin-top: 1rem;
+				font-size: 0.75rem;
+				color: #444;
+			}
+
+			/* SCROLL REVEAL */
+			.reveal {
+				opacity: 0;
+				transform: translateY(40px);
+				transition:
+					opacity 0.6s ease-out,
+					transform 0.6s ease-out;
+			}
+			.reveal.visible {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		</style>
+	</head>
+
+	<body>
+		<!-- Particles Background -->
+		<div id="tsparticles"></div>
+
+		<!-- Mobile Menu -->
+		<div class="mobile-menu" id="mobileMenu">
+			<button class="mobile-close" onclick="closeMobileMenu()">✕</button>
+			<a href="#home" onclick="closeMobileMenu()">Home</a>
+			<a href="#about" onclick="closeMobileMenu()">About</a>
+			<a href="#projects" onclick="closeMobileMenu()">Projects</a>
+			<a href="#skills" onclick="closeMobileMenu()">Skills</a>
+			<a href="#achievements" onclick="closeMobileMenu()">Achievements</a>
+			<a href="#contact" onclick="closeMobileMenu()">Contact</a>
+		</div>
+
+		<!-- NAVBAR -->
+		<nav>
+			<a href="#home" class="nav-logo">YG</a>
+			<ul class="nav-links">
+				<li><a href="#about">About</a></li>
+				<li><a href="#projects">Projects</a></li>
+				<li><a href="#skills">Skills</a></li>
+				<li><a href="#achievements">Achievements</a></li>
+				<li><a href="#contact">Contact</a></li>
+			</ul>
+			<button
+				class="hamburger"
+				onclick="openMobileMenu()"
+				aria-label="Menu"
+			>
+				<span></span><span></span><span></span>
+			</button>
+		</nav>
+
+		<!-- HERO -->
+		<section id="home" style="position:relative;">
+			<div class="hero-avatar">YG</div>
+			<p class="hero-greeting">Hello, I'm</p>
+			<h1 class="hero-name">
+				<span class="gradient">Yathin</span> Gnaneshwar
+			</h1>
+			<div class="hero-typewriter">
+				<span id="typed"></span>
+			</div>
+			<p class="hero-sub">
+				Building Iron Man-inspired AI at 19 · Vidyavardhaka College of
+				Engineering
+			</p>
+			<div class="hero-btns">
+				<a href="#projects" class="btn-primary">View My Projects</a>
+				<a
+					href="https://github.com/YathinTHEBUILDER"
+					target="_blank"
+					rel="noopener"
+					class="btn-ghost">GitHub ↗</a
+				>
+			</div>
+			<div class="scroll-indicator">⌄</div>
+		</section>
+
+		<!-- ABOUT -->
+		<section id="about">
+			<h2 class="section-title reveal">About <span>Me</span></h2>
+			<div class="title-bar reveal"></div>
+			<div class="about-grid">
+				<div class="about-avatar-wrap reveal">
+					<div class="about-avatar">YG</div>
+					<p class="about-name">Yathin Gnaneshwar</p>
+					<p class="about-role">CS Engineering Student</p>
+					<p class="about-uni">
+						Vidyavardhaka College of Engineering
+					</p>
+					<p class="about-loc">Mysuru, Karnataka 🇮🇳</p>
+				</div>
+				<div>
+					<p class="about-bio reveal">
+						Building the future, one line of code at a time.<br
+						/><br />
+						I'm Yathin — a 19-year-old Computer Science Engineering student
+						driven by an obsession with Artificial Intelligence and intelligent
+						systems. From building Iron Man-inspired voice assistants
+						like J.A.R.V.I.S and F.R.I.D.A.Y, to exploring the bleeding
+						edge of computer vision and LLM APIs — I don't just study
+						technology, I build with it.<br /><br />
+						Currently in my first year at VCE and already shipping real
+						AI products.
+					</p>
+					<div class="stats-grid reveal">
+						<div class="glass stat-card">
+							<span class="stat-number">2+</span>
+							<p class="stat-label">AI Projects Shipped</p>
+						</div>
+						<div class="glass stat-card">
+							<span class="stat-number">5+</span>
+							<p class="stat-label">APIs Integrated</p>
+						</div>
+						<div class="glass stat-card">
+							<span class="stat-number">1st</span>
+							<p class="stat-label">Year, Already Building</p>
+						</div>
+					</div>
+					<blockquote class="quote reveal">
+						"The best way to predict the future is to build it."
+					</blockquote>
+				</div>
+			</div>
+		</section>
+
+		<!-- PROJECTS -->
+		<section id="projects">
+			<h2 class="section-title reveal">My <span>Projects</span></h2>
+			<div class="title-bar reveal"></div>
+			<p
+				style="color:#888;margin-bottom:2.5rem;font-size:0.95rem;"
+				class="reveal"
+			>
+				Things I've actually built — not just studied.
+			</p>
+			<div class="projects-grid">
+				<div
+					class="glass project-card reveal"
+					data-tilt
+					data-tilt-max="8"
+					data-tilt-glare="true"
+					data-tilt-max-glare="0.2"
+				>
+					<div class="project-top">
+						<span class="project-icon">🤖</span>
+						<span class="project-name">J.A.R.V.I.S</span>
+						<span class="project-badge">Stable</span>
+					</div>
+					<p class="project-fullname">
+						Just A Rather Very Intelligent System
+					</p>
+					<p class="project-desc">
+						A conversational AI assistant inspired by Iron Man's
+						J.A.R.V.I.S. Performs real-time web searches and
+						intelligent conversations using Groq's blazing-fast LLM
+						inference and Tavily's live web search API. Speaks,
+						searches, and responds in near real-time.
+					</p>
+					<div class="tech-stack">
+						<span class="tech-badge">Python</span>
+						<span class="tech-badge">Groq API</span>
+						<span class="tech-badge">Tavily API</span>
+						<span class="tech-badge">JavaScript</span>
+						<span class="tech-badge">HTML/CSS</span>
+					</div>
+					<a
+						href="https://github.com/YathinTHEBUILDER/J.A.R.V.I.S_Stable"
+						target="_blank"
+						rel="noopener"
+						class="project-link"
+					>
+						View on GitHub →
+					</a>
+				</div>
+
+				<div
+					class="glass project-card reveal"
+					data-tilt
+					data-tilt-max="8"
+					data-tilt-glare="true"
+					data-tilt-max-glare="0.2"
+				>
+					<div class="project-top">
+						<span class="project-icon">🧠</span>
+						<span class="project-name">F.R.I.D.A.Y</span>
+						<span class="project-badge">Stable</span>
+					</div>
+					<p class="project-fullname">
+						Female Replacement Intelligent Digital Assistant Youth
+					</p>
+					<p class="project-desc">
+						The evolution of J.A.R.V.I.S — a multimodal AI assistant
+						with real-time voice interaction, computer vision, and
+						advanced reasoning. Powered by Gemini API, it sees
+						through a camera, hears through a mic, and thinks with
+						the intelligence of Google's best model.
+					</p>
+					<div class="tech-stack">
+						<span class="tech-badge">Python</span>
+						<span class="tech-badge">Gemini API</span>
+						<span class="tech-badge">OpenCV</span>
+						<span class="tech-badge">LiveKit</span>
+						<span class="tech-badge">Computer Vision</span>
+					</div>
+					<a
+						href="https://github.com/YathinTHEBUILDER/F.R.I.D.A.Y_Stable"
+						target="_blank"
+						rel="noopener"
+						class="project-link"
+					>
+						View on GitHub →
+					</a>
+				</div>
+			</div>
+		</section>
+
+		<!-- SKILLS -->
+		<section id="skills">
+			<h2 class="section-title reveal">My <span>Skills</span></h2>
+			<div class="title-bar reveal"></div>
+			<p
+				style="color:#888;margin-bottom:2.5rem;font-size:0.95rem;"
+				class="reveal"
+			>
+				What I work with, and what I'm obsessing over next.
+			</p>
+			<div class="skills-categories">
+				<div class="reveal">
+					<p class="skill-cat-label">⚡ Languages</p>
+					<div class="skill-badges">
+						<span class="skill-badge">Python</span>
+						<span class="skill-badge">C</span>
+						<span class="skill-badge">C++</span>
+						<span class="skill-badge">JavaScript</span>
+						<span class="skill-badge">HTML</span>
+						<span class="skill-badge">CSS</span>
+					</div>
+				</div>
+
+				<div class="reveal">
+					<p class="skill-cat-label">🧠 AI & Machine Learning</p>
+					<div class="skill-badges">
+						<span class="skill-badge">Groq API</span>
+						<span class="skill-badge">Gemini API</span>
+						<span class="skill-badge">Tavily API</span>
+						<span class="skill-badge">OpenCV</span>
+						<span class="skill-badge">Computer Vision</span>
+						<span class="skill-badge">LLM Integration</span>
+						<span class="skill-badge">LiveKit</span>
+					</div>
+				</div>
+
+				<div class="reveal">
+					<p class="skill-cat-label">🛠️ Tools & Platforms</p>
+					<div class="skill-badges">
+						<span class="skill-badge">Git</span>
+						<span class="skill-badge">GitHub</span>
+						<span class="skill-badge">VS Code</span>
+						<span class="skill-badge">Vercel</span>
+						<span class="skill-badge">Linux Terminal</span>
+						<span class="skill-badge">Google Antigravity</span>
+					</div>
+				</div>
+
+				<div class="reveal">
+					<p class="skill-cat-label">🌱 Currently Learning</p>
+					<div class="skill-badges">
+						<span class="skill-badge">🌱 React</span>
+						<span class="skill-badge">🌱 Astro</span>
+						<span class="skill-badge">🌱 TensorFlow</span>
+						<span class="skill-badge">🌱 Next.js</span>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- ACHIEVEMENTS -->
+		<section id="achievements">
+			<h2 class="section-title reveal">My <span>Achievements</span></h2>
+			<div class="title-bar reveal"></div>
+			<p
+				style="color:#888;margin-bottom:2.5rem;font-size:0.95rem;"
+				class="reveal"
+			>
+				What I've accomplished in Year 1 of college — and counting.
+			</p>
+			<div class="achievements-grid">
+				<div class="glass achievement-card reveal">
+					<span class="achievement-icon">🚀</span>
+					<h3 class="achievement-title">Shipped 2 AI Assistants</h3>
+					<p class="achievement-desc">
+						Built and deployed J.A.R.V.I.S and F.R.I.D.A.Y — two
+						fully functional AI assistants — within the first year
+						of college.
+					</p>
+				</div>
+				<div class="glass achievement-card reveal">
+					<span class="achievement-icon">🔗</span>
+					<h3 class="achievement-title">5+ API Integrations</h3>
+					<p class="achievement-desc">
+						Integrated production-grade AI APIs including Groq,
+						Gemini, Tavily, LiveKit, and OpenCV into real, working
+						applications.
+					</p>
+				</div>
+				<div class="glass achievement-card reveal">
+					<span class="achievement-icon">💻</span>
+					<h3 class="achievement-title">Open Source from Day 1</h3>
+					<p class="achievement-desc">
+						All projects publicly available on GitHub with full
+						version history — contributing to open knowledge from
+						the very start.
+					</p>
+				</div>
+				<div class="glass achievement-card reveal">
+					<span class="achievement-icon">🧠</span>
+					<h3 class="achievement-title">Self-Taught AI Developer</h3>
+					<p class="achievement-desc">
+						Learned Python, LLM APIs, and computer vision
+						independently alongside college coursework with zero
+						formal AI training.
+					</p>
+				</div>
+				<div class="glass achievement-card soon reveal">
+					<span class="achievement-icon">✨</span>
+					<h3 class="achievement-title">More Coming Soon...</h3>
+					<p class="achievement-desc">
+						Currently pursuing certifications in AI/ML and working
+						on the next evolution of intelligent systems. Watch this
+						space.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- CONTACT -->
+		<section id="contact">
+			<h2 class="section-title reveal">Get In <span>Touch</span></h2>
+			<div class="title-bar reveal" style="margin:0.5rem auto 2rem;">
+			</div>
+			<h3 class="contact-heading reveal">
+				Let's Build Something Together
+			</h3>
+			<p class="contact-sub reveal">
+				I'm always open to new ideas, collaborations, and opportunities.
+				Whether you want to talk AI, projects, or just say hi — my inbox
+				is open.
+			</p>
+			<div class="contact-grid">
+				<a
+					href="mailto:yathing52@gmail.com"
+					class="glass contact-card reveal"
+				>
+					<span class="contact-icon">📧</span>
+					<span class="contact-label">Email Me</span>
+					<span class="contact-sub-label">yathing52@gmail.com</span>
+				</a>
+				<a
+					href="https://github.com/YathinTHEBUILDER"
+					target="_blank"
+					rel="noopener"
+					class="glass contact-card reveal"
+				>
+					<span class="contact-icon">🐙</span>
+					<span class="contact-label">GitHub</span>
+					<span class="contact-sub-label">@YathinTHEBUILDER</span>
+				</a>
+				<a
+					href="https://www.linkedin.com/in/yathin-gnaneshwar-5133b4367"
+					target="_blank"
+					rel="noopener"
+					class="glass contact-card reveal"
+				>
+					<span class="contact-icon">💼</span>
+					<span class="contact-label">LinkedIn</span>
+					<span class="contact-sub-label">Yathin Gnaneshwar</span>
+				</a>
+				<a
+					href="https://www.instagram.com/yathin_gnaneshwar"
+					target="_blank"
+					rel="noopener"
+					class="glass contact-card reveal"
+				>
+					<span class="contact-icon">📸</span>
+					<span class="contact-label">Instagram</span>
+					<span class="contact-sub-label">@yathin_gnaneshwar</span>
+				</a>
+			</div>
+			<p class="contact-location reveal">
+				Currently based in Mysuru, Karnataka, India 🇮🇳<br />
+				Open to remote collaborations worldwide.
+			</p>
+		</section>
+
+		<!-- FOOTER -->
+		<footer>
+			<p>
+				Built with ❤️ + ☕ by <span class="footer-name"
+					>Yathin Gnaneshwar</span
+				>
+			</p>
+			<p class="footer-stack">
+				Powered by Astro · Tailwind CSS · Google Antigravity · Deployed
+				on Vercel
+			</p>
+			<p class="footer-copy">
+				© 2025 Yathin Gnaneshwar. All rights reserved.
+			</p>
+		</footer>
+
+		<script>
+			// ── Typed.js ──────────────────────────────────────────
+			document.addEventListener("DOMContentLoaded", () => {
+				new Typed("#typed", {
+					strings: [
+						"I Build AI Assistants.",
+						"I Engineer Intelligent Systems.",
+						"I Turn Ideas Into Code.",
+						"CS Student. AI Builder. Tech Obsessed.",
+					],
+					typeSpeed: 50,
+					backSpeed: 30,
+					backDelay: 2000,
+					loop: true,
+				});
+			});
+
+			// ── tsParticles ───────────────────────────────────────
+			document.addEventListener("DOMContentLoaded", async () => {
+				if (window.tsParticles) {
+					await tsParticles.load("tsparticles", {
+						particles: {
+							number: { value: 80 },
+							color: { value: ["#ffffff", "#f97316"] },
+							opacity: { value: { min: 0.3, max: 0.8 } },
+							size: { value: { min: 1, max: 3 } },
+							move: { enable: true, speed: 0.6 },
+							links: {
+								enable: true,
+								color: "#f97316",
+								opacity: 0.15,
+								distance: 120,
+							},
+						},
+						interactivity: {
+							events: {
+								onHover: { enable: true, mode: "repulse" },
+							},
+							modes: { repulse: { distance: 80 } },
+						},
+						background: { color: "transparent" },
+					});
+				}
+			});
+
+			// ── Vanilla Tilt ──────────────────────────────────────
+			document.addEventListener("DOMContentLoaded", () => {
+				if (window.VanillaTilt) {
+					VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
+						max: 8,
+						glare: true,
+						"max-glare": 0.2,
+					});
+				}
+			});
+
+			// ── Scroll Reveal ─────────────────────────────────────
+			const observer = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((e, i) => {
+						if (e.isIntersecting) {
+							setTimeout(
+								() => e.target.classList.add("visible"),
+								i * 80,
+							);
+						}
+					});
+				},
+				{ threshold: 0.12 },
+			);
+
+			document
+				.querySelectorAll(".reveal")
+				.forEach((el) => observer.observe(el));
+
+			// ── Mobile Menu ───────────────────────────────────────
+			function openMobileMenu() {
+				document.getElementById("mobileMenu").classList.add("open");
+			}
+			function closeMobileMenu() {
+				document.getElementById("mobileMenu").classList.remove("open");
+			}
+
+			// ── Navbar opacity on scroll ──────────────────────────
+			window.addEventListener("scroll", () => {
+				const nav = document.querySelector("nav");
+				nav.style.background =
+					window.scrollY > 50 ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.2)";
+			});
+		</script>
+	</body>
+</html>
