@@ -261,7 +261,7 @@ The design should be:
 - Dark background (#0a0a0a)
 - Glassmorphism style with orange (#f97316) as the accent color
 - Full screen height (100vh)
-- My name "Yathin Gnaneshwar" in Orbitron font, very large
+- My name "Yathin" in Orbitron font, very large
 - A typewriter effect cycling through: "I Build AI Assistants.", "I Engineer Intelligent Systems.", "I Turn Ideas Into Code."
 - Two buttons: "View Projects" and "GitHub"
 - A "YG" monogram in a glowing orange circle
@@ -284,7 +284,7 @@ Now the fun begins. Open Antigravity with your project folder open. For each ste
 **Click "New Mission" → Paste this prompt:**
 
 ```
-I'm building a personal portfolio for "Yathin Gnaneshwar", a CS engineering student who builds AI projects. The tech stack is Astro + Tailwind CSS.
+I'm building a personal portfolio for "Yathin", a CS engineering student who builds AI projects. The tech stack is Astro + Tailwind CSS.
 
 First, update the tailwind.config.mjs file with these settings:
 - Add Google Font imports for "Orbitron" (futuristic heading font) and "Syne" (clean body font)
@@ -326,7 +326,7 @@ A base HTML layout component that wraps all pages. It should:
 - Set page title to the prop value
 - Import src/styles/global.css
 - Have full dark background (#0a0a0a)
-- Include SEO meta tags: description "Portfolio of Yathin Gnaneshwar — CS Engineering student and AI builder", viewport, theme-color #f97316
+- Include SEO meta tags: description "Portfolio of Yathin — CS Engineering student and AI builder", viewport, theme-color #f97316
 - Include Open Graph tags for social sharing
 - Have a <slot /> for page content
 - Add Google Fonts preconnect links for Orbitron and Syne
@@ -351,7 +351,7 @@ Write the implementation plan first and wait for my approval before writing any 
 **Click "New Mission" → Paste this:**
 
 ```
-Create src/components/Navbar.astro — a sticky navigation bar for Yathin Gnaneshwar's portfolio.
+Create src/components/Navbar.astro — a sticky navigation bar for Yathin's portfolio.
 
 Design requirements:
 - Position: sticky, sticks to top of page (position: sticky, top: 0, z-index: 50)
@@ -378,10 +378,10 @@ Write the implementation plan first and wait for my approval before writing any 
 **Click "New Mission" → Paste this:**
 
 ```
-Create src/components/Hero.astro — the first section of Yathin Gnaneshwar's portfolio.
+Create src/components/Hero.astro — the first section of Yathin's portfolio.
 
 Personal details:
-- Name: Yathin Gnaneshwar
+- Name: Yathin
 - Age: 19
 - Role: CS Engineering Student & AI Builder
 - University: Vidyavardhaka College of Engineering
@@ -390,7 +390,7 @@ Design — full viewport height (100vh), dark (#0a0a0a), glassmorphism + orange 
 
 Layout (centered, vertical flex):
 1. Small orange text at top: "Hello, I'm" in uppercase, tracked letters
-2. Name: "Yathin Gnaneshwar" — use Orbitron font, very large (clamp between 3rem and 7rem for responsiveness), white color. Make "Yathin" have an orange-to-amber gradient.
+2. Name: "Yathin" — use Orbitron font, very large (clamp between 3rem and 7rem for responsiveness), white color. Make "Yathin" have an orange-to-amber gradient.
 3. Typewriter text (orange color, 1.5rem): Load Typed.js from CDN (https://cdn.jsdelivr.net/npm/typed.js@2.1.0/dist/typed.umd.js) and cycle through:
    - "I Build AI Assistants."
    - "I Engineer Intelligent Systems."
@@ -416,7 +416,7 @@ Write the implementation plan first and wait for my approval before writing any 
 **Click "New Mission" → Paste this:**
 
 ```
-Create src/components/About.astro — the About Me section for Yathin Gnaneshwar's portfolio.
+Create src/components/About.astro — the About Me section for Yathin's portfolio.
 
 Section id: "about"
 
@@ -426,7 +426,7 @@ Content:
 
 LEFT COLUMN:
 - Large "YG" monogram: 200px circle, glassmorphism bg (bg-white/5 backdrop-blur), orange gradient border (3px), Orbitron font, orange text, slight shadow glow
-- Below it: Name "Yathin Gnaneshwar" in Orbitron
+- Below it: Name "Yathin" in Orbitron
 - Below: "CS Engineering Student" in orange
 - Below: "Vidyavardhaka College of Engineering" in small muted gray text
 - Below: "Mysuru, Karnataka 🇮🇳" in very small muted text
@@ -460,7 +460,7 @@ Write the implementation plan first and wait for my approval before writing any 
 **Click "New Mission" → Paste this:**
 
 ```
-Create src/components/Projects.astro — the Projects section for Yathin Gnaneshwar's portfolio.
+Create src/components/Projects.astro — the Projects section for Yathin's portfolio.
 
 Section id: "projects"
 Section title: "Projects"
@@ -511,7 +511,7 @@ Write the implementation plan first and wait for my approval before writing any 
 **Click "New Mission" → Paste this:**
 
 ```
-Create src/components/Skills.astro — the Skills section for Yathin Gnaneshwar's portfolio.
+Create src/components/Skills.astro — the Skills section for Yathin's portfolio.
 
 Section id: "skills"
 Section title: "Skills"
@@ -554,7 +554,7 @@ Write the implementation plan first and wait for my approval before writing any 
 **Click "New Mission" → Paste this:**
 
 ```
-Create src/components/Certifications.astro — the Achievements section for Yathin Gnaneshwar's portfolio.
+Create src/components/Certifications.astro — the Achievements section for Yathin's portfolio.
 
 Section id: "achievements"
 Section title: "Achievements"
@@ -622,7 +622,7 @@ Card 2: GitHub
 Card 3: LinkedIn
 - Icon: LinkedIn "in" SVG icon (fill #0077b5 blue)
 - Label: "LinkedIn"
-- Sub: "Yathin Gnaneshwar"
+- Sub: "Yathin"
 - href: "https://www.linkedin.com/in/yathin-gnaneshwar-5133b4367"
 - Opens new tab
 
@@ -642,10 +642,10 @@ Below the cards, centered text:
 FILE 2 — src/components/Footer.astro:
 - Minimal, centered
 - Top: 1px gradient line (transparent → #f97316 → transparent)
-- Main text: "Built with ❤️ + ☕ by Yathin Gnaneshwar"
+- Main text: "Built with ❤️ + ☕ by Yathin"
 - Sub text: "Powered by Astro · Tailwind CSS · Google Antigravity · Deployed on Vercel"
 - Small social icon row: GitHub, LinkedIn, Instagram, Email (matching links from above)
-- Copyright: "© 2025 Yathin Gnaneshwar. All rights reserved."
+- Copyright: "© 2025 Yathin. All rights reserved."
 
 Write the implementation plan first and wait for my approval before writing any code.
 ```
@@ -657,10 +657,10 @@ Write the implementation plan first and wait for my approval before writing any 
 **Click "New Mission" → Paste this:**
 
 ```
-Create src/pages/index.astro — the main page of Yathin Gnaneshwar's portfolio that assembles all components.
+Create src/pages/index.astro — the main page of Yathin's portfolio that assembles all components.
 
 Import and use all these components in this exact order:
-1. Layout component (from ../layouts/Layout.astro) — wrap everything, pass title="Yathin Gnaneshwar | AI Builder & CS Student"
+1. Layout component (from ../layouts/Layout.astro) — wrap everything, pass title="Yathin | AI Builder & CS Student"
 2. ParticlesBg (from ../components/ParticlesBg.astro) — full screen background
 3. Navbar (from ../components/Navbar.astro) — sticky top nav
 4. Hero section (from ../components/Hero.astro) — with id="home"
@@ -684,7 +684,7 @@ Write the implementation plan first and wait for my approval before writing any 
 **Click "New Mission" → Paste this:**
 
 ```
-Final polish tasks for Yathin Gnaneshwar's portfolio:
+Final polish tasks for Yathin's portfolio:
 
 TASK 1 — Create public/favicon.svg:
 A 64x64 SVG monogram favicon:
@@ -956,5 +956,5 @@ Antigravity's free tier has generous rate limits that reset every 5 hours. If yo
 
 ---
 
-*Built specifically for Yathin Gnaneshwar · VCE · 2025*
+*Built specifically for Yathin · VCE · 2025*
 *Stack: Astro + Tailwind CSS · Tool: Google Antigravity · Host: Vercel*

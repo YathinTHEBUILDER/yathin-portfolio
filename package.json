@@ -14,6 +14,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.2.2",
     "astro": "^6.1.1",
+    "simple-icons": "^16.14.0",
     "tailwindcss": "^4.2.2",
     "tsparticles": "^3.9.1",
     "vanilla-tilt": "^1.8.1"
