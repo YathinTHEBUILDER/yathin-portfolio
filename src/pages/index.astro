@@ -1312,6 +1312,17 @@
 		</footer>
 
 		<script>
+			declare var Typed: any;
+			declare var tsParticles: any;
+			declare var VanillaTilt: any;
+
+			declare global {
+				interface Window {
+					tsParticles: any;
+					VanillaTilt: any;
+				}
+			}
+
 			// ── Typed.js ──────────────────────────────────────────
 			document.addEventListener("DOMContentLoaded", () => {
 				new Typed("#typed", {
@@ -1388,17 +1399,19 @@
 
 			// ── Mobile Menu ───────────────────────────────────────
 			function openMobileMenu() {
-				document.getElementById("mobileMenu").classList.add("open");
+				document.getElementById("mobileMenu")?.classList.add("open");
 			}
 			function closeMobileMenu() {
-				document.getElementById("mobileMenu").classList.remove("open");
+				document.getElementById("mobileMenu")?.classList.remove("open");
 			}
 
 			// ── Navbar opacity on scroll ──────────────────────────
 			window.addEventListener("scroll", () => {
 				const nav = document.querySelector("nav");
-				nav.style.background =
-					window.scrollY > 50 ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.2)";
+				if (nav) {
+					nav.style.background =
+						window.scrollY > 50 ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.2)";
+				}
 			});
 		</script>
 	</body>
