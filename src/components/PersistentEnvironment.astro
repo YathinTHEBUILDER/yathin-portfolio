@@ -1,0 +1,1024 @@
+---
+// src/components/PersistentEnvironment.astro
+// Unified Cinematic Atmospheric Layer
+---
+
+<!-- Cinematic Background System -->
+<div id="cinematic-background">
+	<div class="bg-base"></div>
+	<div class="ambient-glow glow-1"></div>
+	<div class="ambient-glow glow-2"></div>
+	<div class="ambient-glow glow-3"></div>
+	<div class="cinematic-haze"></div>
+	<div class="infrastructure-grid"></div>
+</div>
+
+<!-- Interactive Ambient Layer -->
+<div id="meteor-system"></div>
+<div id="meteor-score" class="meteor-score">
+	<span class="score-label">INTERCEPTIONS</span>
+	<span class="score-value" id="meteor-score-value">00</span>
+</div>
+
+<style>
+	#cinematic-background {
+		position: fixed;
+		inset: 0;
+		z-index: -2;
+		overflow: hidden;
+		pointer-events: none;
+		background: #030303;
+	}
+
+	.bg-base {
+		position: absolute;
+		inset: 0;
+		background: radial-gradient(circle at 50% 0%, rgba(20, 20, 20, 1) 0%, rgba(3, 3, 3, 1) 100%);
+	}
+
+	.ambient-glow {
+		position: absolute;
+		border-radius: 50%;
+		filter: blur(120px);
+		opacity: 0.6;
+		mix-blend-mode: screen;
+		animation: drift 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+		will-change: transform, opacity;
+	}
+
+	.glow-1 {
+		width: 60vw;
+		height: 60vw;
+		background: radial-gradient(circle, rgba(249, 115, 22, 0.04) 0%, rgba(249, 115, 22, 0) 70%);
+		top: -20%;
+		left: -10%;
+		animation-duration: 25s;
+	}
+
+	.glow-2 {
+		width: 50vw;
+		height: 50vw;
+		background: radial-gradient(circle, rgba(147, 51, 234, 0.03) 0%, rgba(147, 51, 234, 0) 70%);
+		bottom: -10%;
+		right: -10%;
+		animation-duration: 22s;
+		animation-delay: -5s;
+	}
+
+	.glow-3 {
+		width: 70vw;
+		height: 40vw;
+		background: radial-gradient(circle, rgba(59, 130, 246, 0.02) 0%, rgba(59, 130, 246, 0) 70%);
+		top: 30%;
+		left: 20%;
+		animation-duration: 28s;
+		animation-delay: -10s;
+	}
+
+	.cinematic-haze {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(to bottom, transparent 0%, rgba(3, 3, 3, 0.8) 100%);
+		z-index: 1;
+	}
+
+	.infrastructure-grid {
+		position: absolute;
+		inset: -50%;
+		width: 200%;
+		height: 200%;
+		background-image: 
+			linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+		background-size: 100px 100px;
+		background-position: center center;
+		transform: perspective(1000px) rotateX(60deg) translateY(100px) translateZ(-200px);
+		opacity: 0.3;
+		mask-image: radial-gradient(ellipse at center, black 0%, transparent 60%);
+		-webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 60%);
+		z-index: 1;
+		animation: grid-drift 30s linear infinite;
+	}
+
+	@keyframes drift {
+		0% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+		50% { transform: translate(5%, 5%) scale(1.05); opacity: 0.6; }
+		100% { transform: translate(-5%, 8%) scale(0.95); opacity: 0.5; }
+	}
+
+	@keyframes grid-drift {
+		0% { background-position: 0px 0px; }
+		100% { background-position: 0px 100px; }
+	}
+
+	@media (max-width: 768px) {
+		.ambient-glow {
+			filter: blur(80px);
+		}
+		.infrastructure-grid {
+			opacity: 0.15;
+			background-size: 60px 60px;
+		}
+	}
+
+	/* ── METEOR SYSTEM STYLES ── */
+	#meteor-system {
+		position: fixed;
+		inset: 0;
+		z-index: 50;
+		pointer-events: none;
+		overflow: hidden;
+	}
+
+	.meteor-score {
+		position: fixed;
+		bottom: 2.5rem;
+		right: 2.5rem;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		font-family: "Orbitron", sans-serif;
+		opacity: 0;
+		transition: opacity 1.5s ease;
+		pointer-events: none;
+		z-index: 50;
+		mix-blend-mode: screen;
+	}
+
+	.meteor-score.visible {
+		opacity: 0.35;
+	}
+
+	.meteor-score .score-label {
+		font-size: 0.5rem;
+		letter-spacing: 0.35em;
+		color: #888;
+		margin-bottom: -2px;
+	}
+
+	.meteor-score .score-value {
+		font-size: 1.1rem;
+		font-weight: 700;
+		color: rgba(249, 115, 22, 0.9);
+		text-shadow: 0 0 10px rgba(249, 115, 22, 0.4);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.meteor-entity {
+		position: absolute;
+		width: 2px;
+		height: 2px;
+		background: #fff;
+		border-radius: 50%;
+		box-shadow: 0 0 8px 1px rgba(255, 255, 255, 0.8), 0 0 15px 3px rgba(249, 115, 22, 0.3);
+		pointer-events: auto;
+		cursor: crosshair;
+		will-change: transform, opacity;
+		z-index: 3;
+	}
+
+	.meteor-entity::before {
+		content: '';
+		position: absolute;
+		top: 50%;
+		right: 100%;
+		width: 50px;
+		height: 1px;
+		background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.7));
+		transform: translateY(-50%);
+		pointer-events: none;
+	}
+
+	.meteor-entity.destroyed {
+		opacity: 0 !important;
+		transform: scale(2) !important;
+		box-shadow: 0 0 25px 6px rgba(249, 115, 22, 0.8) !important;
+		transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+	}
+
+	.meteor-particle {
+		position: absolute;
+		width: 2px;
+		height: 2px;
+		background: rgba(249, 115, 22, 0.9);
+		border-radius: 50%;
+		pointer-events: none;
+		box-shadow: 0 0 8px rgba(249, 115, 22, 0.6);
+		will-change: transform, opacity;
+	}
+
+	.meteor-ripple {
+		position: absolute;
+		border-radius: 50%;
+		border: 1px solid rgba(249, 115, 22, 0.5);
+		pointer-events: none;
+		transform: translate(-50%, -50%) scale(0);
+		opacity: 1;
+		will-change: transform, opacity;
+	}
+</style>
+
+<script>
+	// ── GLOBAL UNIFIED MOTION DESIGN SYSTEM CONSTANTS ──
+	const MOTION_TOKENS = {
+		duration: {
+			fast: 200,
+			medium: 380,
+			slow: 600,
+			cinematic: 1200
+		},
+		stagger: 80,
+		springs: {
+			cursorTrack: { stiffness: 0.08, damping: 0.16 },
+			cursorDeform: { stiffness: 0.06, damping: 0.22 },
+			elasticNode: { stiffness: 0.05, damping: 0.16 },
+			elasticPath: { stiffness: 0.04, damping: 0.18 },
+			softBlend: { stiffness: 0.03, damping: 0.15 }
+		}
+	};
+
+	class Spring {
+		constructor(val = 0, target = 0, stiffness = 0.05, damping = 0.15) {
+			this.val = val;
+			this.target = target;
+			this.vel = 0;
+			this.stiffness = stiffness;
+			this.damping = damping;
+		}
+
+		update() {
+			const force = (this.target - this.val) * this.stiffness;
+			this.vel += force;
+			this.vel *= (1 - this.damping);
+			this.val += this.vel;
+			return this.val;
+		}
+	}
+
+	document.addEventListener("DOMContentLoaded", () => {
+		let isMobile = window.innerWidth < 768;
+
+		const rawMouse = { 
+			x: window.innerWidth / 2, 
+			y: window.innerHeight / 2, 
+			targetX: window.innerWidth / 2, 
+			targetY: window.innerHeight / 2 
+		};
+		let lastMouseX = rawMouse.targetX;
+		let lastMouseY = rawMouse.targetY;
+		let mouseVelocityX = 0;
+		let mouseVelocityY = 0;
+		let mouseSpeed = 0;
+
+		const cursorEl = document.getElementById("spatial-cursor-system");
+		const cursorDot = cursorEl?.querySelector(".cursor-dot");
+		const cursorRing = cursorEl?.querySelector(".cursor-ring");
+		const cursorGlow = cursorEl?.querySelector(".cursor-glow");
+		const xValEl = cursorEl?.querySelector(".x-val");
+		const yValEl = cursorEl?.querySelector(".y-val");
+
+		const cX = new Spring(rawMouse.targetX, rawMouse.targetX, MOTION_TOKENS.springs.cursorTrack.stiffness, MOTION_TOKENS.springs.cursorTrack.damping);
+		const cY = new Spring(rawMouse.targetY, rawMouse.targetY, MOTION_TOKENS.springs.cursorTrack.stiffness, MOTION_TOKENS.springs.cursorTrack.damping);
+		const cWidth = new Spring(48, 48, MOTION_TOKENS.springs.cursorTrack.stiffness, MOTION_TOKENS.springs.cursorTrack.damping);
+		const cHeight = new Spring(48, 48, MOTION_TOKENS.springs.cursorTrack.stiffness, MOTION_TOKENS.springs.cursorTrack.damping);
+		const cRadius = new Spring(24, 24, MOTION_TOKENS.springs.cursorTrack.stiffness, MOTION_TOKENS.springs.cursorTrack.damping);
+		const cRotation = new Spring(0, 0, MOTION_TOKENS.springs.cursorTrack.stiffness, MOTION_TOKENS.springs.cursorTrack.damping);
+		const cDeform = new Spring(1, 1, MOTION_TOKENS.springs.cursorDeform.stiffness, MOTION_TOKENS.springs.cursorDeform.damping);
+
+		function getStableBoundingRect(el) {
+			let top = 0;
+			let left = 0;
+			const width = el.offsetWidth;
+			const height = el.offsetHeight;
+			
+			let current = el;
+			while (current) {
+				top += current.offsetTop || 0;
+				left += current.offsetLeft || 0;
+				current = current.offsetParent;
+			}
+			
+			return {
+				left: left - window.scrollX,
+				top: top - window.scrollY,
+				width,
+				height
+			};
+		}
+
+		let hoveredElement = null;
+		let isClicking = false;
+
+		window.addEventListener("mousemove", (e) => {
+			rawMouse.targetX = e.clientX;
+			rawMouse.targetY = e.clientY;
+			
+			if (!isMobile) {
+				mouseVelocityX = e.clientX - lastMouseX;
+				mouseVelocityY = e.clientY - lastMouseY;
+				mouseSpeed = Math.sqrt(mouseVelocityX * mouseVelocityX + mouseVelocityY * mouseVelocityY);
+				
+				lastMouseX = e.clientX;
+				lastMouseY = e.clientY;
+			}
+		});
+
+		window.addEventListener("mousedown", (e) => {
+			if (e.button !== 0) return; 
+			isClicking = true;
+			cursorEl?.classList.add("clicking");
+			const ripple = cursorEl?.querySelector(".cursor-click-ripple");
+			if (ripple) {
+				ripple.classList.remove("ping");
+				void ripple.offsetWidth;
+				ripple.classList.add("ping");
+			}
+		});
+
+		window.addEventListener("mouseup", (e) => {
+			if (e.button !== 0) return;
+			isClicking = false;
+			cursorEl?.classList.remove("clicking");
+		});
+
+		window.addEventListener("contextmenu", (e) => {
+			e.preventDefault();
+		});
+
+		document.addEventListener("mouseover", (e) => {
+			if (isMobile) return; 
+			const target = e.target;
+			const interactive = target.closest("a, button, [role='button'], .skill-badge");
+			if (interactive) {
+				if (interactive.classList.contains("contact-card")) return; 
+				hoveredElement = interactive;
+				cursorEl?.classList.add("snapped");
+			}
+		});
+
+		document.addEventListener("mouseout", (e) => {
+			if (isMobile) return;
+			const related = e.relatedTarget;
+			if (hoveredElement && (!related || !hoveredElement.contains(related))) {
+				hoveredElement = null;
+				cursorEl?.classList.remove("snapped");
+			}
+		});
+
+		const spatialElements = [];
+		const spatialObserver = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				const el = entry.target;
+				if (entry.isIntersecting) {
+					if (!spatialElements.includes(el)) {
+						spatialElements.push(el);
+					}
+				} else {
+					const index = spatialElements.indexOf(el);
+					if (index > -1) {
+						spatialElements.splice(index, 1);
+					}
+				}
+			});
+		}, { rootMargin: "100px" });
+
+		setTimeout(() => {
+			document.querySelectorAll(".project-card, .skill-badge, .btn-primary, .btn-ghost, .contact-card, .achievement-card").forEach(el => {
+				spatialObserver.observe(el);
+			});
+		}, 150);
+
+		let blueprintData = [];
+
+		setTimeout(() => {
+			if (isMobile) return;
+			const blueprintCards = document.querySelectorAll(".project-card");
+			blueprintData = Array.from(blueprintCards).map(card => {
+				const svg = card.querySelector(".blueprint-svg");
+				if (!svg) return null;
+				
+				const nodes = card.querySelectorAll(".blueprint-node");
+				const nodeStates = Array.from(nodes).map(node => {
+					const transform = node.getAttribute("transform") || "";
+					const match = transform.match(/translate\(\s*([\d.-]+)\s*,\s*([\d.-]+)\s*\)/);
+					const bx = match ? parseFloat(match[1]) : 0;
+					const by = match ? parseFloat(match[2]) : 0;
+					
+					return {
+						el: node,
+						bx,
+						by,
+						x: new Spring(bx, bx, MOTION_TOKENS.springs.elasticNode.stiffness, MOTION_TOKENS.springs.elasticNode.damping),
+						y: new Spring(by, by, MOTION_TOKENS.springs.elasticNode.stiffness, MOTION_TOKENS.springs.elasticNode.damping)
+					};
+				});
+				
+				const paths = card.querySelectorAll(".connection-path, .signal-pulse");
+				const pathStates = Array.from(paths).map(path => {
+					const baseD = path.getAttribute("d") || "";
+					const coords = baseD.match(/(-?[\d.]+)/g)?.map(Number) || [];
+					return {
+						el: path,
+						baseD,
+						coords,
+						springs: coords.map(c => new Spring(c, c, MOTION_TOKENS.springs.elasticPath.stiffness, MOTION_TOKENS.springs.elasticPath.damping))
+					};
+				});
+
+				return {
+					card: card,
+					svg,
+					nodeStates,
+					pathStates
+				};
+			}).filter(Boolean);
+		}, 300);
+
+		let currentPhase = 1;
+		let loaderProgress = 0;
+		let phaseTimer = 0;
+		let lastTimestamp = 0;
+
+		const loaderPercentEl = document.getElementById("loader-percent");
+		const loaderStatusEl = document.getElementById("loader-status-code");
+		const loaderStatusTitleEl = document.getElementById("loader-status-title");
+		const loaderBarEl = document.getElementById("loader-bar-fill");
+		const loaderUiEl = document.getElementById("loader-ui");
+		const loaderOverlayEl = document.getElementById("cinematic-loader");
+		const mainContentEl = document.getElementById("main-content");
+		const ringProgress = document.querySelector(".ring-progress");
+		const ringCircumference = 502.65;
+
+		const loaderProgressSpring = new Spring(0, 0, MOTION_TOKENS.springs.softBlend.stiffness, MOTION_TOKENS.springs.softBlend.damping);
+
+		function resize() {
+			isMobile = window.innerWidth < 768;
+		}
+		window.addEventListener("resize", resize);
+
+		const statusLogs = [
+			"SYS.CORE_STAGE_01 // AMBIENT_VOID_SECTOR",
+			"DETECTION_EMERGED // CAPTURING_BEACON_PULSE",
+			"TOPOLOGY_ACTIVE // GENERATING_COORDINATE_MAP",
+			"INITIALIZING_YATHIN.ENGINEER // BOOTING_SERVICES",
+			"INTERFACE_SYSTEMS_READY // SYNC_SUCCESS"
+		];
+
+		function getGlitchedText(text, phaseProgress) {
+			if (phaseProgress >= 0.96) return text;
+			const cyberchars = ["▰", "▱", "▀", "▄", "█", "░", "▒", "▓", "⚡", "⚙", "0", "1", "[", "]", "X", "Y"];
+			let result = "";
+			for (let i = 0; i < text.length; i++) {
+				const char = text[i];
+				if (char === " " || char === "/" || char === "." || char === "_") {
+					result += char;
+				} else {
+					const threshold = Math.pow(phaseProgress, 1.4);
+					if (Math.random() > threshold) {
+						result += cyberchars[Math.floor(Math.random() * cyberchars.length)];
+					} else {
+						result += char;
+					}
+				}
+			}
+			return result;
+		}
+
+		function tick(timestamp) {
+			const dt = timestamp - (lastTimestamp || timestamp);
+			lastTimestamp = timestamp;
+
+			if (currentPhase < 5) {
+				phaseTimer += dt;
+				loaderProgress = Math.min(100, (phaseTimer / 3200) * 100);
+			}
+
+			let targetTitle = "ESTABLISHING CORE";
+			let baseText = statusLogs[0];
+			let phaseProg = 0;
+
+			if (loaderProgress < 20) {
+				currentPhase = 1;
+				targetTitle = "ESTABLISHING CORE";
+				baseText = statusLogs[0];
+				phaseProg = loaderProgress / 20;
+			} else if (loaderProgress < 45) {
+				currentPhase = 2;
+				targetTitle = "DECRYPTING LINK";
+				baseText = statusLogs[1];
+				phaseProg = (loaderProgress - 20) / 25;
+			} else if (loaderProgress < 70) {
+				currentPhase = 3;
+				targetTitle = "TOPOLOGY BOOT";
+				baseText = statusLogs[2];
+				phaseProg = (loaderProgress - 45) / 25;
+			} else if (loaderProgress < 100) {
+				currentPhase = 4;
+				targetTitle = "BOOTING MODULES";
+				baseText = statusLogs[3];
+				phaseProg = (loaderProgress - 70) / 30;
+			} else {
+				if (currentPhase < 5) {
+					currentPhase = 5;
+					triggerTransition();
+				}
+				targetTitle = "SYNC COMPLETE";
+				baseText = statusLogs[4];
+				phaseProg = 1.0;
+			}
+
+			if (loaderStatusEl && currentPhase < 5) {
+				loaderStatusEl.innerText = getGlitchedText(baseText, phaseProg);
+			} else if (loaderStatusEl && currentPhase === 5) {
+				loaderStatusEl.innerText = baseText;
+			}
+			if (loaderStatusTitleEl) {
+				loaderStatusTitleEl.innerText = targetTitle;
+			}
+
+			loaderProgressSpring.target = loaderProgress;
+			const activeProgress = loaderProgressSpring.update();
+			
+			if (loaderPercentEl) {
+				loaderPercentEl.innerText = Math.floor(activeProgress).toString().padStart(2, '0');
+			}
+			if (loaderBarEl) {
+				loaderBarEl.style.width = `${activeProgress}%`;
+			}
+			if (ringProgress) {
+				const offset = ringCircumference - (activeProgress / 100) * ringCircumference;
+				ringProgress.style.strokeDashoffset = offset.toString();
+			}
+			if (loaderUiEl) {
+				const speed = 1.0 + (activeProgress / 20.0);
+				loaderUiEl.style.setProperty("--orbit-speed", speed.toFixed(2));
+			}
+
+			if (currentPhase === 5 && !isMobile) {
+				rawMouse.x += (rawMouse.targetX - rawMouse.x) * 0.45;
+				rawMouse.y += (rawMouse.targetY - rawMouse.y) * 0.45;
+
+				mouseVelocityX *= 0.85;
+				mouseVelocityY *= 0.85;
+				mouseSpeed = Math.sqrt(mouseVelocityX * mouseVelocityX + mouseVelocityY * mouseVelocityY);
+
+				if (hoveredElement) {
+					const rect = getStableBoundingRect(hoveredElement);
+					const cx = rect.left + rect.width / 2;
+					const cy = rect.top + rect.height / 2;
+					
+					cX.target = cx;
+					cY.target = cy;
+					cWidth.target = rect.width + 12;
+					cHeight.target = rect.height + 12;
+					
+					if (hoveredElement.classList.contains("skill-badge")) {
+						cRadius.target = rect.height / 2 + 6;
+					} else {
+						cRadius.target = 8;
+					}
+					
+					cDeform.target = 1;
+					cRotation.target = 0;
+				} else {
+					cX.target = rawMouse.targetX;
+					cY.target = rawMouse.targetY;
+					cWidth.target = 40;
+					cHeight.target = 40;
+					cRadius.target = 20;
+					
+					const maxStretch = 1.35;
+					const speedThreshold = 8;
+					if (mouseSpeed > speedThreshold) {
+						const stretch = Math.min(maxStretch, 1 + (mouseSpeed - speedThreshold) * 0.015);
+						cDeform.target = stretch;
+						cRotation.target = Math.atan2(mouseVelocityY, mouseVelocityX) * (180 / Math.PI);
+					} else {
+						cDeform.target = 1;
+					}
+				}
+
+				const currentCX = cX.update();
+				const currentCY = cY.update();
+				const currentCW = cWidth.update();
+				const currentCH = cHeight.update();
+				const currentCR = cRadius.update();
+				const currentCRot = cRotation.update();
+				const currentCD = cDeform.update();
+
+				if (cursorEl) {
+					cursorEl.style.transform = `translate3d(${rawMouse.x}px, ${rawMouse.y}px, 0)`;
+					if (!cursorEl.classList.contains("active")) {
+						cursorEl.classList.add("active");
+					}
+					
+					if (xValEl && yValEl && !hoveredElement) {
+						xValEl.innerText = Math.floor(rawMouse.x).toString().padStart(3, '0');
+						yValEl.innerText = Math.floor(rawMouse.y).toString().padStart(3, '0');
+					}
+				}
+
+				const clickScale = isClicking ? 0.72 : 1.0;
+
+				if (cursorDot) {
+					const dotOffsetX = rawMouse.targetX - rawMouse.x;
+					const dotOffsetY = rawMouse.targetY - rawMouse.y;
+					cursorDot.style.transform = `translate3d(${dotOffsetX}px, ${dotOffsetY}px, 0) scale(${isClicking ? 0.6 : 1.0})`;
+				}
+
+				if (cursorRing) {
+					const ringOffsetX = currentCX - rawMouse.x;
+					const ringOffsetY = currentCY - rawMouse.y;
+					
+					let transformStr = `translate3d(${ringOffsetX}px, ${ringOffsetY}px, 0)`;
+					if (currentCD > 1.01) {
+						transformStr += ` rotate(${currentCRot}deg) scale(${currentCD * clickScale}, ${(2 - currentCD) * clickScale})`;
+					} else {
+						transformStr += ` scale(${clickScale})`;
+					}
+					cursorRing.style.transform = transformStr;
+					cursorRing.style.width = `${currentCW}px`;
+					cursorRing.style.height = `${currentCH}px`;
+					cursorRing.style.borderRadius = `${currentCR}px`;
+				}
+
+				if (cursorGlow) {
+					const glowOffsetX = currentCX - rawMouse.x;
+					const glowOffsetY = currentCY - rawMouse.y;
+					const breath = 1.0 + Math.sin(timestamp * 0.0035) * 0.08;
+					const speedFlare = mouseSpeed * 0.016;
+					const glowScale = Math.min(1.6, breath + speedFlare);
+					
+					cursorGlow.style.transform = `translate3d(${glowOffsetX}px, ${glowOffsetY}px, 0) scale(${glowScale})`;
+				}
+
+				mouseSpeed *= 0.85;
+
+				if (spatialElements.length > 0) {
+					const radiusLimit = 280;
+					
+					spatialElements.forEach(el => {
+						const rect = el.getBoundingClientRect();
+						const cx = rect.left + rect.width / 2;
+						const cy = rect.top + rect.height / 2;
+						
+						const dx = rawMouse.targetX - cx;
+						const dy = rawMouse.targetY - cy;
+						const distance = Math.sqrt(dx * dx + dy * dy);
+						
+						if (distance < radiusLimit) {
+							const proximity = Math.max(0, 1 - distance / radiusLimit);
+							const rx = rawMouse.targetX - rect.left;
+							const ry = rawMouse.targetY - rect.top;
+							
+							el.style.setProperty("--mouse-x", `${rx}px`);
+							el.style.setProperty("--mouse-y", `${ry}px`);
+							el.style.setProperty("--proximity", proximity.toFixed(3));
+						} else {
+							el.style.setProperty("--proximity", "0");
+						}
+					});
+				}
+
+				blueprintData.forEach(data => {
+					const proximity = parseFloat(data.card.style.getPropertyValue("--proximity") || "0");
+					
+					if (proximity > 0.01) {
+						const rect = data.svg.getBoundingClientRect();
+						const mX = rawMouse.targetX - rect.left;
+						const mY = rawMouse.targetY - rect.top;
+						
+						const localX = (mX / rect.width) * 320;
+						const localY = (mY / rect.height) * 80;
+						
+						data.nodeStates.forEach(ns => {
+							const dx = localX - ns.bx;
+							const dy = localY - ns.by;
+							const dist = Math.sqrt(dx * dx + dy * dy);
+							const limit = 80;
+							
+							if (dist < limit) {
+								const pull = (1 - dist / limit) * 8 * proximity;
+								const angle = Math.atan2(dy, dx);
+								ns.x.target = ns.bx + Math.cos(angle) * pull;
+								ns.y.target = ns.by + Math.sin(angle) * pull;
+							} else {
+								ns.x.target = ns.bx;
+								ns.y.target = ns.by;
+							}
+							
+							const currX = ns.x.update();
+							const currY = ns.y.update();
+							ns.el.setAttribute("transform", `translate(${currX.toFixed(2)}, ${currY.toFixed(2)})`);
+						});
+
+						data.pathStates.forEach(ps => {
+							for (let i = 0; i < ps.coords.length; i += 2) {
+								const px = ps.coords[i];
+								const py = ps.coords[i+1];
+								if (px === undefined || py === undefined) continue;
+
+								const dx = localX - px;
+								const dy = localY - py;
+								const dist = Math.sqrt(dx * dx + dy * dy);
+								const limit = 75;
+								
+								if (dist < limit) {
+									const pull = (1 - dist / limit) * 9 * proximity;
+									const angle = Math.atan2(dy, dx);
+									ps.springs[i].target = px + Math.cos(angle) * pull;
+									ps.springs[i+1].target = py + Math.sin(angle) * pull;
+								} else {
+									ps.springs[i].target = px;
+									ps.springs[i+1].target = py;
+								}
+							}
+
+							const originalParts = ps.baseD.split(/(-?[\d.]+)/);
+							let coordCount = 0;
+							const rebuiltParts = originalParts.map(part => {
+								if (/^-?[\d.]+$/.test(part)) {
+									const currentVal = ps.springs[coordCount].update();
+									coordCount++;
+									return currentVal.toFixed(1);
+								}
+								return part;
+							});
+							
+							ps.el.setAttribute("d", rebuiltParts.join(""));
+						});
+					} else {
+						data.nodeStates.forEach(ns => {
+							ns.x.target = ns.bx;
+							ns.y.target = ns.by;
+							const currX = ns.x.update();
+							const currY = ns.y.update();
+							ns.el.setAttribute("transform", `translate(${currX.toFixed(2)}, ${currY.toFixed(2)})`);
+						});
+
+						data.pathStates.forEach(ps => {
+							for (let i = 0; i < ps.coords.length; i++) {
+								ps.springs[i].target = ps.coords[i];
+							}
+							
+							const originalParts = ps.baseD.split(/(-?[\d.]+)/);
+							let coordCount = 0;
+							const rebuiltParts = originalParts.map(part => {
+								if (/^-?[\d.]+$/.test(part)) {
+									const currentVal = ps.springs[coordCount].update();
+									coordCount++;
+									return currentVal.toFixed(1);
+								}
+								return part;
+							});
+							ps.el.setAttribute("d", rebuiltParts.join(""));
+						});
+					}
+				});
+			}
+
+			requestAnimationFrame(tick);
+		}
+
+		function triggerTransition() {
+			if (loaderUiEl) {
+				loaderUiEl.style.transform = "scale(0.92) translateY(-15px)";
+				loaderUiEl.style.opacity = "0";
+			}
+
+			setTimeout(() => {
+				if (loaderOverlayEl) {
+					loaderOverlayEl.style.opacity = "0";
+					loaderOverlayEl.style.pointerEvents = "none";
+				}
+
+				if (mainContentEl) {
+					mainContentEl.style.opacity = "1";
+					mainContentEl.style.transform = "translateY(0)";
+					mainContentEl.style.pointerEvents = "all";
+				}
+
+				document.body.classList.remove("loading");
+
+				const nav = document.querySelector("nav");
+				if (nav) {
+					nav.style.transform = "translateY(0)";
+					nav.style.opacity = "1";
+				}
+
+				setTimeout(() => {
+					if (loaderOverlayEl) {
+						loaderOverlayEl.style.display = "none";
+					}
+				}, 1500);
+
+			}, 400);
+		}
+
+		// ── METEOR INTERCEPTION SYSTEM ──
+		class MeteorSystem {
+			constructor() {
+				this.container = document.getElementById("meteor-system");
+				this.scoreContainer = document.getElementById("meteor-score");
+				this.scoreValueEl = document.getElementById("meteor-score-value");
+				this.score = 0;
+				
+				if (!this.container) return;
+				this.scheduleNextSpawn();
+			}
+
+			scheduleNextSpawn() {
+				const delay = 6000 + Math.random() * 12000;
+				setTimeout(() => {
+					if (!document.hidden && currentPhase === 5) {
+						this.spawnMeteor();
+					}
+					this.scheduleNextSpawn();
+				}, delay);
+			}
+
+			spawnMeteor() {
+				const meteor = document.createElement("div");
+				meteor.className = "meteor-entity";
+				
+				const side = Math.random() > 0.5 ? 'left' : 'right';
+				const startY = Math.random() * window.innerHeight * 0.7;
+				let startX, targetX;
+				
+				if (side === 'left') {
+					startX = -50;
+					targetX = window.innerWidth + 50;
+				} else {
+					startX = window.innerWidth + 50;
+					targetX = -50;
+				}
+				
+				const targetY = startY + (Math.random() * 400 - 100);
+				const angle = Math.atan2(targetY - startY, targetX - startX);
+				
+				const duration = 12000 + Math.random() * 8000; // Very slow, ambient, cinematic drifting
+				
+				meteor.style.left = `${startX}px`;
+				meteor.style.top = `${startY}px`;
+				
+				this.container.appendChild(meteor);
+				
+				const startTime = performance.now();
+				let animationFrame;
+				
+				const animate = (currentTime) => {
+					if (meteor.dataset.destroyed === "true") return;
+					
+					const elapsed = currentTime - startTime;
+					const progress = elapsed / duration;
+					
+					if (progress >= 1) {
+						meteor.remove();
+						return;
+					}
+					
+					const currentX = startX + (targetX - startX) * progress;
+					const currentY = startY + (targetY - startY) * progress;
+					
+					meteor.style.transform = `translate(${currentX - startX}px, ${currentY - startY}px) rotate(${angle}rad)`;
+					
+					animationFrame = requestAnimationFrame(animate);
+				};
+				
+				animationFrame = requestAnimationFrame(animate);
+				
+				meteor.addEventListener("mousedown", (e) => {
+					if (e.button !== 0) return;
+					e.stopPropagation();
+					if (meteor.dataset.destroyed === "true") return;
+					
+					meteor.dataset.destroyed = "true";
+					cancelAnimationFrame(animationFrame);
+					
+					const rect = meteor.getBoundingClientRect();
+					const hitX = rect.left + rect.width / 2;
+					const hitY = rect.top + rect.height / 2;
+					
+					this.interceptMeteor(meteor, hitX, hitY);
+				});
+			}
+
+			interceptMeteor(meteor, x, y) {
+				// Score update
+				this.score++;
+				if (this.scoreValueEl) {
+					this.scoreValueEl.innerText = this.score.toString().padStart(2, '0');
+				}
+				if (this.scoreContainer && !this.scoreContainer.classList.contains("visible")) {
+					this.scoreContainer.classList.add("visible");
+				}
+
+				// Destruction class triggers CSS animation
+				meteor.classList.add("destroyed");
+				
+				// Particles
+				const particleCount = 8 + Math.floor(Math.random() * 5);
+				for (let i = 0; i < particleCount; i++) {
+					this.spawnParticle(x, y);
+				}
+				
+				// Atmospheric ripple
+				this.spawnRipple(x, y);
+
+				// Soft ambient flash
+				const flash = document.createElement("div");
+				flash.style.position = "fixed";
+				flash.style.inset = "0";
+				flash.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(249, 115, 22, 0.06) 0%, transparent 40%)`;
+				flash.style.pointerEvents = "none";
+				flash.style.zIndex = "49";
+				flash.style.opacity = "1";
+				flash.style.transition = "opacity 0.8s ease-out";
+				document.body.appendChild(flash);
+				
+				// Cleanup
+				setTimeout(() => { flash.style.opacity = "0"; }, 50);
+				setTimeout(() => { flash.remove(); }, 850);
+				setTimeout(() => { meteor.remove(); }, 600);
+			}
+
+			spawnParticle(x, y) {
+				const p = document.createElement("div");
+				p.className = "meteor-particle";
+				p.style.left = `${x}px`;
+				p.style.top = `${y}px`;
+				
+				const angle = Math.random() * Math.PI * 2;
+				const velocity = 0.5 + Math.random() * 2.5;
+				const vx = Math.cos(angle) * velocity;
+				const vy = Math.sin(angle) * velocity;
+				const duration = 800 + Math.random() * 500;
+				
+				this.container.appendChild(p);
+				
+				const startTime = performance.now();
+				const animateP = (currentTime) => {
+					const elapsed = currentTime - startTime;
+					const progress = elapsed / duration;
+					
+					if (progress >= 1) {
+						p.remove();
+						return;
+					}
+					
+					const currentX = x + vx * elapsed * 0.1;
+					const currentY = y + vy * elapsed * 0.1 + (elapsed * elapsed * 0.0002);
+					const opacity = 1 - Math.pow(progress, 1.5);
+					
+					p.style.transform = `translate(${currentX - x}px, ${currentY - y}px) scale(${1 - progress})`;
+					p.style.opacity = opacity;
+					
+					requestAnimationFrame(animateP);
+				};
+				
+				requestAnimationFrame(animateP);
+			}
+
+			spawnRipple(x, y) {
+				const ripple = document.createElement("div");
+				ripple.className = "meteor-ripple";
+				ripple.style.left = `${x}px`;
+				ripple.style.top = `${y}px`;
+				ripple.style.width = "10px";
+				ripple.style.height = "10px";
+				
+				this.container.appendChild(ripple);
+				
+				const startTime = performance.now();
+				const duration = 1400;
+				
+				const animateR = (currentTime) => {
+					const elapsed = currentTime - startTime;
+					const progress = elapsed / duration;
+					
+					if (progress >= 1) {
+						ripple.remove();
+						return;
+					}
+					
+					const easeOut = 1 - Math.pow(1 - progress, 3);
+					const scale = 1 + easeOut * 25;
+					const opacity = 1 - progress;
+					
+					ripple.style.transform = `translate(-50%, -50%) scale(${scale})`;
+					ripple.style.opacity = opacity * 0.8;
+					
+					requestAnimationFrame(animateR);
+				};
+				
+				requestAnimationFrame(animateR);
+			}
+		}
+
+		// Initialize interactive systems
+		new MeteorSystem();
+
+		document.body.classList.add("loading");
+		requestAnimationFrame(tick);
+	});
+</script>
