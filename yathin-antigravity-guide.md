@@ -384,7 +384,6 @@ Personal details:
 - Name: Yathin
 - Age: 19
 - Role: CS Engineering Student & AI Builder
-- University: Vidyavardhaka College of Engineering
 
 Design — full viewport height (100vh), dark (#0a0a0a), glassmorphism + orange (#f97316) accents:
 
@@ -396,7 +395,7 @@ Layout (centered, vertical flex):
    - "I Engineer Intelligent Systems."
    - "I Turn Ideas Into Code."
    - "CS Student. AI Builder. Tech Obsessed."
-4. Subtitle: "Building Iron Man-inspired AI at 19 · Vidyavardhaka College of Engineering" in muted gray text
+4. Subtitle: "Building Iron Man-inspired AI at 19 · Computer Science Engineering" in muted gray text
 5. Two buttons side by side:
    - "View My Projects" → scrolls to #projects — glass style with orange border and glow
    - "GitHub ↗" → opens https://github.com/YathinTHEBUILDER in new tab — ghost style
@@ -428,7 +427,7 @@ LEFT COLUMN:
 - Large "YG" monogram: 200px circle, glassmorphism bg (bg-white/5 backdrop-blur), orange gradient border (3px), Orbitron font, orange text, slight shadow glow
 - Below it: Name "Yathin" in Orbitron
 - Below: "CS Engineering Student" in orange
-- Below: "Vidyavardhaka College of Engineering" in small muted gray text
+- Below: "Computer Science Engineering" in small muted gray text
 - Below: "Mysuru, Karnataka 🇮🇳" in very small muted text
 
 RIGHT COLUMN:
@@ -437,7 +436,7 @@ RIGHT COLUMN:
   
   I'm Yathin — a 19-year-old Computer Science Engineering student driven by an obsession with Artificial Intelligence and intelligent systems. From building Iron Man-inspired voice assistants like J.A.R.V.I.S and F.R.I.D.A.Y, to exploring the bleeding edge of computer vision and LLM APIs — I don't just study technology, I build with it.
   
-  Currently in my first year at VCE and already shipping real AI products."
+  Currently in my first year of college and already shipping real AI products."
 
 - Stats row (3 equal glass cards below bio):
   Card 1: "2+" above "AI Projects Shipped"
@@ -956,5 +955,5 @@ Antigravity's free tier has generous rate limits that reset every 5 hours. If yo
 
 ---
 
-*Built specifically for Yathin · VCE · 2025*
+*Built specifically for Yathin · 2026*
 *Stack: Astro + Tailwind CSS · Tool: Google Antigravity · Host: Vercel*
