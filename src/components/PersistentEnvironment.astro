@@ -11,16 +11,29 @@
 	<div class="ambient-glow glow-3"></div>
 	<div class="cinematic-haze"></div>
 	<div class="infrastructure-grid"></div>
+	<canvas id="particle-background-canvas" class="particle-background-canvas"></canvas>
 </div>
 
-<!-- Interactive Ambient Layer -->
-<div id="meteor-system"></div>
-<div id="meteor-score" class="meteor-score">
-	<span class="score-label">INTERCEPTIONS</span>
-	<span class="score-value" id="meteor-score-value">00</span>
+<!-- Modern Futuristic Neon Glowing Custom Cursor System -->
+<div id="neon-cursor-system" class="neon-cursor-system">
+	<div class="cursor-core"></div>
+	<div class="cursor-glow-ring"></div>
+	<canvas id="cursor-trail-canvas" class="cursor-trail-canvas"></canvas>
 </div>
 
 <style is:global>
+	*, *::before, *::after {
+		user-select: none !important;
+		-webkit-user-select: none !important;
+		-webkit-user-drag: none !important;
+		-webkit-touch-callout: none !important;
+	}
+	input, textarea {
+		user-select: auto !important;
+		-webkit-user-select: auto !important;
+		-webkit-user-drag: auto !important;
+	}
+
 	#cinematic-background {
 		position: fixed;
 		inset: 0;
@@ -100,6 +113,15 @@
 		animation: grid-drift 30s linear infinite;
 	}
 
+	.particle-background-canvas {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 2;
+		pointer-events: none;
+	}
+
 	@keyframes drift {
 		0% { transform: translate(0, 0) scale(1); opacity: 0.4; }
 		50% { transform: translate(5%, 5%) scale(1.05); opacity: 0.6; }
@@ -121,108 +143,93 @@
 		}
 	}
 
-	/* ── METEOR SYSTEM STYLES ── */
-	#meteor-system {
+	/* ── MODERN FUTURISTIC NEON GLOWING CUSTOM CURSOR SYSTEM ── */
+	:root {
+		--accent: #f97316;
+		--accent-glow: rgba(249, 115, 22, 0.35);
+	}
+
+	/* Neon Cursor System container */
+	.neon-cursor-system {
+		display: none;
 		position: fixed;
 		inset: 0;
-		z-index: 50;
 		pointer-events: none;
-		overflow: hidden;
-	}
-
-	.meteor-score {
-		position: fixed;
-		bottom: 2.5rem;
-		right: 2.5rem;
-		display: flex;
-		flex-direction: column;
-		align-items: flex-end;
-		font-family: "Orbitron", sans-serif;
+		z-index: 999999;
 		opacity: 0;
-		transition: opacity 1.5s ease;
-		pointer-events: none;
-		z-index: 50;
-		mix-blend-mode: screen;
+		transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
-	.meteor-score.visible {
-		opacity: 0.35;
-	}
-
-	.meteor-score .score-label {
-		font-size: 0.5rem;
-		letter-spacing: 0.35em;
-		color: #888;
-		margin-bottom: -2px;
-	}
-
-	.meteor-score .score-value {
-		font-size: 1.1rem;
-		font-weight: 700;
-		color: rgba(249, 115, 22, 0.9);
-		text-shadow: 0 0 10px rgba(249, 115, 22, 0.4);
-		font-variant-numeric: tabular-nums;
-	}
-
-	.meteor-entity {
-		position: absolute;
-		width: 4px;
-		height: 4px;
-		background: #fff;
-		border-radius: 50%;
-		box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.9), 0 0 20px 4px rgba(249, 115, 22, 0.4);
-		pointer-events: auto;
-		cursor: crosshair;
-		will-change: transform, opacity;
-		z-index: 3;
-		/* Invisible padding expands clickable hitbox */
-		padding: 12px;
-		margin: -12px;
-		background-clip: content-box;
-	}
-
-	.meteor-entity::before {
-		content: '';
-		position: absolute;
-		top: 50%;
-		right: 100%;
-		width: 70px;
-		height: 1.5px;
-		background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.5) 60%, rgba(255, 255, 255, 0.8));
-		transform: translateY(-50%);
-		pointer-events: none;
-	}
-
-	.meteor-entity.destroyed {
-		opacity: 0 !important;
-		transform: scale(2) !important;
-		box-shadow: 0 0 25px 6px rgba(249, 115, 22, 0.8) !important;
-		transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
-	}
-
-	.meteor-particle {
-		position: absolute;
-		width: 2px;
-		height: 2px;
-		background: rgba(249, 115, 22, 0.9);
-		border-radius: 50%;
-		pointer-events: none;
-		box-shadow: 0 0 8px rgba(249, 115, 22, 0.6);
-		will-change: transform, opacity;
-	}
-
-	.meteor-ripple {
-		position: absolute;
-		border-radius: 50%;
-		border: 1px solid rgba(249, 115, 22, 0.5);
-		pointer-events: none;
-		transform: translate(-50%, -50%) scale(0);
+	.neon-cursor-system.active {
 		opacity: 1;
-		will-change: transform, opacity;
+	}
+
+	/* Disable standard cursor for non-touch devices with fine pointers */
+	@media (hover: hover) and (pointer: fine) {
+		html, body, a, button, [role="button"], input, select, textarea, [onclick], .skill-badge, .project-card, .contact-card, .achievement-card, .link, .btn-primary, .btn-ghost {
+			cursor: none !important;
+		}
+		.neon-cursor-system {
+			display: block;
+		}
+	}
+
+	@media (hover: none) or (pointer: coarse) {
+		.neon-cursor-system {
+			display: none !important;
+		}
+	}
+
+	/* Small, sharp, bright core dot */
+	.cursor-core {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 8px;
+		height: 8px;
+		background: #ffffff;
+		border-radius: 50%;
+		transform: translate(-50%, -50%);
+		will-change: transform;
+		z-index: 10;
+		box-shadow: 0 0 10px #ffffff, 0 0 18px var(--accent);
+		transition: background-color 0.25s ease;
+	}
+
+	/* Larger blurred halo trailing slightly behind */
+	.cursor-glow-ring {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 36px;
+		height: 36px;
+		border: 1.5px solid rgba(249, 115, 22, 0.4);
+		background: rgba(249, 115, 22, 0.03);
+		border-radius: 50%;
+		transform: translate(-50%, -50%);
+		will-change: transform, width, height, border-color, background-color, box-shadow;
+		z-index: 5;
+		box-shadow: 0 0 15px rgba(249, 115, 22, 0.15), inset 0 0 10px rgba(249, 115, 22, 0.1);
+	}
+
+	/* Full-screen high-performance canvas trail */
+	.cursor-trail-canvas {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		pointer-events: none;
+		z-index: 4;
+		mix-blend-mode: screen;
 	}
 </style>
 
 <script>
+	// ── GLOBAL PROJECT PROTECTION: DISABLE RIGHT CLICK & SELECTION ──
+	document.addEventListener("contextmenu", (e) => e.preventDefault());
+	document.addEventListener("dragstart", (e) => e.preventDefault());
+
 	// ── GLOBAL UNIFIED MOTION DESIGN SYSTEM CONSTANTS ──
 	const MOTION_TOKENS = {
 		duration: {
@@ -242,6 +249,12 @@
 	};
 
 	class Spring {
+		val: number;
+		target: number;
+		vel: number;
+		stiffness: number;
+		damping: number;
+
 		constructor(val = 0, target = 0, stiffness = 0.05, damping = 0.15) {
 			this.val = val;
 			this.target = target;
@@ -261,7 +274,6 @@
 
 	document.addEventListener("DOMContentLoaded", () => {
 		let isMobile = window.innerWidth < 768;
-
 		const rawMouse = { 
 			x: window.innerWidth / 2, 
 			y: window.innerHeight / 2, 
@@ -270,109 +282,139 @@
 		};
 		let lastMouseX = rawMouse.targetX;
 		let lastMouseY = rawMouse.targetY;
-		let mouseVelocityX = 0;
-		let mouseVelocityY = 0;
-		let mouseSpeed = 0;
 
-		const cursorEl = document.getElementById("spatial-cursor-system");
-		const cursorDot = cursorEl?.querySelector(".cursor-dot");
-		const cursorRing = cursorEl?.querySelector(".cursor-ring");
-		const cursorGlow = cursorEl?.querySelector(".cursor-glow");
-		const xValEl = cursorEl?.querySelector(".x-val");
-		const yValEl = cursorEl?.querySelector(".y-val");
+		// New custom cursor DOM cache
+		const cursorEl = document.getElementById("neon-cursor-system");
+		const cursorCore = cursorEl?.querySelector(".cursor-core") as HTMLElement | null;
+		const cursorGlowRing = cursorEl?.querySelector(".cursor-glow-ring") as HTMLElement | null;
+		const canvas = document.getElementById("cursor-trail-canvas") as HTMLCanvasElement | null;
+		const ctx = canvas ? canvas.getContext("2d") : null;
 
-		const cX = new Spring(rawMouse.targetX, rawMouse.targetX, MOTION_TOKENS.springs.cursorTrack.stiffness, MOTION_TOKENS.springs.cursorTrack.damping);
-		const cY = new Spring(rawMouse.targetY, rawMouse.targetY, MOTION_TOKENS.springs.cursorTrack.stiffness, MOTION_TOKENS.springs.cursorTrack.damping);
-		const cWidth = new Spring(48, 48, MOTION_TOKENS.springs.cursorTrack.stiffness, MOTION_TOKENS.springs.cursorTrack.damping);
-		const cHeight = new Spring(48, 48, MOTION_TOKENS.springs.cursorTrack.stiffness, MOTION_TOKENS.springs.cursorTrack.damping);
-		const cRadius = new Spring(24, 24, MOTION_TOKENS.springs.cursorTrack.stiffness, MOTION_TOKENS.springs.cursorTrack.damping);
-		const cRotation = new Spring(0, 0, MOTION_TOKENS.springs.cursorTrack.stiffness, MOTION_TOKENS.springs.cursorTrack.damping);
-		const cDeform = new Spring(1, 1, MOTION_TOKENS.springs.cursorDeform.stiffness, MOTION_TOKENS.springs.cursorDeform.damping);
+		// Particle Background DOM cache & state
+		const partCanvas = document.getElementById("particle-background-canvas") as HTMLCanvasElement | null;
+		const partCtx = partCanvas ? partCanvas.getContext("2d") : null;
 
-		function getStableBoundingRect(el) {
-			let top = 0;
-			let left = 0;
-			const width = el.offsetWidth;
-			const height = el.offsetHeight;
-			
-			let current = el;
-			while (current) {
-				top += current.offsetTop || 0;
-				left += current.offsetLeft || 0;
-				current = current.offsetParent;
-			}
-			
-			return {
-				left: left - window.scrollX,
-				top: top - window.scrollY,
-				width,
-				height
-			};
+		let currentScrollY = window.scrollY || 0;
+		let lastScrollY = currentScrollY;
+		window.addEventListener("scroll", () => {
+			currentScrollY = window.scrollY || 0;
+		});
+
+		// Initialize Background Particles
+		const bgParticleCount = isMobile ? 35 : 75;
+		const bgParticles: Array<{
+			x: number;
+			y: number;
+			vx: number;
+			vy: number;
+			size: number;
+			baseAlpha: number;
+			alpha: number;
+			color: string;
+			parallaxFactor: number;
+		}> = [];
+
+		const palette = ["#3b82f6", "#f97316", "#a855f7", "#ffffff"];
+
+		for (let i = 0; i < bgParticleCount; i++) {
+			const size = Math.random() * 1.8 + 0.8;
+			bgParticles.push({
+				x: Math.random() * window.innerWidth,
+				y: Math.random() * window.innerHeight,
+				vx: (Math.random() - 0.5) * 0.5,
+				vy: (Math.random() - 0.5) * 0.5,
+				size: size,
+				baseAlpha: Math.random() * 0.35 + 0.15,
+				alpha: 0,
+				color: palette[Math.floor(Math.random() * palette.length)],
+				parallaxFactor: size * 0.35
+			});
 		}
 
-		let hoveredElement = null;
+		// Interpolated cursor states
+		const core = { x: rawMouse.targetX, y: rawMouse.targetY };
+		const ring = { x: rawMouse.targetX, y: rawMouse.targetY };
+		
+		// Responsive interactive sizing
+		const coreSize = { current: 8, target: 8 };
+		const ringSize = { current: 36, target: 36 };
+
+		// Smooth Ribbon Trail history buffer
+		const trailMax = 24;
+		const trailPoints = Array.from({ length: trailMax }, () => ({ x: rawMouse.targetX, y: rawMouse.targetY }));
+
+		// Floating Spark particles array
+		const sparkParticles: Array<{
+			x: number;
+			y: number;
+			vx: number;
+			vy: number;
+			size: number;
+			alpha: number;
+			age: number;
+			maxAge: number;
+		}> = [];
+
+		function resizeCanvas() {
+			if (canvas) {
+				canvas.width = window.innerWidth;
+				canvas.height = window.innerHeight;
+			}
+			if (partCanvas) {
+				partCanvas.width = window.innerWidth;
+				partCanvas.height = window.innerHeight;
+				bgParticles.forEach(p => {
+					if (p.x > partCanvas.width) p.x = Math.random() * partCanvas.width;
+					if (p.y > partCanvas.height) p.y = Math.random() * partCanvas.height;
+				});
+			}
+		}
+		window.addEventListener("resize", resizeCanvas);
+		resizeCanvas();
+
+		let hoveredElement: HTMLElement | null = null;
+		let isHovered = false;
 		let isClicking = false;
 
 		window.addEventListener("mousemove", (e) => {
 			rawMouse.targetX = e.clientX;
 			rawMouse.targetY = e.clientY;
-			
-			if (!isMobile) {
-				mouseVelocityX = e.clientX - lastMouseX;
-				mouseVelocityY = e.clientY - lastMouseY;
-				mouseSpeed = Math.sqrt(mouseVelocityX * mouseVelocityX + mouseVelocityY * mouseVelocityY);
-				
-				lastMouseX = e.clientX;
-				lastMouseY = e.clientY;
-			}
 		});
 
 		window.addEventListener("mousedown", (e) => {
 			if (e.button !== 0) return; 
 			isClicking = true;
-			cursorEl?.classList.add("clicking");
-			const ripple = cursorEl?.querySelector(".cursor-click-ripple");
-			if (ripple) {
-				ripple.classList.remove("ping");
-				void ripple.offsetWidth;
-				ripple.classList.add("ping");
-			}
 		});
 
 		window.addEventListener("mouseup", (e) => {
 			if (e.button !== 0) return;
 			isClicking = false;
-			cursorEl?.classList.remove("clicking");
-		});
-
-		window.addEventListener("contextmenu", (e) => {
-			e.preventDefault();
 		});
 
 		document.addEventListener("mouseover", (e) => {
 			if (isMobile) return; 
-			const target = e.target;
-			const interactive = target.closest("a, button, [role='button'], .skill-badge");
+			const target = e.target as HTMLElement | null;
+			if (!target) return;
+			const interactive = target.closest("a, button, [role='button'], .skill-badge, .project-card, .contact-card, .achievement-card, .link, .btn-primary, .btn-ghost");
 			if (interactive) {
-				if (interactive.classList.contains("contact-card")) return; 
-				hoveredElement = interactive;
-				cursorEl?.classList.add("snapped");
+				hoveredElement = interactive as HTMLElement;
+				isHovered = true;
 			}
 		});
 
 		document.addEventListener("mouseout", (e) => {
 			if (isMobile) return;
-			const related = e.relatedTarget;
+			const related = e.relatedTarget as HTMLElement | null;
 			if (hoveredElement && (!related || !hoveredElement.contains(related))) {
 				hoveredElement = null;
-				cursorEl?.classList.remove("snapped");
+				isHovered = false;
 			}
 		});
 
-		const spatialElements = [];
+		const spatialElements: HTMLElement[] = [];
 		const spatialObserver = new IntersectionObserver((entries) => {
 			entries.forEach(entry => {
-				const el = entry.target;
+				const el = entry.target as HTMLElement;
 				if (entry.isIntersecting) {
 					if (!spatialElements.includes(el)) {
 						spatialElements.push(el);
@@ -392,7 +434,7 @@
 			});
 		}, 150);
 
-		let blueprintData = [];
+		let blueprintData: any[] = [];
 
 		setTimeout(() => {
 			if (isMobile) return;
@@ -450,7 +492,7 @@
 		const loaderUiEl = document.getElementById("loader-ui");
 		const loaderOverlayEl = document.getElementById("cinematic-loader");
 		const mainContentEl = document.getElementById("main-content");
-		const ringProgress = document.querySelector(".ring-progress");
+		const ringProgress = document.querySelector(".ring-progress") as HTMLElement | null;
 		const ringCircumference = 502.65;
 
 		const loaderProgressSpring = new Spring(0, 0, MOTION_TOKENS.springs.softBlend.stiffness, MOTION_TOKENS.springs.softBlend.damping);
@@ -468,7 +510,7 @@
 			"INTERFACE_SYSTEMS_READY // SYNC_SUCCESS"
 		];
 
-		function getGlitchedText(text, phaseProgress) {
+		function getGlitchedText(text: string, phaseProgress: number) {
 			if (phaseProgress >= 0.96) return text;
 			const cyberchars = ["▰", "▱", "▀", "▄", "█", "░", "▒", "▓", "⚡", "⚙", "0", "1", "[", "]", "X", "Y"];
 			let result = "";
@@ -488,7 +530,7 @@
 			return result;
 		}
 
-		function tick(timestamp) {
+		function tick(timestamp: number) {
 			const dt = timestamp - (lastTimestamp || timestamp);
 			lastTimestamp = timestamp;
 
@@ -559,122 +601,272 @@
 			}
 
 			if (currentPhase === 5 && !isMobile) {
-				rawMouse.x += (rawMouse.targetX - rawMouse.x) * 0.45;
-				rawMouse.y += (rawMouse.targetY - rawMouse.y) * 0.45;
+				// 1. Core Position Easing (Faster, buttery smooth tracking to eliminate lag)
+				core.x += (rawMouse.targetX - core.x) * 0.65;
+				core.y += (rawMouse.targetY - core.y) * 0.65;
 
-				mouseVelocityX *= 0.85;
-				mouseVelocityY *= 0.85;
-				mouseSpeed = Math.sqrt(mouseVelocityX * mouseVelocityX + mouseVelocityY * mouseVelocityY);
+				// 2. Glow Ring Position Easing (Smooth, elegant trailing)
+				ring.x += (core.x - ring.x) * 0.25;
+				ring.y += (core.y - ring.y) * 0.25;
 
-				if (hoveredElement) {
-					const rect = getStableBoundingRect(hoveredElement);
-					const cx = rect.left + rect.width / 2;
-					const cy = rect.top + rect.height / 2;
-					
-					cX.target = cx;
-					cY.target = cy;
-					cWidth.target = rect.width + 12;
-					cHeight.target = rect.height + 12;
-					
-					if (hoveredElement.classList.contains("skill-badge")) {
-						cRadius.target = rect.height / 2 + 6;
-					} else {
-						cRadius.target = 8;
-					}
-					
-					cDeform.target = 1;
-					cRotation.target = 0;
+				// 3. Dynamic Interactive Sizing & Pulse Animation
+				if (isClicking) {
+					coreSize.target = 4;
+					ringSize.target = 18;
+				} else if (isHovered) {
+					coreSize.target = 10;
+					ringSize.target = 52;
 				} else {
-					cX.target = rawMouse.targetX;
-					cY.target = rawMouse.targetY;
-					cWidth.target = 40;
-					cHeight.target = 40;
-					cRadius.target = 20;
-					
-					const maxStretch = 1.35;
-					const speedThreshold = 8;
-					if (mouseSpeed > speedThreshold) {
-						const stretch = Math.min(maxStretch, 1 + (mouseSpeed - speedThreshold) * 0.015);
-						cDeform.target = stretch;
-						cRotation.target = Math.atan2(mouseVelocityY, mouseVelocityX) * (180 / Math.PI);
-					} else {
-						cDeform.target = 1;
-					}
+					coreSize.target = 8;
+					ringSize.target = 36;
 				}
+				coreSize.current += (coreSize.target - coreSize.current) * 0.2;
+				ringSize.current += (ringSize.target - ringSize.current) * 0.15;
 
-				const currentCX = cX.update();
-				const currentCY = cY.update();
-				const currentCW = cWidth.update();
-				const currentCH = cHeight.update();
-				const currentCR = cRadius.update();
-				const currentCRot = cRotation.update();
-				const currentCD = cDeform.update();
-
+				// 4. Update core and ring DOM elements
 				if (cursorEl) {
-					cursorEl.style.transform = `translate3d(${rawMouse.x}px, ${rawMouse.y}px, 0)`;
 					if (!cursorEl.classList.contains("active")) {
 						cursorEl.classList.add("active");
 					}
-					
-					if (xValEl && yValEl && !hoveredElement) {
-						xValEl.innerText = Math.floor(rawMouse.x).toString().padStart(3, '0');
-						yValEl.innerText = Math.floor(rawMouse.y).toString().padStart(3, '0');
+
+					if (cursorCore) {
+						cursorCore.style.transform = `translate3d(${core.x}px, ${core.y}px, 0) translate(-50%, -50%)`;
+						cursorCore.style.width = `${coreSize.current}px`;
+						cursorCore.style.height = `${coreSize.current}px`;
+					}
+
+					if (cursorGlowRing) {
+						cursorGlowRing.style.transform = `translate3d(${ring.x}px, ${ring.y}px, 0) translate(-50%, -50%)`;
+						cursorGlowRing.style.width = `${ringSize.current}px`;
+						cursorGlowRing.style.height = `${ringSize.current}px`;
+
+						if (isHovered) {
+							cursorGlowRing.style.borderColor = 'var(--accent, #f97316)';
+							cursorGlowRing.style.backgroundColor = 'rgba(249, 115, 22, 0.08)';
+							cursorGlowRing.style.boxShadow = '0 0 25px rgba(249, 115, 22, 0.45), inset 0 0 15px rgba(249, 115, 22, 0.2)';
+						} else if (isClicking) {
+							cursorGlowRing.style.borderColor = 'rgba(255, 255, 255, 0.8)';
+							cursorGlowRing.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
+							cursorGlowRing.style.boxShadow = '0 0 35px rgba(255, 255, 255, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.3)';
+						} else {
+							cursorGlowRing.style.borderColor = 'rgba(249, 115, 22, 0.4)';
+							cursorGlowRing.style.backgroundColor = 'rgba(249, 115, 22, 0.03)';
+							cursorGlowRing.style.boxShadow = '0 0 15px rgba(249, 115, 22, 0.15), inset 0 0 10px rgba(249, 115, 22, 0.1)';
+						}
 					}
 				}
 
-				const clickScale = isClicking ? 0.72 : 1.0;
+				// 5. High-fidelity Fluid Trail & Plasma Sparks
+				let dx = rawMouse.targetX - lastMouseX;
+				let dy = rawMouse.targetY - lastMouseY;
+				lastMouseX = rawMouse.targetX;
+				lastMouseY = rawMouse.targetY;
 
-				if (cursorDot) {
-					const dotOffsetX = rawMouse.targetX - rawMouse.x;
-					const dotOffsetY = rawMouse.targetY - rawMouse.y;
-					cursorDot.style.transform = `translate3d(${dotOffsetX}px, ${dotOffsetY}px, 0) scale(${isClicking ? 0.6 : 1.0})`;
+				// Update head of the smooth ribbon trail to match core position
+				trailPoints[0].x = core.x;
+				trailPoints[0].y = core.y;
+
+				// Lerp the rest of the chain for buttery smooth continuous trailing
+				for (let i = 1; i < trailPoints.length; i++) {
+					const prev = trailPoints[i - 1];
+					const curr = trailPoints[i];
+					curr.x += (prev.x - curr.x) * 0.55;
+					curr.y += (prev.y - curr.y) * 0.55;
 				}
 
-				if (cursorRing) {
-					const ringOffsetX = currentCX - rawMouse.x;
-					const ringOffsetY = currentCY - rawMouse.y;
-					
-					let transformStr = `translate3d(${ringOffsetX}px, ${ringOffsetY}px, 0)`;
-					if (currentCD > 1.01) {
-						transformStr += ` rotate(${currentCRot}deg) scale(${currentCD * clickScale}, ${(2 - currentCD) * clickScale})`;
-					} else {
-						transformStr += ` scale(${clickScale})`;
+				const speed = Math.sqrt(dx * dx + dy * dy);
+				const spawnCount = isClicking ? 3 : (isHovered ? 2 : (speed > 1 ? 1 : 0));
+
+				// Spawn spark particles on movement or click
+				if (spawnCount > 0 || Math.random() < 0.1) {
+					for (let i = 0; i < spawnCount; i++) {
+						if (sparkParticles.length < 35) {
+							sparkParticles.push({
+								x: core.x,
+								y: core.y,
+								vx: (dx * 0.08) + (Math.random() - 0.5) * 1.2,
+								vy: (dy * 0.08) + (Math.random() - 0.5) * 1.2,
+								size: (isHovered ? 12 : (isClicking ? 16 : 6)) * (0.6 + Math.random() * 0.6),
+								alpha: isClicking ? 0.9 : (isHovered ? 0.8 : 0.6),
+								age: 0,
+								maxAge: 20 + Math.random() * 20
+							});
+						}
 					}
-					cursorRing.style.transform = transformStr;
-					cursorRing.style.width = `${currentCW}px`;
-					cursorRing.style.height = `${currentCH}px`;
-					cursorRing.style.borderRadius = `${currentCR}px`;
 				}
 
-				if (cursorGlow) {
-					const glowOffsetX = currentCX - rawMouse.x;
-					const glowOffsetY = currentCY - rawMouse.y;
-					const breath = 1.0 + Math.sin(timestamp * 0.0035) * 0.08;
-					const speedFlare = mouseSpeed * 0.016;
-					const glowScale = Math.min(1.6, breath + speedFlare);
+				// Update spark particles
+				for (let i = sparkParticles.length - 1; i >= 0; i--) {
+					const p = sparkParticles[i];
+					p.age++;
+					if (p.age >= p.maxAge) {
+						sparkParticles.splice(i, 1);
+						continue;
+					}
+
+					p.vx *= 0.95;
+					p.vy *= 0.95;
+					p.x += p.vx;
+					p.y += p.vy - 0.15; // warm thermal rise
+				}
+
+				// Render glowing trail and sparks on Canvas
+				if (ctx && canvas) {
+					ctx.clearRect(0, 0, canvas.width, canvas.height);
+					ctx.globalCompositeOperation = "screen";
+
+					// Render smooth tapered ribbon trail
+					for (let i = 0; i < trailPoints.length - 2; i++) {
+						const p1 = trailPoints[i];
+						const p2 = trailPoints[i + 1];
+						const p3 = trailPoints[i + 2];
+						const xc = (p2.x + p3.x) / 2;
+						const yc = (p2.y + p3.y) / 2;
+
+						const ratio = i / (trailPoints.length - 2);
+						const alpha = (isClicking ? 0.7 : (isHovered ? 0.5 : 0.35)) * (1 - Math.pow(ratio, 0.7));
+						const width = (isClicking ? 10 : (isHovered ? 8 : 5)) * (1 - ratio);
+
+						if (alpha <= 0.01 || width <= 0.1) continue;
+
+						ctx.beginPath();
+						ctx.moveTo(p1.x, p1.y);
+						ctx.quadraticCurveTo(p2.x, p2.y, xc, yc);
+						ctx.strokeStyle = isClicking ? `rgba(255, 255, 255, ${alpha})` : `rgba(249, 115, 22, ${alpha})`;
+						ctx.lineWidth = width;
+						ctx.lineCap = "round";
+						ctx.lineJoin = "round";
+						ctx.shadowBlur = i < 3 ? (isClicking ? 25 : (isHovered ? 15 : 10)) : 0;
+						ctx.shadowColor = isClicking ? 'rgba(255, 255, 255, 0.8)' : 'rgba(249, 115, 22, 0.7)';
+						ctx.stroke();
+					}
+
+					// Render soft plasma halo circular spark particles
+					sparkParticles.forEach(p => {
+						const ratio = p.age / p.maxAge;
+						const currentAlpha = p.alpha * (1 - ratio);
+						const currentSize = Math.max(0.1, p.size * (1 - ratio * 0.5));
+
+						const radGrad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, currentSize);
+						if (isClicking) {
+							radGrad.addColorStop(0, `rgba(255, 255, 255, ${currentAlpha})`);
+							radGrad.addColorStop(0.3, `rgba(249, 115, 22, ${currentAlpha * 0.7})`);
+							radGrad.addColorStop(0.8, `rgba(249, 115, 22, ${currentAlpha * 0.15})`);
+						} else {
+							radGrad.addColorStop(0, `rgba(255, 255, 255, ${currentAlpha * 0.95})`);
+							radGrad.addColorStop(0.2, `rgba(249, 115, 22, ${currentAlpha * 0.8})`);
+							radGrad.addColorStop(0.7, `rgba(249, 115, 22, ${currentAlpha * 0.18})`);
+						}
+						radGrad.addColorStop(1, 'rgba(249, 115, 22, 0)');
+
+						ctx.fillStyle = radGrad;
+						ctx.beginPath();
+						ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2);
+						ctx.fill();
+					});
+				}
+
+				// Render background particle system with hover interactions and scroll animations
+				if (partCtx && partCanvas) {
+					partCtx.clearRect(0, 0, partCanvas.width, partCanvas.height);
 					
-					cursorGlow.style.transform = `translate3d(${glowOffsetX}px, ${glowOffsetY}px, 0) scale(${glowScale})`;
-				}
+					const scrollDelta = currentScrollY - lastScrollY;
+					lastScrollY = currentScrollY;
 
-				mouseSpeed *= 0.85;
+					const mouseDistLimit = 180;
+					const connectDistLimit = isMobile ? 100 : 150;
+
+					// 1. Update and draw particles
+					bgParticles.forEach(p => {
+						// Scroll parallax animation
+						p.y -= scrollDelta * p.parallaxFactor;
+
+						// Natural drift velocity
+						p.x += p.vx;
+						p.y += p.vy;
+
+						// Edge wrapping
+						if (p.x < 0) p.x = partCanvas.width;
+						if (p.x > partCanvas.width) p.x = 0;
+						if (p.y < 0) p.y = partCanvas.height;
+						if (p.y > partCanvas.height) p.y = 0;
+
+						// Hover interaction: calculate distance to mouse
+						const dx = p.x - rawMouse.targetX;
+						const dy = p.y - rawMouse.targetY;
+						const dist = Math.sqrt(dx * dx + dy * dy);
+
+						let activeAlpha = p.baseAlpha;
+						let activeSize = p.size;
+
+						if (dist < mouseDistLimit && !isMobile) {
+							const force = 1 - dist / mouseDistLimit;
+							
+							// Gentle magnetic push away or pull
+							p.x += (dx / dist) * force * 1.5;
+							p.y += (dy / dist) * force * 1.5;
+
+							// Brighten and enlarge near cursor
+							activeAlpha = Math.min(0.85, p.baseAlpha + force * 0.5);
+							activeSize = p.size * (1 + force * 0.8);
+
+							// Draw subtle interactive beam to mouse cursor
+							partCtx.beginPath();
+							partCtx.moveTo(p.x, p.y);
+							partCtx.lineTo(rawMouse.targetX, rawMouse.targetY);
+							partCtx.strokeStyle = `rgba(249, 115, 22, ${force * 0.25})`;
+							partCtx.lineWidth = 0.8;
+							partCtx.stroke();
+						}
+
+						// Draw particle dot
+						partCtx.beginPath();
+						partCtx.arc(p.x, p.y, activeSize, 0, Math.PI * 2);
+						partCtx.fillStyle = p.color;
+						partCtx.globalAlpha = activeAlpha;
+						partCtx.fill();
+						partCtx.globalAlpha = 1.0; // reset
+					});
+
+					// 2. Draw subtle constellation/plexus connecting lines
+					partCtx.lineWidth = 0.6;
+					for (let i = 0; i < bgParticles.length; i++) {
+						const p1 = bgParticles[i];
+						for (let j = i + 1; j < bgParticles.length; j++) {
+							const p2 = bgParticles[j];
+							const dx = p1.x - p2.x;
+							const dy = p1.y - p2.y;
+							const dist = Math.sqrt(dx * dx + dy * dy);
+
+							if (dist < connectDistLimit) {
+								const alpha = (1 - dist / connectDistLimit) * 0.22;
+								partCtx.beginPath();
+								partCtx.moveTo(p1.x, p1.y);
+								partCtx.lineTo(p2.x, p2.y);
+								partCtx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+								partCtx.stroke();
+							}
+						}
+					}
+				}
 
 				if (spatialElements.length > 0) {
 					const radiusLimit = 280;
-					
+
 					spatialElements.forEach(el => {
 						const rect = el.getBoundingClientRect();
 						const cx = rect.left + rect.width / 2;
 						const cy = rect.top + rect.height / 2;
-						
+
 						const dx = rawMouse.targetX - cx;
 						const dy = rawMouse.targetY - cy;
 						const distance = Math.sqrt(dx * dx + dy * dy);
-						
+
 						if (distance < radiusLimit) {
 							const proximity = Math.max(0, 1 - distance / radiusLimit);
 							const rx = rawMouse.targetX - rect.left;
 							const ry = rawMouse.targetY - rect.top;
-							
+
 							el.style.setProperty("--mouse-x", `${rx}px`);
 							el.style.setProperty("--mouse-y", `${ry}px`);
 							el.style.setProperty("--proximity", proximity.toFixed(3));
@@ -695,7 +887,7 @@
 						const localX = (mX / rect.width) * 320;
 						const localY = (mY / rect.height) * 80;
 						
-						data.nodeStates.forEach(ns => {
+						data.nodeStates.forEach((ns: any) => {
 							const dx = localX - ns.bx;
 							const dy = localY - ns.by;
 							const dist = Math.sqrt(dx * dx + dy * dy);
@@ -716,7 +908,7 @@
 							ns.el.setAttribute("transform", `translate(${currX.toFixed(2)}, ${currY.toFixed(2)})`);
 						});
 
-						data.pathStates.forEach(ps => {
+						data.pathStates.forEach((ps: any) => {
 							for (let i = 0; i < ps.coords.length; i += 2) {
 								const px = ps.coords[i];
 								const py = ps.coords[i+1];
@@ -740,7 +932,7 @@
 
 							const originalParts = ps.baseD.split(/(-?[\d.]+)/);
 							let coordCount = 0;
-							const rebuiltParts = originalParts.map(part => {
+							const rebuiltParts = originalParts.map((part: string) => {
 								if (/^-?[\d.]+$/.test(part)) {
 									const currentVal = ps.springs[coordCount].update();
 									coordCount++;
@@ -752,7 +944,7 @@
 							ps.el.setAttribute("d", rebuiltParts.join(""));
 						});
 					} else {
-						data.nodeStates.forEach(ns => {
+						data.nodeStates.forEach((ns: any) => {
 							ns.x.target = ns.bx;
 							ns.y.target = ns.by;
 							const currX = ns.x.update();
@@ -760,14 +952,14 @@
 							ns.el.setAttribute("transform", `translate(${currX.toFixed(2)}, ${currY.toFixed(2)})`);
 						});
 
-						data.pathStates.forEach(ps => {
+						data.pathStates.forEach((ps: any) => {
 							for (let i = 0; i < ps.coords.length; i++) {
 								ps.springs[i].target = ps.coords[i];
 							}
 							
 							const originalParts = ps.baseD.split(/(-?[\d.]+)/);
 							let coordCount = 0;
-							const rebuiltParts = originalParts.map(part => {
+							const rebuiltParts = originalParts.map((part: string) => {
 								if (/^-?[\d.]+$/.test(part)) {
 									const currentVal = ps.springs[coordCount].update();
 									coordCount++;
@@ -818,217 +1010,6 @@
 
 			}, 400);
 		}
-
-		// ── METEOR INTERCEPTION SYSTEM ──
-		class MeteorSystem {
-			constructor() {
-				this.container = document.getElementById("meteor-system");
-				this.scoreContainer = document.getElementById("meteor-score");
-				this.scoreValueEl = document.getElementById("meteor-score-value");
-				this.score = 0;
-				
-				if (!this.container) return;
-				this.scheduleNextSpawn();
-			}
-
-			scheduleNextSpawn() {
-				const delay = 4000 + Math.random() * 8000;
-				setTimeout(() => {
-					if (!document.hidden && currentPhase === 5) {
-						this.spawnMeteor();
-					}
-					this.scheduleNextSpawn();
-				}, delay);
-			}
-
-			spawnMeteor() {
-				const meteor = document.createElement("div");
-				meteor.className = "meteor-entity";
-				
-				const side = Math.random() > 0.5 ? 'left' : 'right';
-				const startY = Math.random() * window.innerHeight * 0.7;
-				let startX, targetX;
-				
-				if (side === 'left') {
-					startX = -50;
-					targetX = window.innerWidth + 50;
-				} else {
-					startX = window.innerWidth + 50;
-					targetX = -50;
-				}
-				
-				const targetY = startY + (Math.random() * 400 - 100);
-				const angle = Math.atan2(targetY - startY, targetX - startX);
-				
-				const duration = 12000 + Math.random() * 8000; // Very slow, ambient, cinematic drifting
-				
-				meteor.style.left = `${startX}px`;
-				meteor.style.top = `${startY}px`;
-				
-				this.container.appendChild(meteor);
-				
-				const startTime = performance.now();
-				let animationFrame;
-				
-				const animate = (currentTime) => {
-					if (meteor.dataset.destroyed === "true") return;
-					
-					const elapsed = currentTime - startTime;
-					const progress = elapsed / duration;
-					
-					if (progress >= 1) {
-						meteor.remove();
-						return;
-					}
-					
-					const currentX = startX + (targetX - startX) * progress;
-					const currentY = startY + (targetY - startY) * progress;
-					
-					meteor.style.transform = `translate(${currentX - startX}px, ${currentY - startY}px) rotate(${angle}rad)`;
-					
-					animationFrame = requestAnimationFrame(animate);
-				};
-				
-				animationFrame = requestAnimationFrame(animate);
-				
-				meteor.addEventListener("mousedown", (e) => {
-					if (e.button !== 0) return;
-					e.stopPropagation();
-					if (meteor.dataset.destroyed === "true") return;
-					
-					meteor.dataset.destroyed = "true";
-					cancelAnimationFrame(animationFrame);
-					
-					const rect = meteor.getBoundingClientRect();
-					const hitX = rect.left + rect.width / 2;
-					const hitY = rect.top + rect.height / 2;
-					
-					this.interceptMeteor(meteor, hitX, hitY);
-				});
-			}
-
-			interceptMeteor(meteor, x, y) {
-				// Score update
-				this.score++;
-				if (this.scoreValueEl) {
-					this.scoreValueEl.innerText = this.score.toString().padStart(2, '0');
-				}
-				if (this.scoreContainer && !this.scoreContainer.classList.contains("visible")) {
-					this.scoreContainer.classList.add("visible");
-				}
-
-				// Destruction class triggers CSS animation
-				meteor.classList.add("destroyed");
-				
-				// Particles
-				const particleCount = 8 + Math.floor(Math.random() * 5);
-				for (let i = 0; i < particleCount; i++) {
-					this.spawnParticle(x, y);
-				}
-				
-				// Atmospheric ripple
-				this.spawnRipple(x, y);
-
-				// Soft ambient flash
-				const flash = document.createElement("div");
-				flash.style.position = "fixed";
-				flash.style.inset = "0";
-				flash.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(249, 115, 22, 0.06) 0%, transparent 40%)`;
-				flash.style.pointerEvents = "none";
-				flash.style.zIndex = "49";
-				flash.style.opacity = "1";
-				flash.style.transition = "opacity 0.8s ease-out";
-				document.body.appendChild(flash);
-				
-				// Cleanup
-				setTimeout(() => { flash.style.opacity = "0"; }, 50);
-				setTimeout(() => { flash.remove(); }, 850);
-				setTimeout(() => { meteor.remove(); }, 600);
-			}
-
-			spawnParticle(x, y) {
-				const p = document.createElement("div");
-				p.className = "meteor-particle";
-				p.style.left = `${x}px`;
-				p.style.top = `${y}px`;
-				
-				const angle = Math.random() * Math.PI * 2;
-				const velocity = 0.5 + Math.random() * 2.5;
-				const vx = Math.cos(angle) * velocity;
-				const vy = Math.sin(angle) * velocity;
-				const duration = 800 + Math.random() * 500;
-				
-				this.container.appendChild(p);
-				
-				const startTime = performance.now();
-				const animateP = (currentTime) => {
-					const elapsed = currentTime - startTime;
-					const progress = elapsed / duration;
-					
-					if (progress >= 1) {
-						p.remove();
-						return;
-					}
-					
-					const currentX = x + vx * elapsed * 0.1;
-					const currentY = y + vy * elapsed * 0.1 + (elapsed * elapsed * 0.0002);
-					const opacity = 1 - Math.pow(progress, 1.5);
-					
-					p.style.transform = `translate(${currentX - x}px, ${currentY - y}px) scale(${1 - progress})`;
-					p.style.opacity = opacity;
-					
-					requestAnimationFrame(animateP);
-				};
-				
-				requestAnimationFrame(animateP);
-			}
-
-			spawnRipple(x, y) {
-				const ripple = document.createElement("div");
-				ripple.className = "meteor-ripple";
-				ripple.style.left = `${x}px`;
-				ripple.style.top = `${y}px`;
-				ripple.style.width = "10px";
-				ripple.style.height = "10px";
-				
-				this.container.appendChild(ripple);
-				
-				const startTime = performance.now();
-				const duration = 1400;
-				
-				const animateR = (currentTime) => {
-					const elapsed = currentTime - startTime;
-					const progress = elapsed / duration;
-					
-					if (progress >= 1) {
-						ripple.remove();
-						return;
-					}
-					
-					const easeOut = 1 - Math.pow(1 - progress, 3);
-					const scale = 1 + easeOut * 25;
-					const opacity = 1 - progress;
-					
-					ripple.style.transform = `translate(-50%, -50%) scale(${scale})`;
-					ripple.style.opacity = opacity * 0.8;
-					
-					requestAnimationFrame(animateR);
-				};
-				
-				requestAnimationFrame(animateR);
-			}
-		}
-
-		// Initialize interactive systems
-		const meteorSystem = new MeteorSystem();
-
-		// Spawn the first meteor shortly after loader completes
-		const firstMeteorCheck = setInterval(() => {
-			if (currentPhase === 5 && meteorSystem.container) {
-				clearInterval(firstMeteorCheck);
-				setTimeout(() => meteorSystem.spawnMeteor(), 2000);
-			}
-		}, 500);
 
 		document.body.classList.add("loading");
 		requestAnimationFrame(tick);

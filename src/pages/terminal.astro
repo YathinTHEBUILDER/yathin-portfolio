@@ -1,0 +1,1061 @@
+---
+// Yathin — Nexus Terminal Web Application
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Terminal | Nexus Terminal - Advanced CLI Environment</title>
+		<meta
+			name="description"
+			content="Interactive Nexus Terminal environment exploring system commands, AI capabilities, and developer portfolio."
+		/>
+		<meta name="theme-color" content="#0a0a0a" />
+
+		<!-- Google Fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+			rel="stylesheet"
+		/>
+
+		<style is:global>
+			*, *::before, *::after {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+				user-select: none !important;
+				-webkit-user-select: none !important;
+				-webkit-user-drag: none !important;
+				-webkit-touch-callout: none !important;
+			}
+
+			input, textarea {
+				user-select: auto !important;
+				-webkit-user-select: auto !important;
+				-webkit-user-drag: auto !important;
+			}
+
+			:root {
+				--font-display: 'Outfit', sans-serif;
+				--font-tech: 'Space Grotesk', sans-serif;
+				--font-mono: 'Fira Code', monospace;
+
+				--bg-desktop: #050505;
+				--bg-panel: #0f0f0f;
+				--bg-terminal: rgba(10, 10, 10, 0.88);
+				--bg-header: #161616;
+				
+				--core-blue: #38bdf8;
+				--core-blue-dark: #0284c7;
+				--text-main: #e2e8f0;
+				--text-muted: #94a3b8;
+				--accent-orange: #f97316;
+
+				--color-green: #10b981;
+				--color-yellow: #eab308;
+				--color-red: #ef4444;
+				--color-purple: #a855f7;
+			}
+
+			html, body {
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+				background: var(--bg-desktop);
+				font-family: var(--font-tech);
+				color: var(--text-main);
+			}
+
+			/* Desktop Environment */
+			#desktop {
+				position: relative;
+				width: 100vw;
+				height: 100vh;
+				display: flex;
+				flex-direction: column;
+				overflow: hidden;
+				background-image: 
+					radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.05) 0%, transparent 60%),
+					linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+					linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+				background-size: 100% 100%, 40px 40px, 40px 40px;
+				background-position: center;
+			}
+
+			/* Top Panel */
+			#top-panel {
+				height: 40px;
+				background: var(--bg-panel);
+				border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0 1.5rem;
+				z-index: 100;
+				backdrop-filter: blur(10px);
+				-webkit-backdrop-filter: blur(10px);
+			}
+
+			.panel-left {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+			}
+
+			.core-brand {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+				font-weight: 800;
+				font-family: var(--font-display);
+				font-size: 1.1rem;
+				color: var(--core-blue);
+				text-decoration: none;
+				text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+			}
+
+			.panel-title {
+				font-size: 0.85rem;
+				color: var(--text-muted);
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+			.panel-title::before {
+				content: '';
+				width: 4px;
+				height: 4px;
+				background: var(--color-green);
+				border-radius: 50%;
+				box-shadow: 0 0 8px var(--color-green);
+			}
+
+			.panel-right {
+				display: flex;
+				align-items: center;
+				gap: 1.5rem;
+				font-size: 0.85rem;
+				color: var(--text-muted);
+			}
+
+			.panel-btn {
+				display: flex;
+				align-items: center;
+				gap: 0.4rem;
+				background: rgba(249, 115, 22, 0.15);
+				border: 1px solid rgba(249, 115, 22, 0.4);
+				color: var(--accent-orange);
+				padding: 0.3rem 0.8rem;
+				border-radius: 6px;
+				text-decoration: none;
+				font-weight: 700;
+				font-size: 0.8rem;
+				transition: all 0.3s ease;
+				box-shadow: 0 0 10px rgba(249, 115, 22, 0.1);
+			}
+			.panel-btn:hover {
+				background: rgba(249, 115, 22, 0.3);
+				box-shadow: 0 0 15px rgba(249, 115, 22, 0.3);
+				transform: translateY(-1px);
+				color: #fff;
+			}
+
+			.sys-stats {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+			}
+
+			/* Main Workspace Area */
+			#workspace {
+				flex: 1;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 1.5rem;
+			}
+
+			/* Terminal Window Container */
+			#terminal-window {
+				width: 100%;
+				max-width: 1050px;
+				height: 100%;
+				max-height: 680px;
+				background: var(--bg-terminal);
+				backdrop-filter: blur(25px);
+				-webkit-backdrop-filter: blur(25px);
+				border: 1px solid rgba(255, 255, 255, 0.12);
+				border-radius: 12px;
+				box-shadow: 0 30px 70px rgba(0, 0, 0, 0.9), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+				display: flex;
+				flex-direction: column;
+				overflow: hidden;
+				animation: windowOpen 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+				transform-origin: center;
+			}
+
+			@keyframes windowOpen {
+				from { opacity: 0; transform: scale(0.95) translateY(10px); }
+				to { opacity: 1; transform: scale(1) translateY(0); }
+			}
+
+			/* Terminal Title Bar */
+			#window-header {
+				height: 38px;
+				background: var(--bg-header);
+				border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0 1rem;
+				user-select: none;
+			}
+
+			.window-controls {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+			}
+			.win-dot {
+				width: 12px;
+				height: 12px;
+				border-radius: 50%;
+				cursor: pointer;
+				transition: opacity 0.2s;
+			}
+			.win-dot:hover { opacity: 0.8; }
+			.win-dot.close { background: #ff5f56; box-shadow: 0 0 6px #ff5f56; }
+			.win-dot.min { background: #ffbd2e; box-shadow: 0 0 6px #ffbd2e; }
+			.win-dot.max { background: #27c93f; box-shadow: 0 0 6px #27c93f; }
+
+			.window-title {
+				font-family: var(--font-mono);
+				font-size: 0.85rem;
+				color: var(--text-muted);
+				font-weight: 500;
+			}
+
+			.window-actions {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+			.win-action-btn {
+				background: none;
+				border: none;
+				color: var(--text-muted);
+				cursor: pointer;
+				padding: 0.2rem 0.5rem;
+				border-radius: 4px;
+				transition: all 0.2s;
+			}
+			.win-action-btn:hover {
+				background: rgba(255, 255, 255, 0.1);
+				color: #fff;
+			}
+
+			/* CRT Scanline Overlay */
+			.scanlines {
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+				background-size: 100% 4px, 6px 100%;
+				pointer-events: none;
+				z-index: 10;
+				opacity: 0.6;
+			}
+
+			/* Terminal Body */
+			#terminal-body {
+				flex: 1;
+				padding: 1.5rem;
+				overflow-y: auto;
+				font-family: var(--font-mono);
+				font-size: 0.95rem;
+				line-height: 1.6;
+				color: var(--text-main);
+				position: relative;
+				cursor: text;
+			}
+
+			/* Scrollbar */
+			#terminal-body::-webkit-scrollbar { width: 6px; }
+			#terminal-body::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+			#terminal-body::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 3px; }
+			#terminal-body::-webkit-scrollbar-thumb:hover { background: rgba(56, 189, 248, 0.6); }
+
+			::selection {
+				background: var(--core-blue);
+				color: #000;
+			}
+
+			/* Output Blocks */
+			.output-block {
+				margin-bottom: 0.8rem;
+				word-break: break-word;
+				white-space: pre-wrap;
+			}
+
+			/* Active & Static Prompt Lines */
+			.prompt-line {
+				display: flex;
+				align-items: flex-start;
+				gap: 0;
+				margin-bottom: 0.8rem;
+				flex-wrap: wrap;
+			}
+			.prompt-header {
+				display: flex;
+				align-items: center;
+				white-space: nowrap;
+				margin-right: 0.6rem;
+			}
+			.prompt-p1 { color: var(--core-blue); font-weight: 600; }
+			.prompt-user { color: var(--core-blue); font-weight: 700; }
+			.prompt-p2 { color: var(--core-blue); font-weight: 600; }
+			.prompt-dir { color: #f1f5f9; font-weight: 600; }
+			.prompt-p3 { color: var(--core-blue); font-weight: 600; }
+			
+			.prompt-arrow-wrap {
+				display: flex;
+				align-items: center;
+				width: 100%;
+				gap: 0.6rem;
+				margin-top: 0.2rem;
+			}
+			.prompt-arrow { color: var(--core-blue); font-weight: 700; }
+
+			.cmd-input {
+				background: transparent;
+				border: none;
+				outline: none;
+				color: #fff;
+				font-family: var(--font-mono);
+				font-size: 0.95rem;
+				flex: 1;
+				min-width: 200px;
+				caret-color: var(--core-blue);
+				font-weight: 500;
+			}
+
+			.cmd-text {
+				color: #fff;
+				font-weight: 500;
+			}
+
+			/* Utility Colors for Terminal Output */
+			.c-blue { color: var(--core-blue); }
+			.c-green { color: var(--color-green); }
+			.c-yellow { color: var(--color-yellow); }
+			.c-red { color: var(--color-red); }
+			.c-purple { color: var(--color-purple); }
+			.c-gray { color: var(--text-muted); }
+			.c-white { color: #fff; }
+
+			/* ASCII Art & Tables */
+			.ascii-art {
+				font-family: var(--font-mono);
+				line-height: 1.15;
+				color: var(--core-blue);
+				margin-bottom: 1rem;
+				text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+				overflow-x: auto;
+			}
+
+			.neofetch-container {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 2.5rem;
+				margin-bottom: 1.5rem;
+				background: rgba(0, 0, 0, 0.3);
+				padding: 1.5rem;
+				border-radius: 8px;
+				border: 1px solid rgba(255,255,255,0.05);
+			}
+
+			.neofetch-ascii {
+				font-family: var(--font-mono);
+				line-height: 1.15;
+				color: var(--core-blue);
+				font-weight: 600;
+			}
+
+			.neofetch-info {
+				display: flex;
+				flex-direction: column;
+				gap: 0.4rem;
+				min-width: 280px;
+			}
+			.neofetch-title {
+				color: var(--core-blue);
+				font-weight: 700;
+				border-bottom: 1px solid rgba(255,255,255,0.1);
+				padding-bottom: 0.4rem;
+				margin-bottom: 0.4rem;
+			}
+
+			.help-table {
+				width: 100%;
+				border-collapse: collapse;
+				margin: 1rem 0;
+			}
+			.help-table td {
+				padding: 0.4rem 1rem 0.4rem 0;
+				vertical-align: top;
+			}
+			.help-cmd {
+				color: var(--core-blue);
+				font-weight: 600;
+				width: 140px;
+			}
+			.help-desc {
+				color: var(--text-muted);
+			}
+
+			.ls-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+				gap: 0.8rem;
+				margin: 0.8rem 0;
+			}
+			.ls-item {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+				font-weight: 500;
+			}
+			.ls-dir { color: var(--core-blue); font-weight: 700; }
+			.ls-file { color: var(--text-main); }
+			.ls-exec { color: var(--color-green); font-weight: 700; }
+
+			/* Portfolio Info Tables */
+			.info-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+				gap: 1.5rem;
+				margin: 1rem 0;
+			}
+			.info-card {
+				background: rgba(255, 255, 255, 0.03);
+				border: 1px solid rgba(255, 255, 255, 0.08);
+				padding: 1.2rem;
+				border-radius: 8px;
+			}
+			.info-card-title {
+				color: var(--core-blue);
+				font-weight: 700;
+				margin-bottom: 0.5rem;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+				padding-bottom: 0.4rem;
+			}
+
+			@media (max-width: 768px) {
+				#workspace { padding: 0.5rem; }
+				#terminal-window { border-radius: 8px; }
+				.neofetch-container { gap: 1.5rem; padding: 1rem; }
+				.panel-right { gap: 0.8rem; }
+			}
+		</style>
+	</head>
+	<body>
+		<div id="desktop">
+			<!-- Top Panel -->
+			<div id="top-panel">
+				<div class="panel-left">
+					<a href="/" class="core-brand">
+						<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+						NEXUS TERMINAL
+					</a>
+					<span class="panel-title">Terminal Workspace // NEXUS-01</span>
+				</div>
+				<div class="panel-right">
+					<div class="sys-stats">
+						<span id="clock" style="font-family: var(--font-mono); font-weight: 600;">12:00:00</span>
+					</div>
+					<a href="/" class="panel-btn">← Exit Terminal</a>
+				</div>
+			</div>
+
+			<!-- Workspace Area -->
+			<div id="workspace">
+				<div id="terminal-window">
+					<div id="window-header">
+						<div class="window-controls">
+							<div class="win-dot close" onclick="window.location.href='/'" title="Close"></div>
+							<div class="win-dot min" title="Minimize"></div>
+							<div class="win-dot max" id="btnMaximize" title="Maximize"></div>
+						</div>
+						<div class="window-title">yathin@nexus: ~</div>
+						<div class="window-actions">
+							<button class="win-action-btn" onclick="clearTerminal()" title="Clear Terminal">
+								<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+							</button>
+						</div>
+					</div>
+
+					<div class="scanlines"></div>
+
+					<div id="terminal-body" onclick="focusInput()">
+						<!-- Initial Welcome Banner -->
+						<div class="output-block">
+							<div class="ascii-art">
+███╗   ██╗███████╗██╗  ██╗██╗   ██╗███████╗    ████████╗███████╗██████╗ ███╗   ███╗
+████╗  ██║██╔════╝╚██╗██╔╝██║   ██║██╔════╝    ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║
+██╔██╗ ██║█████╗   ╚███╔╝ ██║   ██║███████╗       ██║   █████╗  ██████╔╝██╔████╔██║
+██║╚██╗██║██╔══╝   ██╔██╗ ██║   ██║╚════██║       ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║
+██║ ╚████║███████╗██╔╝ ██╗╚██████╔╝███████║       ██║   ███████╗██║  ██║██║ ╚═╝ ██║
+╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝       ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝
+							</div>
+							<p class="c-gray" style="margin-bottom: 0.5rem;">Welcome to the interactive Nexus Terminal Advanced AI & Full Stack Environment.</p>
+							<p class="c-gray" style="margin-bottom: 1.2rem;">Type <span class="c-green">help</span> to view available system commands and portfolio information.</p>
+						</div>
+
+						<!-- Dynamic Output Container -->
+						<div id="terminal-output"></div>
+
+						<!-- Active Prompt Line -->
+						<div class="prompt-line" id="active-prompt">
+							<div class="prompt-header">
+								<span class="prompt-p1">┌──(</span><span class="prompt-user">yathin㉿nexus</span><span class="prompt-p2">)-[</span><span class="prompt-dir">~</span><span class="prompt-p3">]</span>
+							</div>
+							<div class="prompt-arrow-wrap">
+								<span class="prompt-arrow">└─$</span>
+								<input type="text" class="cmd-input" id="cmdInput" autocomplete="off" spellcheck="false" autofocus />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			// ── GLOBAL PROJECT PROTECTION: DISABLE RIGHT CLICK & SELECTION ──
+			document.addEventListener("contextmenu", (e) => e.preventDefault());
+			document.addEventListener("dragstart", (e) => e.preventDefault());
+
+			// --- STATE & DATA ---
+			const cmdHistory: string[] = [];
+			let historyIndex = -1;
+
+			const availableCommands = [
+				'help', 'neofetch', 'whoami', 'pwd', 'ls', 'cat', 
+				'nmap', 'aircrack-ng', 'sqlmap', 'dirb', 'msfconsole', 
+				'sysinfo', 'about', 'skills', 'projects', 'achievements', 
+				'contact', 'bio', 'history', 'date', 'echo', 'clear', 
+				'cls', 'sudo', 'exit'
+			];
+
+			const files = {
+				'flag.txt': '<span class="c-green" style="font-size:1.1rem;font-weight:700;">FLAG{yathin_fullstack_ai_architect_2026}</span>\n\nCongratulations! You found the secret root flag.',
+				'notes.txt': '=== RESEARCH & DEVELOPMENT NOTES ===\n1. Upgrade multimodal pipeline for F.R.I.D.A.Y using Gemini 1.5 Pro.\n2. Scale InvoiceFlow co-financing settlement engine.\n3. Deploy low-latency WebRTC audio streams for J.A.R.V.I.S.',
+				'wordlist.txt': 'admin\npassword\n123456\nqwerty\nroot\nyathin\ntoor\nsupersecret\nyathin2026\nmasterkey',
+				'target_ips.txt': '192.168.1.105 - Vulnerable Web Server (Apache 2.4.49)\n10.0.0.42 - Active Directory Domain Controller\n172.16.5.18 - Staging API Gateway'
+			};
+
+			// --- DOM ELEMENTS ---
+			const terminalBody = document.getElementById('terminal-body');
+			const terminalOutput = document.getElementById('terminal-output');
+			const cmdInput = document.getElementById('cmdInput') as HTMLInputElement;
+			const btnMaximize = document.getElementById('btnMaximize');
+			const terminalWindow = document.getElementById('terminal-window');
+			const clockEl = document.getElementById('clock');
+
+			// --- CLOCK ---
+			function updateClock() {
+				if (!clockEl) return;
+				const now = new Date();
+				clockEl.textContent = now.toTimeString().split(' ')[0];
+			}
+			setInterval(updateClock, 1000);
+			updateClock();
+
+			// --- WINDOW CONTROLS ---
+			let isMaximized = false;
+			if (btnMaximize && terminalWindow) {
+				btnMaximize.addEventListener('click', () => {
+					isMaximized = !isMaximized;
+					if (isMaximized) {
+						terminalWindow.style.maxWidth = '100vw';
+						terminalWindow.style.maxHeight = 'calc(100vh - 40px)';
+						terminalWindow.style.borderRadius = '0';
+					} else {
+						terminalWindow.style.maxWidth = '1050px';
+						terminalWindow.style.maxHeight = '680px';
+						terminalWindow.style.borderRadius = '12px';
+					}
+				});
+			}
+
+			// --- FOCUS INPUT ---
+			function focusInput() {
+				if (cmdInput) cmdInput.focus();
+			}
+			(window as any).focusInput = focusInput;
+
+			// --- CLEAR TERMINAL ---
+			function clearTerminal() {
+				if (terminalOutput) terminalOutput.innerHTML = '';
+				focusInput();
+			}
+			(window as any).clearTerminal = clearTerminal;
+
+			// --- EVENT LISTENERS ---
+			if (cmdInput) {
+				cmdInput.addEventListener('keydown', (e) => {
+					if (e.key === 'Enter') {
+						const commandText = cmdInput.value.trim();
+						if (commandText) {
+							cmdHistory.push(commandText);
+							historyIndex = cmdHistory.length;
+						}
+						executeCommand(commandText);
+						cmdInput.value = '';
+					} else if (e.key === 'ArrowUp') {
+						e.preventDefault();
+						if (historyIndex > 0) {
+							historyIndex--;
+							cmdInput.value = cmdHistory[historyIndex];
+						}
+					} else if (e.key === 'ArrowDown') {
+						e.preventDefault();
+						if (historyIndex < cmdHistory.length - 1) {
+							historyIndex++;
+							cmdInput.value = cmdHistory[historyIndex];
+						} else {
+							historyIndex = cmdHistory.length;
+							cmdInput.value = '';
+						}
+					} else if (e.key === 'Tab') {
+						e.preventDefault();
+						const current = cmdInput.value.trim();
+						if (!current) return;
+						const matches = availableCommands.filter(c => c.startsWith(current.toLowerCase()));
+						if (matches.length === 1) {
+							cmdInput.value = matches[0] + ' ';
+						} else if (matches.length > 1) {
+							appendStaticPrompt(current);
+							appendOutput(`<div class="c-blue">${matches.join('    ')}</div>`);
+							resetPrompt();
+						}
+					} else if (e.ctrlKey && e.key === 'l') {
+						e.preventDefault();
+						clearTerminal();
+					} else if (e.ctrlKey && e.key === 'c') {
+						e.preventDefault();
+						appendStaticPrompt(cmdInput.value + '^C');
+						cmdInput.value = '';
+						resetPrompt();
+					}
+				});
+			}
+
+			// --- EXECUTION ENGINE ---
+			function appendStaticPrompt(cmdText: string) {
+				if (!terminalOutput) return;
+				const promptHtml = `
+					<div class="prompt-line">
+						<div class="prompt-header">
+							<span class="prompt-p1">┌──(</span><span class="prompt-user">yathin㉿nexus</span><span class="prompt-p2">)-[</span><span class="prompt-dir">~</span><span class="prompt-p3">]</span>
+						</div>
+						<div class="prompt-arrow-wrap">
+							<span class="prompt-arrow">└─$</span>
+							<span class="cmd-text">${escapeHtml(cmdText)}</span>
+						</div>
+					</div>
+				`;
+				terminalOutput.insertAdjacentHTML('beforeend', promptHtml);
+			}
+
+			function appendOutput(htmlContent: string) {
+				if (!terminalOutput) return;
+				const outputHtml = `<div class="output-block">${htmlContent}</div>`;
+				terminalOutput.insertAdjacentHTML('beforeend', outputHtml);
+			}
+
+			function resetPrompt() {
+				if (!terminalBody) return;
+				terminalBody.scrollTop = terminalBody.scrollHeight;
+				focusInput();
+			}
+
+			function escapeHtml(str: string): string {
+				return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+			}
+
+			function executeCommand(input: string) {
+				appendStaticPrompt(input);
+				if (!input) {
+					resetPrompt();
+					return;
+				}
+
+				const parts = input.split(/\s+/);
+				const cmd = parts[0].toLowerCase();
+				const args = parts.slice(1);
+
+				switch (cmd) {
+					case 'help':
+						appendOutput(`
+							<table class="help-table">
+								<tr><td class="help-cmd">help</td><td class="help-desc">Show this help menu</td></tr>
+								<tr><td class="help-cmd">about / bio</td><td class="help-desc">Display Yathin's professional background & bio</td></tr>
+								<tr><td class="help-cmd">skills</td><td class="help-desc">Display core technical expertise & languages</td></tr>
+								<tr><td class="help-cmd">projects</td><td class="help-desc">Explore full stack & AI engineering projects</td></tr>
+								<tr><td class="help-cmd">achievements</td><td class="help-desc">View key milestones & continuous study efforts</td></tr>
+								<tr><td class="help-cmd">contact</td><td class="help-desc">Display direct contact information & social links</td></tr>
+								<tr><td class="help-cmd">neofetch</td><td class="help-desc">Display system information and Nexus Terminal ASCII logo</td></tr>
+								<tr><td class="help-cmd">whoami</td><td class="help-desc">Print current user</td></tr>
+								<tr><td class="help-cmd">pwd</td><td class="help-desc">Print working directory</td></tr>
+								<tr><td class="help-cmd">ls</td><td class="help-desc">List directory contents</td></tr>
+								<tr><td class="help-cmd">cat &lt;file&gt;</td><td class="help-desc">Display file contents (e.g. cat flag.txt)</td></tr>
+								<tr><td class="help-cmd">nmap &lt;target&gt;</td><td class="help-desc">Run network exploration and port scanner simulation</td></tr>
+								<tr><td class="help-cmd">aircrack-ng</td><td class="help-desc">WPA/WPA2 handshake cracking simulation</td></tr>
+								<tr><td class="help-cmd">sqlmap</td><td class="help-desc">Automated SQL injection scanner simulation</td></tr>
+								<tr><td class="help-cmd">dirb</td><td class="help-desc">Web content scanner simulation</td></tr>
+								<tr><td class="help-cmd">msfconsole</td><td class="help-desc">Metasploit Framework console simulation</td></tr>
+								<tr><td class="help-cmd">sysinfo</td><td class="help-desc">Display deep system architecture & AI specs</td></tr>
+								<tr><td class="help-cmd">history</td><td class="help-desc">Display command history</td></tr>
+								<tr><td class="help-cmd">date</td><td class="help-desc">Display current date and time</td></tr>
+								<tr><td class="help-cmd">echo &lt;text&gt;</td><td class="help-desc">Print text to terminal</td></tr>
+								<tr><td class="help-cmd">clear / cls</td><td class="help-desc">Clear the terminal screen</td></tr>
+								<tr><td class="help-cmd">sudo &lt;cmd&gt;</td><td class="help-desc">Execute command with superuser privileges</td></tr>
+								<tr><td class="help-cmd">exit</td><td class="help-desc">Exit terminal and return to portfolio</td></tr>
+							</table>
+						`);
+						break;
+
+					case 'about':
+					case 'bio':
+						appendOutput(`
+<div class="c-blue" style="font-weight:700;font-size:1.1rem;margin-bottom:0.5rem;">=== ABOUT YATHIN ===</div>
+<div class="c-white" style="font-weight:600;margin-bottom:0.5rem;">Full Stack Developer & AI Engineer | Mysuru, Karnataka, India 🇮🇳</div>
+<p class="c-gray" style="line-height:1.8;">
+I am a Full Stack Developer and AI Engineer focusing on the intersection of robust backend architectures, dynamic user interfaces, and intelligent software.
+<br /><br />
+My work centers on building software that feels natural and responsive. I enjoy exploring how modern APIs, low-latency audio streams, and real-time computer vision can be combined to solve real problems and create intuitive user experiences.
+</p>
+						`);
+						break;
+
+					case 'skills':
+						appendOutput(`
+<div class="c-blue" style="font-weight:700;font-size:1.1rem;margin-bottom:0.5rem;">=== TECHNICAL EXPERTISE ===</div>
+<div class="info-grid">
+	<div class="info-card">
+		<div class="info-card-title">⚡ Languages & Web Core</div>
+		<div class="c-white">Python · C · C++ · JavaScript · HTML · CSS</div>
+	</div>
+	<div class="info-card">
+		<div class="info-card-title">🧠 AI & Machine Learning</div>
+		<div class="c-white">Groq API · Gemini API · Tavily API · OpenCV · Computer Vision · LLMs · LiveKit</div>
+	</div>
+	<div class="info-card">
+		<div class="info-card-title">🛠️ Tools & Platforms</div>
+		<div class="c-white">Git · GitHub · VS Code · Vercel · Linux Terminal</div>
+	</div>
+	<div class="info-card">
+		<div class="info-card-title">🌱 Currently Learning</div>
+		<div class="c-white">React · Astro · TensorFlow · Next.js</div>
+	</div>
+</div>
+						`);
+						break;
+
+					case 'projects':
+						appendOutput(`
+<div class="c-blue" style="font-weight:700;font-size:1.1rem;margin-bottom:0.5rem;">=== FEATURED PROJECTS ===</div>
+<div class="info-grid">
+	<div class="info-card">
+		<div class="info-card-title">📦 InvoiceFlow</div>
+		<div class="c-white" style="font-weight:600;margin-bottom:0.4rem;">Co-Financing Invoice Discounting Platform</div>
+		<p class="c-gray" style="font-size:0.85rem;margin-bottom:0.8rem;">A shared retail investor invoice financing platform for Indian MSMEs solving working capital shortages.</p>
+		<div class="c-green" style="font-size:0.8rem;">Tech: Next.js · Supabase · TypeScript · Vercel</div>
+	</div>
+	<div class="info-card">
+		<div class="info-card-title">🤖 J.A.R.V.I.S</div>
+		<div class="c-white" style="font-weight:600;margin-bottom:0.4rem;">Intelligent Conversational AI Assistant</div>
+		<p class="c-gray" style="font-size:0.85rem;margin-bottom:0.8rem;">Performs real-time web searches and intelligent conversations using Groq LPU inference and Tavily API.</p>
+		<div class="c-green" style="font-size:0.8rem;">Tech: Python · Groq API · Tavily API · JavaScript</div>
+	</div>
+	<div class="info-card">
+		<div class="info-card-title">👁️ F.R.I.D.A.Y</div>
+		<div class="c-white" style="font-weight:600;margin-bottom:0.4rem;">Multimodal AI Assistant</div>
+		<p class="c-gray" style="font-size:0.85rem;margin-bottom:0.8rem;">Real-time voice interaction, computer vision, and advanced reasoning powered by Gemini 1.5 Pro.</p>
+		<div class="c-green" style="font-size:0.8rem;">Tech: Python · Gemini API · Multimodal Streams</div>
+	</div>
+</div>
+						`);
+						break;
+
+					case 'achievements':
+						appendOutput(`
+<div class="c-blue" style="font-weight:700;font-size:1.1rem;margin-bottom:0.5rem;">=== KEY ACHIEVEMENTS ===</div>
+<table style="width:100%;text-align:left;line-height:1.8;">
+	<tr><td class="c-white" style="width:200px;font-weight:600;">🏆 Multimodal Prototypes</td><td class="c-gray">Built J.A.R.V.I.S and F.R.I.D.A.Y exploring low-latency assistant architectures and real-time vision.</td></tr>
+	<tr><td class="c-white" style="font-weight:600;">🔗 Core Integrations</td><td class="c-gray">Integrated production-grade streaming, multimodal vision, and high-speed LLM inference APIs.</td></tr>
+	<tr><td class="c-white" style="font-weight:600;">🤝 Open Source Advocacy</td><td class="c-gray">Developing platforms openly on GitHub to invite peer feedback and contribute to the community.</td></tr>
+	<tr><td class="c-white" style="font-weight:600;">📚 Continuous Study</td><td class="c-gray">Independently researching deep learning patterns, computer vision, and modern interface design.</td></tr>
+</table>
+						`);
+						break;
+
+					case 'contact':
+						appendOutput(`
+<div class="c-blue" style="font-weight:700;font-size:1.1rem;margin-bottom:0.5rem;">=== CONTACT YATHIN ===</div>
+<table style="width:100%;text-align:left;line-height:1.8;">
+	<tr><td class="c-blue" style="width:120px;">📧 Email:</td><td><a href="mailto:yathing52@gmail.com" class="c-white" style="text-decoration:none;">yathing52@gmail.com</a></td></tr>
+	<tr><td class="c-blue">🐙 GitHub:</td><td><a href="https://github.com/YathinTHEBUILDER" target="_blank" class="c-white" style="text-decoration:none;">@YathinTHEBUILDER</a></td></tr>
+	<tr><td class="c-blue">💼 LinkedIn:</td><td><a href="https://www.linkedin.com/in/yathin-gnaneshwar-5133b4367" target="_blank" class="c-white" style="text-decoration:none;">Yathin</a></td></tr>
+	<tr><td class="c-blue">📸 Instagram:</td><td><a href="https://www.instagram.com/yathin_gnaneshwar" target="_blank" class="c-white" style="text-decoration:none;">@yathin_gnaneshwar</a></td></tr>
+	<tr><td class="c-blue">📍 Location:</td><td class="c-gray">Mysuru, Karnataka, India 🇮🇳 (Open to remote collaborations worldwide)</td></tr>
+</table>
+						`);
+						break;
+
+					case 'neofetch':
+						appendOutput(`
+							<div class="neofetch-container">
+								<div class="neofetch-ascii">
+         /\\  /\\         
+        // \\// \\        
+       //  //  \\       
+      //  //    \\      
+     //  //      \\     
+    //  //        \\    
+   //  //__________\\   
+  //  //            \\  
+ //  //              \\ 
+//  //                \\
+								</div>
+								<div class="neofetch-info">
+									<div class="neofetch-title">yathin@nexus-terminal</div>
+									<div><span class="c-blue">Terminal:</span> Nexus Terminal v2026.5</div>
+									<div><span class="c-blue">Host:</span> Yathin Advanced AI Architecture</div>
+									<div><span class="c-blue">Kernel:</span> 6.6.9-nexus-amd64</div>
+									<div><span class="c-blue">Uptime:</span> 42 days, 7 hours, 12 mins</div>
+									<div><span class="c-blue">Packages:</span> 3184 (nexus-pkg)</div>
+									<div><span class="c-blue">Shell:</span> zsh 5.9</div>
+									<div><span class="c-blue">WM:</span> NeuralGlass (Cinematic UI)</div>
+									<div><span class="c-blue">CPU:</span> Quantum Neural Processor (16) @ 4.800GHz</div>
+									<div><span class="c-blue">GPU:</span> AI Hardware Accelerator RTX 5090</div>
+									<div><span class="c-blue">Memory:</span> 32184MiB / 64000MiB</div>
+								</div>
+							</div>
+						`);
+						break;
+
+					case 'whoami':
+						appendOutput('yathin');
+						break;
+
+					case 'pwd':
+						appendOutput('/home/yathin');
+						break;
+
+					case 'ls':
+						appendOutput(`
+							<div class="ls-grid">
+								<div class="ls-item"><span class="ls-dir">📁 Desktop</span></div>
+								<div class="ls-item"><span class="ls-dir">📁 Downloads</span></div>
+								<div class="ls-item"><span class="ls-dir">📁 Projects</span></div>
+								<div class="ls-item"><span class="ls-dir">📁 tools</span></div>
+								<div class="ls-item"><span class="ls-file">📄 wordlist.txt</span></div>
+								<div class="ls-item"><span class="ls-exec">🚩 flag.txt</span></div>
+								<div class="ls-item"><span class="ls-file">📄 notes.txt</span></div>
+								<div class="ls-item"><span class="ls-file">📄 target_ips.txt</span></div>
+							</div>
+						`);
+						break;
+
+					case 'cat':
+						if (args.length === 0) {
+							appendOutput('cat: missing operand. Try cat flag.txt, notes.txt, wordlist.txt, target_ips.txt');
+						} else {
+							const filename = args[0];
+							if ((files as any)[filename]) {
+								appendOutput((files as any)[filename]);
+							} else {
+								appendOutput(`cat: ${escapeHtml(filename)}: No such file or directory. Available files: flag.txt, notes.txt, wordlist.txt, target_ips.txt`);
+							}
+						}
+						break;
+
+					case 'nmap':
+						const target = args.length > 0 ? args[0] : '192.168.1.105';
+						appendOutput(`
+<div class="c-gray">Starting Nmap 7.94 ( https://nmap.org ) at ${new Date().toISOString().replace('T', ' ').substring(0,19)}</div>
+<div class="c-gray">Nmap scan report for ${escapeHtml(target)}</div>
+<div class="c-gray">Host is up (0.012s latency).</div>
+<div class="c-gray">Not shown: 996 closed tcp ports (reset)</div>
+<br />
+<table style="width:100%;text-align:left;">
+	<tr class="c-blue"><th>PORT</th><th>STATE</th><th>SERVICE</th><th>VERSION</th></tr>
+	<tr><td>22/tcp</td><td class="c-green">open</td><td>ssh</td><td>OpenSSH 8.4p1 Debian 5 (protocol 2.0)</td></tr>
+	<tr><td>80/tcp</td><td class="c-green">open</td><td>http</td><td>Apache httpd 2.4.49 ((Debian))</td></tr>
+	<tr><td>443/tcp</td><td class="c-green">open</td><td>ssl/https</td><td>Apache httpd 2.4.49</td></tr>
+	<tr><td>3306/tcp</td><td class="c-green">open</td><td>mysql</td><td>MySQL 8.0.23</td></tr>
+</table>
+<br />
+<div class="c-gray">Nmap done: 1 IP address (1 host up) scanned in 1.42 seconds</div>
+						`);
+						break;
+
+					case 'aircrack-ng':
+						appendOutput(`
+<div class="c-gray">Opening wordlist.txt</div>
+<div class="c-gray">Read 10 words (10 keys tested)</div>
+<br />
+<div class="c-blue">Aircrack-ng 1.7 (EPFL/Inria)</div>
+<br />
+<div class="c-gray">[00:00:01] Tested 10 keys (10.00 k/s)</div>
+<br />
+<div class="c-green" style="font-size:1.1rem;font-weight:700;">KEY FOUND! [ supersecret ]</div>
+<br />
+<div class="c-gray">Master Key: 4E:2A:8B:11:0C:9F:33:41:A2:B8:C7:D6:E5:F4:00:11</div>
+<div class="c-gray">Transient Key: 1A:2B:3C:4D:5E:6F:7A:8B:9C:0D:1E:2F:3A:4B:5C:6D</div>
+						`);
+						break;
+
+					case 'sqlmap':
+						appendOutput(`
+<div class="c-blue">___
+__H__
+___ ___[(]___ ___ ___
+/__/ / [)] / / / _ \\
+_\\ ___/ / / / / / / / _\\
+\\___/\\___/_/ /_/ /_/ /_/\\___/ v1.8.2#dev</div>
+<br />
+<div class="c-gray">[!] legal disclaimer: Usage of sqlmap for testing targets without prior mutual consent is illegal.</div>
+<div class="c-gray">[*] starting @ ${new Date().toTimeString().split(' ')[0]}</div>
+<br />
+<div class="c-gray">[INFO] testing connection to the target URL</div>
+<div class="c-gray">[INFO] testing if the GET parameter 'id' is dynamic</div>
+<div class="c-gray">[INFO] GET parameter 'id' appears to be dynamic</div>
+<div class="c-green">[INFO] GET parameter 'id' is 'Boolean-based blind - Parameter replace' injectable</div>
+<div class="c-gray">[INFO] fetching database names...</div>
+<div class="c-blue">available databases [2]:</div>
+<div class="c-white">[*] information_schema</div>
+<div class="c-white">[*] vulnerable_db</div>
+<br />
+<div class="c-green">[SUCCESS] Dumped table 'users' successfully (1 entry found: admin:supersecret)</div>
+						`);
+						break;
+
+					case 'dirb':
+						const url = args.length > 0 ? args[0] : 'http://192.168.1.105/';
+						appendOutput(`
+<div class="c-blue">---------------------------------
+DIRB v2.22
+By The Dark Raver
+---------------------------------</div>
+<div class="c-gray">START_TIME: ${new Date().toTimeString().split(' ')[0]}</div>
+<div class="c-gray">URL_BASE: ${escapeHtml(url)}</div>
+<div class="c-gray">WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt</div>
+<br />
+<div class="c-gray">GENERATED WORDS: 4612</div>
+<br />
+<div class="c-gray">---- Scanning URL: ${escapeHtml(url)} ----</div>
+<div class="c-green">+ ${escapeHtml(url)}admin (CODE:200|SIZE:4210)</div>
+<div class="c-green">+ ${escapeHtml(url)}login.php (CODE:200|SIZE:1240)</div>
+<div class="c-yellow">+ ${escapeHtml(url)}uploads/ (CODE:403|SIZE:1020)</div>
+<div class="c-green">+ ${escapeHtml(url)}config.bak (CODE:200|SIZE:512)</div>
+<br />
+<div class="c-gray">---------------------------------</div>
+<div class="c-gray">END_TIME: ${new Date().toTimeString().split(' ')[0]}</div>
+<div class="c-gray">DOWNLOADED: 4612 - FOUND: 4</div>
+						`);
+						break;
+
+					case 'msfconsole':
+						appendOutput(`
+<div class="c-purple">
+      .:+ooyyeyyoo+:.
+   .+yhhhhhhyhhhhhhhy+.
+ .shhhhhhhhhyhhhhhhhhhhs.
+.shhhhhhhhhhyhhhhhhhhhhhs.
+shhhhhhhhhhhyhhhhhhhhhhhhs
+hhhhhhhhhhhhyhhhhhhhhhhhhh
+hhhhhhhhhhhhyhhhhhhhhhhhhh
+hhhhhhhhhhhhyhhhhhhhhhhhhh
+hhhhhhhhhhhhyhhhhhhhhhhhhh
+shhhhhhhhhhhyhhhhhhhhhhhhs
+.shhhhhhhhhhyhhhhhhhhhhhs.
+ .shhhhhhhhhyhhhhhhhhhhs.
+   .+yhhhhhhyhhhhhhhy+.
+      .:+ooyyeyyoo+:.
+</div>
+<br />
+<div class="c-blue">=[ metasploit v6.3.27-dev-                         ]</div>
+<div class="c-blue">+ -- --=[ 2384 exploits - 1235 auxiliary - 415 post       ]</div>
+<div class="c-blue">+ -- --=[ 1040 payloads - 45 encoders - 11 nops           ]</div>
+<br />
+<div class="c-gray">Metasploit tip: Type <span class="c-green">help</span> or <span class="c-green">search &lt;name&gt;</span> to explore modules.</div>
+<div class="c-yellow">msf6 &gt; payload interactive simulation active. Type 'exit' to quit msfconsole.</div>
+						`);
+						break;
+
+					case 'sysinfo':
+						appendOutput(`
+<div class="c-blue" style="font-weight:700;font-size:1.1rem;margin-bottom:0.5rem;">=== YATHIN ADVANCED AI & FULLSTACK ARCHITECTURE ===</div>
+<table style="width:100%;text-align:left;line-height:1.8;">
+	<tr><td class="c-blue" style="width:180px;">System Core:</td><td>Yathin FullStack Modular Architecture</td></tr>
+	<tr><td class="c-blue">AI Inference Engine:</td><td>Groq LPU & Gemini 1.5 Multimodal Orchestration</td></tr>
+	<tr><td class="c-blue">Real-Time Streaming:</td><td>LiveKit WebRTC Low-Latency Pipeline</td></tr>
+	<tr><td class="c-blue">Frontend Framework:</td><td>Astro & React with Vanilla Glassmorphic CSS</td></tr>
+	<tr><td class="c-blue">Database & Trust Engine:</td><td>Supabase Co-Financing & Settlement Engine</td></tr>
+	<tr><td class="c-blue">Security Protocol:</td><td>Nexus Terminal Simulation Sandbox (Active)</td></tr>
+</table>
+						`);
+						break;
+
+					case 'history':
+						if (cmdHistory.length === 0) {
+							appendOutput('No commands in history.');
+						} else {
+							appendOutput(cmdHistory.map((c, i) => `<div><span class="c-blue" style="display:inline-block;width:40px;">${i+1}</span> ${escapeHtml(c)}</div>`).join(''));
+						}
+						break;
+
+					case 'date':
+						appendOutput(new Date().toString());
+						break;
+
+					case 'echo':
+						appendOutput(escapeHtml(args.join(' ')));
+						break;
+
+					case 'clear':
+					case 'cls':
+						if (terminalOutput) terminalOutput.innerHTML = '';
+						break;
+
+					case 'sudo':
+						if (args.length === 0) {
+							appendOutput('usage: sudo &lt;command&gt;');
+						} else {
+							appendOutput(`[sudo] executing root command: ${escapeHtml(args.join(' '))}...<br /><span class="c-green">SUCCESS: Command executed with elevated root privileges.</span>`);
+						}
+						break;
+
+					case 'exit':
+						appendOutput('Exiting Nexus Terminal session... returning to portfolio.');
+						setTimeout(() => {
+							window.location.href = '/';
+						}, 600);
+						break;
+
+					default:
+						appendOutput(`<span class="c-red">[!] Error: '${escapeHtml(cmd)}' is not a recognized command.</span><br /><span class="c-gray">Please type <span class="c-green" style="font-weight:700;">help</span> to view the list of valid system commands and portfolio actions.</span>`);
+						break;
+				}
+
+				resetPrompt();
+			}
+		</script>
+	</body>
+</html>
