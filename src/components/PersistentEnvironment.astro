@@ -20,7 +20,7 @@
 	<span class="score-value" id="meteor-score-value">00</span>
 </div>
 
-<style>
+<style is:global>
 	#cinematic-background {
 		position: fixed;
 		inset: 0;
@@ -166,15 +166,19 @@
 
 	.meteor-entity {
 		position: absolute;
-		width: 2px;
-		height: 2px;
+		width: 4px;
+		height: 4px;
 		background: #fff;
 		border-radius: 50%;
-		box-shadow: 0 0 8px 1px rgba(255, 255, 255, 0.8), 0 0 15px 3px rgba(249, 115, 22, 0.3);
+		box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.9), 0 0 20px 4px rgba(249, 115, 22, 0.4);
 		pointer-events: auto;
 		cursor: crosshair;
 		will-change: transform, opacity;
 		z-index: 3;
+		/* Invisible padding expands clickable hitbox */
+		padding: 12px;
+		margin: -12px;
+		background-clip: content-box;
 	}
 
 	.meteor-entity::before {
@@ -182,9 +186,9 @@
 		position: absolute;
 		top: 50%;
 		right: 100%;
-		width: 50px;
-		height: 1px;
-		background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.7));
+		width: 70px;
+		height: 1.5px;
+		background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.5) 60%, rgba(255, 255, 255, 0.8));
 		transform: translateY(-50%);
 		pointer-events: none;
 	}
@@ -828,7 +832,7 @@
 			}
 
 			scheduleNextSpawn() {
-				const delay = 6000 + Math.random() * 12000;
+				const delay = 4000 + Math.random() * 8000;
 				setTimeout(() => {
 					if (!document.hidden && currentPhase === 5) {
 						this.spawnMeteor();
@@ -1016,7 +1020,15 @@
 		}
 
 		// Initialize interactive systems
-		new MeteorSystem();
+		const meteorSystem = new MeteorSystem();
+
+		// Spawn the first meteor shortly after loader completes
+		const firstMeteorCheck = setInterval(() => {
+			if (currentPhase === 5 && meteorSystem.container) {
+				clearInterval(firstMeteorCheck);
+				setTimeout(() => meteorSystem.spawnMeteor(), 2000);
+			}
+		}, 500);
 
 		document.body.classList.add("loading");
 		requestAnimationFrame(tick);
