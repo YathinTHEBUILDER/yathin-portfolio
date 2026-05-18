@@ -486,14 +486,31 @@
 		let lastTimestamp = 0;
 
 		const loaderPercentEl = document.getElementById("loader-percent");
-		const loaderStatusEl = document.getElementById("loader-status-code");
 		const loaderStatusTitleEl = document.getElementById("loader-status-title");
-		const loaderBarEl = document.getElementById("loader-bar-fill");
+		const loaderStatusTickerEl = document.getElementById("loader-status-ticker");
 		const loaderUiEl = document.getElementById("loader-ui");
 		const loaderOverlayEl = document.getElementById("cinematic-loader");
 		const mainContentEl = document.getElementById("main-content");
 		const ringProgress = document.querySelector(".ring-progress") as HTMLElement | null;
 		const ringCircumference = 502.65;
+
+		// New symmetric frame bottom-right indicator
+		const hudEncryptionEl = document.getElementById("loader-hud-encryption");
+		const wavePath = document.getElementById("loader-wave-path");
+
+		let wavePhase = 0;
+		let lastLoggedIndex = -1;
+
+		const bootLogs = [
+			{ pct: 0, text: "INITIATING DIAGNOSTIC HANDSHAKE..." },
+			{ pct: 15, text: "ESTABLISHED HOST NEURAL CONNECTION..." },
+			{ pct: 30, text: "DECRYPTING LINK SECURE PIPELINE..." },
+			{ pct: 48, text: "TOPOLOGY BOOT // GENERATING SPATIAL GRID..." },
+			{ pct: 65, text: "PARSING GRAPHICAL ENGINE ARCHITECTURE..." },
+			{ pct: 82, text: "LOADED WEBGL HARDWARE BUFFER PIPELINE..." },
+			{ pct: 95, text: "INTERFACE SYSTEMS READY // ACCESS GRANTED..." },
+			{ pct: 100, text: "NEXUS SYSTEMS SECURELY OPERATIONAL..." }
+		];
 
 		const loaderProgressSpring = new Spring(0, 0, MOTION_TOKENS.springs.softBlend.stiffness, MOTION_TOKENS.springs.softBlend.damping);
 
@@ -501,34 +518,6 @@
 			isMobile = window.innerWidth < 768;
 		}
 		window.addEventListener("resize", resize);
-
-		const statusLogs = [
-			"SYS.CORE_STAGE_01 // AMBIENT_VOID_SECTOR",
-			"DETECTION_EMERGED // CAPTURING_BEACON_PULSE",
-			"TOPOLOGY_ACTIVE // GENERATING_COORDINATE_MAP",
-			"INITIALIZING_YATHIN.ENGINEER // BOOTING_SERVICES",
-			"INTERFACE_SYSTEMS_READY // SYNC_SUCCESS"
-		];
-
-		function getGlitchedText(text: string, phaseProgress: number) {
-			if (phaseProgress >= 0.96) return text;
-			const cyberchars = ["▰", "▱", "▀", "▄", "█", "░", "▒", "▓", "⚡", "⚙", "0", "1", "[", "]", "X", "Y"];
-			let result = "";
-			for (let i = 0; i < text.length; i++) {
-				const char = text[i];
-				if (char === " " || char === "/" || char === "." || char === "_") {
-					result += char;
-				} else {
-					const threshold = Math.pow(phaseProgress, 1.4);
-					if (Math.random() > threshold) {
-						result += cyberchars[Math.floor(Math.random() * cyberchars.length)];
-					} else {
-						result += char;
-					}
-				}
-			}
-			return result;
-		}
 
 		function tick(timestamp: number) {
 			const dt = timestamp - (lastTimestamp || timestamp);
@@ -539,45 +528,28 @@
 				loaderProgress = Math.min(100, (phaseTimer / 3200) * 100);
 			}
 
-			let targetTitle = "ESTABLISHING CORE";
-			let baseText = statusLogs[0];
-			let phaseProg = 0;
+			let targetTitle = "SYSTEM INIT";
 
 			if (loaderProgress < 20) {
 				currentPhase = 1;
-				targetTitle = "ESTABLISHING CORE";
-				baseText = statusLogs[0];
-				phaseProg = loaderProgress / 20;
+				targetTitle = "SYSTEM INIT";
 			} else if (loaderProgress < 45) {
 				currentPhase = 2;
 				targetTitle = "DECRYPTING LINK";
-				baseText = statusLogs[1];
-				phaseProg = (loaderProgress - 20) / 25;
 			} else if (loaderProgress < 70) {
 				currentPhase = 3;
 				targetTitle = "TOPOLOGY BOOT";
-				baseText = statusLogs[2];
-				phaseProg = (loaderProgress - 45) / 25;
 			} else if (loaderProgress < 100) {
 				currentPhase = 4;
 				targetTitle = "BOOTING MODULES";
-				baseText = statusLogs[3];
-				phaseProg = (loaderProgress - 70) / 30;
 			} else {
 				if (currentPhase < 5) {
 					currentPhase = 5;
 					triggerTransition();
 				}
 				targetTitle = "SYNC COMPLETE";
-				baseText = statusLogs[4];
-				phaseProg = 1.0;
 			}
 
-			if (loaderStatusEl && currentPhase < 5) {
-				loaderStatusEl.innerText = getGlitchedText(baseText, phaseProg);
-			} else if (loaderStatusEl && currentPhase === 5) {
-				loaderStatusEl.innerText = baseText;
-			}
 			if (loaderStatusTitleEl) {
 				loaderStatusTitleEl.innerText = targetTitle;
 			}
@@ -588,9 +560,6 @@
 			if (loaderPercentEl) {
 				loaderPercentEl.innerText = Math.floor(activeProgress).toString().padStart(2, '0');
 			}
-			if (loaderBarEl) {
-				loaderBarEl.style.width = `${activeProgress}%`;
-			}
 			if (ringProgress) {
 				const offset = ringCircumference - (activeProgress / 100) * ringCircumference;
 				ringProgress.style.strokeDashoffset = offset.toString();
@@ -598,6 +567,42 @@
 			if (loaderUiEl) {
 				const speed = 1.0 + (activeProgress / 20.0);
 				loaderUiEl.style.setProperty("--orbit-speed", speed.toFixed(2));
+			}
+
+			// Smooth single-line status ticker update on percentage crossings
+			if (loaderStatusTickerEl) {
+				let activeText = bootLogs[0].text;
+				bootLogs.forEach((log) => {
+					if (loaderProgress >= log.pct) {
+						activeText = log.text;
+					}
+				});
+				if (loaderStatusTickerEl.innerText !== activeText) {
+					loaderStatusTickerEl.innerText = activeText;
+				}
+			}
+
+			// Dynamic horizontal mathematical waveguide inside the 100x20 container
+			if (wavePath) {
+				wavePhase += 0.05 + (activeProgress / 250.0);
+				const amp = 0.5 + (activeProgress / 20.0);
+				const freq = 0.15 + (activeProgress / 300.0);
+				let pathD = "M 0,10";
+				for (let x = 0; x <= 100; x += 1) {
+					const env = Math.sin((x * Math.PI) / 100);
+					const y = 10 + Math.sin(x * freq - wavePhase) * amp * env;
+					pathD += ` L ${x},${y.toFixed(1)}`;
+				}
+				wavePath.setAttribute("d", pathD);
+			}
+
+			// Update bottom right static frame key on success
+			if (hudEncryptionEl) {
+				if (currentPhase === 5) {
+					hudEncryptionEl.innerText = "ACCESS_GRANTED // SYNC_OK";
+				} else {
+					hudEncryptionEl.innerText = "AUTH_STAGES: OK";
+				}
 			}
 
 			if (currentPhase === 5 && !isMobile) {
@@ -977,38 +982,63 @@
 		}
 
 		function triggerTransition() {
+			// 1. Instantly trigger waking visual state
 			if (loaderUiEl) {
-				loaderUiEl.style.transform = "scale(0.92) translateY(-15px)";
-				loaderUiEl.style.opacity = "0";
+				loaderUiEl.classList.add("loader-waking");
+				loaderUiEl.style.setProperty("--orbit-speed", "10");
 			}
-
+			
+			// 2. Snap-expand and fade out after a short dramatic pause (500ms)
 			setTimeout(() => {
-				if (loaderOverlayEl) {
-					loaderOverlayEl.style.opacity = "0";
-					loaderOverlayEl.style.pointerEvents = "none";
+				if (loaderUiEl) {
+					loaderUiEl.style.transform = "scale(1.1) rotate(1.5deg)";
+					loaderUiEl.style.opacity = "0";
+					loaderUiEl.style.filter = "blur(12px)";
 				}
-
-				if (mainContentEl) {
-					mainContentEl.style.opacity = "1";
-					mainContentEl.style.transform = "translateY(0)";
-					mainContentEl.style.pointerEvents = "all";
+				
+				const gridOverlay = document.querySelector(".loader-grid-overlay") as HTMLElement | null;
+				if (gridOverlay) {
+					gridOverlay.style.transform = "scale(1.35)";
+					gridOverlay.style.opacity = "0";
 				}
-
-				document.body.classList.remove("loading");
-
-				const nav = document.querySelector("nav");
-				if (nav) {
-					nav.style.transform = "translateY(0)";
-					nav.style.opacity = "1";
+				
+				// De-blur and fade out HUD frame
+				const viewportFrame = document.querySelector(".loader-viewport-frame") as HTMLElement | null;
+				if (viewportFrame) {
+					viewportFrame.style.opacity = "0";
+					viewportFrame.style.transform = "scale(1.02)";
 				}
-
+				
+				// 3. Fade out overlay and slide-in/de-blur main landing page
 				setTimeout(() => {
 					if (loaderOverlayEl) {
-						loaderOverlayEl.style.display = "none";
+						loaderOverlayEl.style.opacity = "0";
+						loaderOverlayEl.style.pointerEvents = "none";
 					}
-				}, 1500);
 
-			}, 400);
+					if (mainContentEl) {
+						mainContentEl.style.opacity = "1";
+						mainContentEl.style.transform = "translateY(0)";
+						mainContentEl.style.filter = "blur(0px)";
+						mainContentEl.style.pointerEvents = "all";
+					}
+
+					document.body.classList.remove("loading");
+
+					const nav = document.querySelector("nav");
+					if (nav) {
+						nav.style.transform = "translateY(0)";
+						nav.style.opacity = "1";
+					}
+
+					setTimeout(() => {
+						if (loaderOverlayEl) {
+							loaderOverlayEl.style.display = "none";
+						}
+					}, 1500);
+
+				}, 350); // snap duration
+			}, 500); // intense wake delay
 		}
 
 		document.body.classList.add("loading");
