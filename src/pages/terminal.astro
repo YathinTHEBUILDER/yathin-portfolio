@@ -1,5 +1,5 @@
 ---
-// Yathin — Nexus Terminal Web Application
+// Yathin — Terminal Web Application
 ---
 
 <!doctype html>
@@ -7,10 +7,10 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Terminal | Nexus Terminal - Advanced CLI Environment</title>
+		<title>Terminal | Interactive Terminal - Advanced CLI Environment</title>
 		<meta
 			name="description"
-			content="Interactive Nexus Terminal environment exploring system commands, AI capabilities, and developer portfolio."
+			content="Interactive Portfolio Terminal environment exploring system commands, AI capabilities, and developer portfolio."
 		/>
 		<meta name="theme-color" content="#0a0a0a" />
 
@@ -469,9 +469,9 @@
 				<div class="panel-left">
 					<a href="/" class="core-brand">
 						<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-						NEXUS TERMINAL
+						YATHIN TERMINAL
 					</a>
-					<span class="panel-title">Terminal Workspace // NEXUS-01</span>
+					<span class="panel-title">Terminal Workspace // SYS-01</span>
 				</div>
 				<div class="panel-right">
 					<div class="sys-stats">
@@ -490,7 +490,7 @@
 							<div class="win-dot min" title="Minimize"></div>
 							<div class="win-dot max" id="btnMaximize" title="Maximize"></div>
 						</div>
-						<div class="window-title">yathin@nexus: ~</div>
+						<div class="window-title">yathin@terminal: ~</div>
 						<div class="window-actions">
 							<button class="win-action-btn" onclick="clearTerminal()" title="Clear Terminal">
 								<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
@@ -504,14 +504,14 @@
 						<!-- Initial Welcome Banner -->
 						<div class="output-block">
 							<div class="ascii-art">
-███╗   ██╗███████╗██╗  ██╗██╗   ██╗███████╗    ████████╗███████╗██████╗ ███╗   ███╗
-████╗  ██║██╔════╝╚██╗██╔╝██║   ██║██╔════╝    ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║
-██╔██╗ ██║█████╗   ╚███╔╝ ██║   ██║███████╗       ██║   █████╗  ██████╔╝██╔████╔██║
-██║╚██╗██║██╔══╝   ██╔██╗ ██║   ██║╚════██║       ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║
-██║ ╚████║███████╗██╔╝ ██╗╚██████╔╝███████║       ██║   ███████╗██║  ██║██║ ╚═╝ ██║
-╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝       ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝
+██╗   ██╗ █████╗ ████████╗██╗  ██╗██╗███╗   ██╗    ████████╗███████╗██████╗ ███╗   ███╗
+╚██╗ ██╔╝██╔══██╗╚══██╔══╝██║  ██║██║████╗  ██║    ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║
+ ╚████╔╝ ███████║   ██║   ███████║██║██╔██╗ ██║       ██║   █████╗  ██████╔╝██╔████╔██║
+  ╚██╔╝  ██╔══██║   ██║   ██╔══██║██║██║╚██╗██║       ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║
+   ██║   ██║  ██║   ██║   ██║  ██║██║██║ ╚████║       ██║   ███████╗██║  ██║██║ ╚═╝ ██║
+   ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝       ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝
 							</div>
-							<p class="c-gray" style="margin-bottom: 0.5rem;">Welcome to the interactive Nexus Terminal Advanced AI & Full Stack Environment.</p>
+							<p class="c-gray" style="margin-bottom: 0.5rem;">Welcome to the interactive Yathin Terminal Advanced AI & Full Stack Environment.</p>
 							<p class="c-gray" style="margin-bottom: 1.2rem;">Type <span class="c-green">help</span> to view available system commands and portfolio information.</p>
 						</div>
 
@@ -521,7 +521,7 @@
 						<!-- Active Prompt Line -->
 						<div class="prompt-line" id="active-prompt">
 							<div class="prompt-header">
-								<span class="prompt-p1">┌──(</span><span class="prompt-user">yathin㉿nexus</span><span class="prompt-p2">)-[</span><span class="prompt-dir">~</span><span class="prompt-p3">]</span>
+								<span class="prompt-p1">┌──(</span><span class="prompt-user">yathin㉿terminal</span><span class="prompt-p2">)-[</span><span class="prompt-dir">~</span><span class="prompt-p3">]</span>
 							</div>
 							<div class="prompt-arrow-wrap">
 								<span class="prompt-arrow">└─$</span>
@@ -660,7 +660,7 @@
 				const promptHtml = `
 					<div class="prompt-line">
 						<div class="prompt-header">
-							<span class="prompt-p1">┌──(</span><span class="prompt-user">yathin㉿nexus</span><span class="prompt-p2">)-[</span><span class="prompt-dir">~</span><span class="prompt-p3">]</span>
+							<span class="prompt-p1">┌──(</span><span class="prompt-user">yathin㉿terminal</span><span class="prompt-p2">)-[</span><span class="prompt-dir">~</span><span class="prompt-p3">]</span>
 						</div>
 						<div class="prompt-arrow-wrap">
 							<span class="prompt-arrow">└─$</span>
@@ -708,7 +708,7 @@
 								<tr><td class="help-cmd">projects</td><td class="help-desc">Explore full stack & AI engineering projects</td></tr>
 								<tr><td class="help-cmd">achievements</td><td class="help-desc">View key milestones & continuous study efforts</td></tr>
 								<tr><td class="help-cmd">contact</td><td class="help-desc">Display direct contact information & social links</td></tr>
-								<tr><td class="help-cmd">neofetch</td><td class="help-desc">Display system information and Nexus Terminal ASCII logo</td></tr>
+								<tr><td class="help-cmd">neofetch</td><td class="help-desc">Display system information and Terminal ASCII logo</td></tr>
 								<tr><td class="help-cmd">whoami</td><td class="help-desc">Print current user</td></tr>
 								<tr><td class="help-cmd">pwd</td><td class="help-desc">Print working directory</td></tr>
 								<tr><td class="help-cmd">ls</td><td class="help-desc">List directory contents</td></tr>
@@ -821,24 +821,24 @@ My work centers on building software that feels natural and responsive. I enjoy 
 						appendOutput(`
 							<div class="neofetch-container">
 								<div class="neofetch-ascii">
-         /\\  /\\         
-        // \\// \\        
-       //  //  \\       
-      //  //    \\      
-     //  //      \\     
-    //  //        \\    
-   //  //__________\\   
-  //  //            \\  
- //  //              \\ 
-//  //                \\
+  \\\\\\         ///  
+   \\\\\\       ///   
+    \\\\\\     ///    
+     \\\\\\   ///     
+      \\\\\\ ///      
+       \\\\V//       
+        |||        
+        |||        
+        |||        
+        |||        
 								</div>
 								<div class="neofetch-info">
-									<div class="neofetch-title">yathin@nexus-terminal</div>
-									<div><span class="c-blue">Terminal:</span> Nexus Terminal v2026.5</div>
+									<div class="neofetch-title">yathin@yathin-terminal</div>
+									<div><span class="c-blue">Terminal:</span> Yathin Terminal v2026.5</div>
 									<div><span class="c-blue">Host:</span> Yathin Advanced AI Architecture</div>
-									<div><span class="c-blue">Kernel:</span> 6.6.9-nexus-amd64</div>
+									<div><span class="c-blue">Kernel:</span> 6.6.9-generic-amd64</div>
 									<div><span class="c-blue">Uptime:</span> 42 days, 7 hours, 12 mins</div>
-									<div><span class="c-blue">Packages:</span> 3184 (nexus-pkg)</div>
+									<div><span class="c-blue">Packages:</span> 3184 (system-pkg)</div>
 									<div><span class="c-blue">Shell:</span> zsh 5.9</div>
 									<div><span class="c-blue">WM:</span> NeuralGlass (Cinematic UI)</div>
 									<div><span class="c-blue">CPU:</span> Quantum Neural Processor (16) @ 4.800GHz</div>
@@ -1008,7 +1008,7 @@ shhhhhhhhhhhyhhhhhhhhhhhhs
 	<tr><td class="c-blue">Real-Time Streaming:</td><td>LiveKit WebRTC Low-Latency Pipeline</td></tr>
 	<tr><td class="c-blue">Frontend Framework:</td><td>Astro & React with Vanilla Glassmorphic CSS</td></tr>
 	<tr><td class="c-blue">Database & Trust Engine:</td><td>Supabase Co-Financing & Settlement Engine</td></tr>
-	<tr><td class="c-blue">Security Protocol:</td><td>Nexus Terminal Simulation Sandbox (Active)</td></tr>
+	<tr><td class="c-blue">Security Protocol:</td><td>Terminal Simulation Sandbox (Active)</td></tr>
 </table>
 						`);
 						break;
@@ -1043,7 +1043,7 @@ shhhhhhhhhhhyhhhhhhhhhhhhs
 						break;
 
 					case 'exit':
-						appendOutput('Exiting Nexus Terminal session... returning to portfolio.');
+						appendOutput('Exiting Terminal session... returning to portfolio.');
 						setTimeout(() => {
 							window.location.href = '/';
 						}, 600);

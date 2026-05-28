@@ -7,6 +7,14 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
+		<script is:inline>
+			window.addEventListener('error', (event) => {
+				alert('GLOBAL ERROR: ' + event.message + ' at ' + event.filename + ':' + event.lineno);
+			});
+			window.addEventListener('unhandledrejection', (event) => {
+				alert('UNHANDLED REJECTION: ' + event.reason);
+			});
+		</script>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Yathin | Full Stack Developer & AI Engineer</title>
 		<meta
@@ -34,6 +42,8 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 		<script
 			src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"
 		></script>
+
+
 
 		<style>
 			*,
@@ -468,8 +478,30 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 			}
 
 
+			/* ── Lenis Smooth Scroll CSS Overrides ── */
+			html.lenis,
+			html.lenis body {
+				height: auto;
+			}
+
+			.lenis.lenis-smooth {
+				scroll-behavior: auto !important;
+			}
+
+			.lenis.lenis-smooth [data-lenis-prevent] {
+				overscroll-behavior: contain;
+			}
+
+			.lenis.lenis-stopped {
+				overflow: hidden;
+			}
+
+			.lenis.lenis-smooth iframe {
+				pointer-events: none;
+			}
+
 			html {
-				scroll-behavior: smooth;
+				scroll-behavior: auto !important;
 			}
 
 			body {
@@ -705,7 +737,6 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 				color: #64748b;
 				pointer-events: none;
 				opacity: 0;
-				animation: fadeUp 1s ease-out 0.8s forwards;
 			}
 			.hero-hud-decorator.top-left {
 				left: 2.5rem;
@@ -756,7 +787,6 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 				width: 150px;
 				height: 150px;
 				opacity: 0;
-				animation: fadeUp 0.8s ease-out forwards;
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -873,7 +903,6 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 				text-transform: uppercase;
 				margin-bottom: 1.5rem;
 				opacity: 0;
-				animation: fadeUp 0.8s ease-out 0.1s forwards;
 				backdrop-filter: blur(12px);
 				box-shadow: 0 0 20px rgba(249, 115, 22, 0.15);
 				position: relative;
@@ -913,7 +942,6 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 				line-height: 1.1;
 				margin-bottom: 1.5rem;
 				opacity: 0;
-				animation: fadeUp 0.8s ease-out 0.2s forwards;
 				letter-spacing: -0.03em;
 				position: relative;
 			}
@@ -946,7 +974,6 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 				min-height: 3rem;
 				opacity: 0;
 				font-weight: 500;
-				animation: fadeUp 0.8s ease-out 0.4s forwards;
 				box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.05);
 				backdrop-filter: blur(12px);
 				letter-spacing: 0.02em;
@@ -964,7 +991,6 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 				max-width: 650px;
 				margin: 0 auto 3.5rem;
 				opacity: 0;
-				animation: fadeUp 0.8s ease-out 0.5s forwards;
 				font-weight: 400;
 			}
 
@@ -977,7 +1003,6 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 				align-items: center;
 				margin-bottom: 3rem;
 				opacity: 0;
-				animation: fadeUp 0.6s ease-out 0.7s forwards;
 			}
 
 			.btn-primary {
@@ -1083,7 +1108,6 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 				align-items: center;
 				gap: 0.5rem;
 				opacity: 0;
-				animation: fadeUp 0.8s ease-out 1s forwards;
 				pointer-events: none;
 			}
 			.mouse-frame {
@@ -1119,16 +1143,7 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 				100% { transform: translateY(0); opacity: 1; }
 			}
 
-			@keyframes fadeUp {
-				from {
-					opacity: 0;
-					transform: translateY(30px);
-				}
-				to {
-					opacity: 1;
-					transform: translateY(0);
-				}
-			}
+			/* fadeUp keyframes removed in favor of GSAP timelines */
 
 			/* ABOUT */
 			.about-grid {
@@ -1972,13 +1987,7 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 				opacity: 0;
 				transform: translateY(45px) translateZ(-50px);
 				transform-style: preserve-3d;
-				transition:
-					opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-					transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
-			}
-			.reveal.visible {
-				opacity: 1;
-				transform: translateY(0) translateZ(0);
+				will-change: transform, opacity;
 			}
 			#main-content {
 				perspective: 1200px;
@@ -2157,12 +2166,6 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 				<div class="orbit-tracker tracker-2"></div>
 			</div>
 
-			<!-- Status Pill -->
-			<div class="hero-greeting-badge">
-				<span class="pulse-dot-inner"></span>
-				<span class="badge-text">HELLO, I'M</span>
-				<span class="badge-scanner"></span>
-			</div>
 
 			<!-- Hero Title -->
 			<h1 class="hero-name">
@@ -2201,15 +2204,6 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 						<svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
 					</a>
 				</div>
-			</div>
-
-			<!-- Sleek Mouse Scroll Indicator -->
-			<div class="scroll-indicator-wrap">
-				<div class="mouse-frame">
-					<div class="mouse-wheel"></div>
-				</div>
-				<span class="scroll-text">SCROLL</span>
-			</div>
 		</section>
 
 		<!-- ABOUT -->
@@ -2769,9 +2763,102 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 					const form = document.getElementById('contact-form');
 					const btn = document.getElementById('contact-submit-btn');
 					
+					// Rate Limiting Constants
+					const COOLDOWN_MS = 60 * 1000; // 1 minute cooldown
+					const MAX_DAILY_SUBMITS = 5;
+					const DAY_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+					// Helper to get rate limit state from localStorage
+					function getRateLimitState() {
+						try {
+							const data = localStorage.getItem('nexus_contact_rate_limit');
+							return data ? JSON.parse(data) : { lastSubmitTime: 0, dailySubmits: [] };
+						} catch (e) {
+							return { lastSubmitTime: 0, dailySubmits: [] };
+						}
+					}
+
+					// Helper to save rate limit state to localStorage
+					function saveRateLimitState(state) {
+						try {
+							localStorage.setItem('nexus_contact_rate_limit', JSON.stringify(state));
+						} catch (e) {}
+					}
+
+					// Update button state with countdown if in cooldown
+					function updateButtonCooldown() {
+						if (!btn) return;
+						const state = getRateLimitState();
+						const now = Date.now();
+						
+						// Filter daily submissions older than 24h
+						const recentDaily = state.dailySubmits.filter(t => now - t < DAY_MS);
+						if (recentDaily.length !== state.dailySubmits.length) {
+							state.dailySubmits = recentDaily;
+							saveRateLimitState(state);
+						}
+
+						// Check daily limit first
+						if (recentDaily.length >= MAX_DAILY_SUBMITS) {
+							const earliestSubmit = Math.min(...recentDaily);
+							const resetTimeRemaining = DAY_MS - (now - earliestSubmit);
+							const hoursLeft = Math.ceil(resetTimeRemaining / (1000 * 60 * 60));
+							btn.disabled = true;
+							const btnText = btn.querySelector('span');
+							if (btnText) {
+								btnText.innerText = `Limit Exceeded (Reset: ${hoursLeft}h)`;
+							}
+							return true; // daily limit active
+						}
+
+						// Check active cooldown
+						const elapsed = now - state.lastSubmitTime;
+						if (elapsed < COOLDOWN_MS) {
+							const remaining = Math.ceil((COOLDOWN_MS - elapsed) / 1000);
+							btn.disabled = true;
+							const btnText = btn.querySelector('span');
+							if (btnText) {
+								btnText.innerText = `Cooldown: ${remaining}s`;
+							}
+							
+							// Poll every second to update button text
+							setTimeout(updateButtonCooldown, 1000);
+							return true; // cooldown active
+						}
+
+						// Reset button state
+						btn.disabled = false;
+						const btnText = btn.querySelector('span');
+						if (btnText) {
+							btnText.innerText = 'Send Message';
+						}
+						return false;
+					}
+
+					// Initial run to restore any active cooldown/limit
+					updateButtonCooldown();
+					
 					if(form) {
 						form.addEventListener('submit', async (e) => {
 							e.preventDefault();
+							
+							const now = Date.now();
+							const state = getRateLimitState();
+							
+							// Double check rate limits on submit trigger
+							const elapsed = now - state.lastSubmitTime;
+							if (elapsed < COOLDOWN_MS) {
+								const remaining = Math.ceil((COOLDOWN_MS - elapsed) / 1000);
+								alert(`Rate Limit: Please wait ${remaining} seconds before sending another message.`);
+								return;
+							}
+							
+							const recentDaily = state.dailySubmits.filter(t => now - t < DAY_MS);
+							if (recentDaily.length >= MAX_DAILY_SUBMITS) {
+								alert(`Daily Limit: You have reached the maximum of ${MAX_DAILY_SUBMITS} messages per 24 hours. Please try again tomorrow.`);
+								return;
+							}
+
 							const originalContent = btn.innerHTML;
 							btn.innerHTML = '<span>Transmitting...</span>';
 							btn.disabled = true;
@@ -2786,6 +2873,15 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 								if (response.ok) {
 									alert('Thanks! Your message has been sent securely.');
 									form.reset();
+									
+									// Record successful submission
+									const updatedState = getRateLimitState();
+									updatedState.lastSubmitTime = Date.now();
+									updatedState.dailySubmits.push(Date.now());
+									saveRateLimitState(updatedState);
+									
+									// Start button cooldown countdown
+									updateButtonCooldown();
 								} else {
 									const data = await response.json();
 									if (Object.hasOwn(data, 'errors')) {
@@ -2793,10 +2889,11 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 									} else {
 										alert('System error: unable to transmit message. Please try again.');
 									}
+									btn.innerHTML = originalContent;
+									btn.disabled = false;
 								}
 							} catch (error) {
 								alert('Network error: unable to reach the server. Please check your connection.');
-							} finally {
 								btn.innerHTML = originalContent;
 								btn.disabled = false;
 							}
@@ -2832,17 +2929,73 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 
 
 	<script>
+			import Lenis from 'lenis';
+			import gsap from 'gsap';
+			import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+			try {
+				gsap.registerPlugin(ScrollTrigger);
+			} catch (e) {
+				console.error("GSAP ScrollTrigger plugin registration failed:", e);
+			}
+
 			declare var Typed: any;
 			declare var VanillaTilt: any;
 
 			declare global {
 				interface Window {
 					VanillaTilt: any;
+					Lenis: any;
 				}
 			}
 
+			const runOnInit = (fn: () => void) => {
+				if (document.readyState === "loading") {
+					document.addEventListener("DOMContentLoaded", fn);
+				} else {
+					fn();
+				}
+			};
+
+			// ── Lenis Smooth Scroll ──────────────────────────────────
+			runOnInit(() => {
+				const lenis = new Lenis({
+					autoRaf: false,
+					lerp: 0.06, // Slightly lower lerp for a smoother, premium deceleration feel
+					smoothWheel: true,
+					wheelMultiplier: 1.0,
+					touchMultiplier: 1.5,
+				});
+				(window as any).lenis = lenis;
+
+				// Hook Lenis into GSAP ticker for perfect synchronization of animations
+				gsap.ticker.add((time) => {
+					lenis.raf(time * 1000);
+				});
+
+				// Disable lag smoothing in GSAP to prevent visual jumps/stutters
+				gsap.ticker.lagSmoothing(0);
+
+				// Connect ScrollTrigger updates with Lenis scroll event
+				lenis.on('scroll', ScrollTrigger.update);
+
+				// Hook all internal anchor links to smooth scroll
+				document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+					anchor.addEventListener("click", function (this: HTMLAnchorElement, e) {
+						e.preventDefault();
+						const targetId = this.getAttribute("href");
+						if (targetId) {
+							const target = document.querySelector(targetId);
+							if (target) {
+								lenis.scrollTo(target as HTMLElement, { offset: -85 });
+							}
+						}
+					});
+				});
+			});
+
 			// ── Typed.js ──────────────────────────────────────────
-			document.addEventListener("DOMContentLoaded", () => {
+			runOnInit(() => {
 				new Typed("#typed", {
 					strings: [
 						"Full Stack Developer & AI Engineer.",
@@ -2860,7 +3013,7 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 
 
 			// ── Vanilla Tilt ──────────────────────────────────────
-			document.addEventListener("DOMContentLoaded", () => {
+			runOnInit(() => {
 				if (window.VanillaTilt) {
 					VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
 						max: 8,
@@ -2870,24 +3023,159 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 				}
 			});
 
-			// ── Scroll Reveal ─────────────────────────────────────
-			const observer = new IntersectionObserver(
-				(entries) => {
-					entries.forEach((e, i) => {
-						if (e.isIntersecting) {
-							setTimeout(
-								() => e.target.classList.add("visible"),
-								i * 80,
-							);
+			// ── GSAP Scroll-Reveal & Entrance Timelines ───────────
+			runOnInit(() => {
+				try {
+					if (!gsap || !ScrollTrigger) {
+						throw new Error("GSAP or ScrollTrigger was not loaded correctly.");
+					}
+
+					// Coordinated Hero entrance synced with preloader boot event
+					document.addEventListener("nxs-boot-complete", () => {
+						const tl = gsap.timeline({
+							defaults: { ease: "power4.out", duration: 1.2 }
+						});
+
+						tl.fromTo(".hero-hud-decorator", { opacity: 0, y: -20 }, { opacity: 1, y: 0 })
+						  .fromTo(".hero-avatar-wrap", { opacity: 0, y: 45 }, { opacity: 1, y: 0 }, "-=0.9")
+						  .fromTo(".hero-name", { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, "-=1.0")
+						  .fromTo(".hero-typewriter-box", { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, "-=1.0")
+						  .fromTo(".hero-sub", { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, "-=1.0")
+						  .fromTo(".hero-btns", { opacity: 0, y: 35 }, { opacity: 1, y: 0 }, "-=1.0")
+						  .fromTo(".scroll-indicator-wrap", { opacity: 0, y: 20 }, { opacity: 1, y: 0 }, "-=0.9");
+					});
+
+					// Projects staggered fade-in reveal
+					gsap.fromTo("#projects .project-card", 
+						{ opacity: 0, y: 55, z: -50 },
+						{
+							opacity: 1,
+							y: 0,
+							z: 0,
+							duration: 1.0,
+							stagger: 0.15,
+							ease: "power4.out",
+							scrollTrigger: {
+								trigger: "#projects .projects-grid",
+								start: "top 85%",
+								toggleActions: "play none none none"
+							}
+						}
+					);
+
+					// Skills categories staggered fade-in reveal
+					gsap.fromTo("#skills .skill-category-card", 
+						{ opacity: 0, y: 50, z: -50 },
+						{
+							opacity: 1,
+							y: 0,
+							z: 0,
+							duration: 1.0,
+							stagger: 0.18,
+							ease: "power4.out",
+							scrollTrigger: {
+								trigger: "#skills .skills-categories",
+								start: "top 85%",
+								toggleActions: "play none none none"
+							}
+						}
+					);
+
+					// Contact channel cards staggered reveal
+					gsap.fromTo("#contact .contact-card", 
+						{ opacity: 0, y: 40, z: -40 },
+						{
+							opacity: 1,
+							y: 0,
+							z: 0,
+							duration: 0.8,
+							stagger: 0.1,
+							ease: "power4.out",
+							scrollTrigger: {
+								trigger: "#contact .contact-grid",
+								start: "top 88%",
+								toggleActions: "play none none none"
+							}
+						}
+					);
+
+					// About section stats counters staggered reveal
+					gsap.fromTo("#about .stat-card", 
+						{ opacity: 0, y: 40 },
+						{
+							opacity: 1,
+							y: 0,
+							duration: 0.8,
+							stagger: 0.1,
+							ease: "power4.out",
+							scrollTrigger: {
+								trigger: "#about .stats-grid",
+								start: "top 90%",
+								toggleActions: "play none none none"
+							}
+						}
+					);
+
+					// General scroll-reveal fallback for standard elements
+					document.querySelectorAll(".reveal").forEach((el) => {
+						if (
+							el.classList.contains("project-card") || 
+							el.classList.contains("skill-category-card") || 
+							el.classList.contains("contact-card") || 
+							el.classList.contains("stat-card")
+						) {
+							return; // already stagger-revealed above
+						}
+
+						gsap.fromTo(el, 
+							{ opacity: 0, y: 40, z: -30 },
+							{
+								opacity: 1,
+								y: 0,
+								z: 0,
+								duration: 0.9,
+								ease: "power4.out",
+								scrollTrigger: {
+									trigger: el,
+									start: "top 88%",
+									toggleActions: "play none none none"
+								}
+							}
+						);
+					});
+				} catch (err) {
+					console.error("GSAP Animations failed to initialize. Triggering fallbacks.", err);
+					
+					// Fail-safe fallback to make everything visible immediately so user doesn't get stuck
+					document.querySelectorAll(".reveal").forEach(el => {
+						if (el instanceof HTMLElement) {
+							el.style.opacity = "1";
+							el.style.transform = "none";
 						}
 					});
-				},
-				{ threshold: 0.12 },
-			);
-
-			document
-				.querySelectorAll(".reveal")
-				.forEach((el) => observer.observe(el));
+					document.querySelectorAll(".hero-name, .hero-typewriter-box, .hero-sub, .hero-btns, .scroll-indicator-wrap, .hero-avatar-wrap, .hero-hud-decorator").forEach(el => {
+						if (el instanceof HTMLElement) {
+							el.style.opacity = "1";
+							el.style.transform = "none";
+						}
+					});
+					
+					// Trigger loader completion if it was waiting for boot completion event
+					const loaderOverlayEl = document.getElementById("cinematic-loader");
+					const mainContentEl = document.getElementById("main-content");
+					if (loaderOverlayEl) {
+						loaderOverlayEl.style.opacity = "0";
+						loaderOverlayEl.style.pointerEvents = "none";
+					}
+					if (mainContentEl) {
+						mainContentEl.style.opacity = "1";
+						mainContentEl.style.transform = "none";
+						mainContentEl.style.filter = "none";
+						mainContentEl.style.pointerEvents = "all";
+					}
+					document.body.classList.remove("loading");
+				}
+			});
 
 			// ── Mobile Menu ───────────────────────────────────────
 			function openMobileMenu() {
@@ -2898,13 +3186,28 @@ import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 			}
 
 			// ── Navbar opacity on scroll ──────────────────────────
-			window.addEventListener("scroll", () => {
+			const updateNavbarBg = (y: number) => {
 				const nav = document.querySelector("nav");
 				if (nav) {
 					nav.style.background =
-						window.scrollY > 50 ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.2)";
+						y > 50 ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.2)";
+				}
+			};
+
+			window.addEventListener("scroll", () => {
+				if (!(window as any).lenis) {
+					updateNavbarBg(window.scrollY);
 				}
 			});
+
+			const checkLenisNav = setInterval(() => {
+				if ((window as any).lenis) {
+					clearInterval(checkLenisNav);
+					(window as any).lenis.on('scroll', (e: any) => {
+						updateNavbarBg(e.scroll);
+					});
+				}
+			}, 100);
 
 			// Interactive Systems Panel features removed as per request
 

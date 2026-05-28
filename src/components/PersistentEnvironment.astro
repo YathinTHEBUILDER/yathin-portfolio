@@ -272,7 +272,7 @@
 		}
 	}
 
-	document.addEventListener("DOMContentLoaded", () => {
+	const initEcosystem = () => {
 		let isMobile = window.innerWidth < 768;
 		const rawMouse = { 
 			x: window.innerWidth / 2, 
@@ -282,6 +282,40 @@
 		};
 		let lastMouseX = rawMouse.targetX;
 		let lastMouseY = rawMouse.targetY;
+
+		// State caches to avoid layout thrashing in requestAnimationFrame
+		interface SpatialElementState {
+			el: HTMLElement;
+			absoluteTop: number;
+			absoluteLeft: number;
+			width: number;
+			height: number;
+		}
+
+		const spatialElements: SpatialElementState[] = [];
+		let blueprintData: any[] = [];
+
+		const updateSpatialElementsRects = () => {
+			spatialElements.forEach(s => {
+				const rect = s.el.getBoundingClientRect();
+				s.absoluteTop = rect.top + (window.scrollY || document.documentElement.scrollTop);
+				s.absoluteLeft = rect.left + (window.scrollX || document.documentElement.scrollLeft);
+				s.width = rect.width;
+				s.height = rect.height;
+			});
+		};
+
+		const updateBlueprintRects = () => {
+			if (isMobile || !blueprintData) return;
+			blueprintData.forEach(data => {
+				if (!data) return;
+				const rect = data.svg.getBoundingClientRect();
+				data.absoluteTop = rect.top + (window.scrollY || document.documentElement.scrollTop);
+				data.absoluteLeft = rect.left + (window.scrollX || document.documentElement.scrollLeft);
+				data.width = rect.width;
+				data.height = rect.height;
+			});
+		};
 
 		// New custom cursor DOM cache
 		const cursorEl = document.getElementById("neon-cursor-system");
@@ -297,8 +331,20 @@
 		let currentScrollY = window.scrollY || 0;
 		let lastScrollY = currentScrollY;
 		window.addEventListener("scroll", () => {
-			currentScrollY = window.scrollY || 0;
+			if (!(window as any).lenis) {
+				currentScrollY = window.scrollY || 0;
+			}
 		});
+
+		// Connect in-sync with Lenis scroll engine if active
+		const checkLenisScroll = setInterval(() => {
+			if ((window as any).lenis) {
+				clearInterval(checkLenisScroll);
+				(window as any).lenis.on('scroll', (e: any) => {
+					currentScrollY = e.scroll;
+				});
+			}
+		}, 100);
 
 		// Initialize Background Particles
 		const bgParticleCount = isMobile ? 35 : 75;
@@ -368,6 +414,8 @@
 					if (p.y > partCanvas.height) p.y = Math.random() * partCanvas.height;
 				});
 			}
+			updateSpatialElementsRects();
+			updateBlueprintRects();
 		}
 		window.addEventListener("resize", resizeCanvas);
 		resizeCanvas();
@@ -411,16 +459,22 @@
 			}
 		});
 
-		const spatialElements: HTMLElement[] = [];
 		const spatialObserver = new IntersectionObserver((entries) => {
 			entries.forEach(entry => {
 				const el = entry.target as HTMLElement;
 				if (entry.isIntersecting) {
-					if (!spatialElements.includes(el)) {
-						spatialElements.push(el);
+					if (!spatialElements.some(s => s.el === el)) {
+						const rect = el.getBoundingClientRect();
+						spatialElements.push({
+							el,
+							absoluteTop: rect.top + (window.scrollY || document.documentElement.scrollTop),
+							absoluteLeft: rect.left + (window.scrollX || document.documentElement.scrollLeft),
+							width: rect.width,
+							height: rect.height
+						});
 					}
 				} else {
-					const index = spatialElements.indexOf(el);
+					const index = spatialElements.findIndex(s => s.el === el);
 					if (index > -1) {
 						spatialElements.splice(index, 1);
 					}
@@ -433,8 +487,6 @@
 				spatialObserver.observe(el);
 			});
 		}, 150);
-
-		let blueprintData: any[] = [];
 
 		setTimeout(() => {
 			if (isMobile) return;
@@ -474,10 +526,17 @@
 				return {
 					card: card,
 					svg,
+					absoluteTop: 0,
+					absoluteLeft: 0,
+					width: 1,
+					height: 1,
 					nodeStates,
 					pathStates
 				};
 			}).filter(Boolean);
+
+			// Calculate initial positions once loaded
+			updateBlueprintRects();
 		}, 300);
 
 		let currentPhase = 1;
@@ -799,12 +858,14 @@
 						// Hover interaction: calculate distance to mouse
 						const dx = p.x - rawMouse.targetX;
 						const dy = p.y - rawMouse.targetY;
-						const dist = Math.sqrt(dx * dx + dy * dy);
+						const distSq = dx * dx + dy * dy;
+						const limitSq = mouseDistLimit * mouseDistLimit;
 
 						let activeAlpha = p.baseAlpha;
 						let activeSize = p.size;
 
-						if (dist < mouseDistLimit && !isMobile) {
+						if (distSq < limitSq && !isMobile) {
+							const dist = Math.sqrt(distSq);
 							const force = 1 - dist / mouseDistLimit;
 							
 							// Gentle magnetic push away or pull
@@ -835,15 +896,17 @@
 
 					// 2. Draw subtle constellation/plexus connecting lines
 					partCtx.lineWidth = 0.6;
+					const constLimitSq = connectDistLimit * connectDistLimit;
 					for (let i = 0; i < bgParticles.length; i++) {
 						const p1 = bgParticles[i];
 						for (let j = i + 1; j < bgParticles.length; j++) {
 							const p2 = bgParticles[j];
 							const dx = p1.x - p2.x;
 							const dy = p1.y - p2.y;
-							const dist = Math.sqrt(dx * dx + dy * dy);
+							const distSq = dx * dx + dy * dy;
 
-							if (dist < connectDistLimit) {
+							if (distSq < constLimitSq) {
+								const dist = Math.sqrt(distSq);
 								const alpha = (1 - dist / connectDistLimit) * 0.22;
 								partCtx.beginPath();
 								partCtx.moveTo(p1.x, p1.y);
@@ -858,10 +921,11 @@
 				if (spatialElements.length > 0) {
 					const radiusLimit = 280;
 
-					spatialElements.forEach(el => {
-						const rect = el.getBoundingClientRect();
-						const cx = rect.left + rect.width / 2;
-						const cy = rect.top + rect.height / 2;
+					spatialElements.forEach(state => {
+						const elTop = state.absoluteTop - currentScrollY;
+						const elLeft = state.absoluteLeft;
+						const cx = elLeft + state.width / 2;
+						const cy = elTop + state.height / 2;
 
 						const dx = rawMouse.targetX - cx;
 						const dy = rawMouse.targetY - cy;
@@ -869,14 +933,14 @@
 
 						if (distance < radiusLimit) {
 							const proximity = Math.max(0, 1 - distance / radiusLimit);
-							const rx = rawMouse.targetX - rect.left;
-							const ry = rawMouse.targetY - rect.top;
+							const rx = rawMouse.targetX - elLeft;
+							const ry = rawMouse.targetY - elTop;
 
-							el.style.setProperty("--mouse-x", `${rx}px`);
-							el.style.setProperty("--mouse-y", `${ry}px`);
-							el.style.setProperty("--proximity", proximity.toFixed(3));
+							state.el.style.setProperty("--mouse-x", `${rx}px`);
+							state.el.style.setProperty("--mouse-y", `${ry}px`);
+							state.el.style.setProperty("--proximity", proximity.toFixed(3));
 						} else {
-							el.style.setProperty("--proximity", "0");
+							state.el.style.setProperty("--proximity", "0");
 						}
 					});
 				}
@@ -885,20 +949,22 @@
 					const proximity = parseFloat(data.card.style.getPropertyValue("--proximity") || "0");
 					
 					if (proximity > 0.01) {
-						const rect = data.svg.getBoundingClientRect();
-						const mX = rawMouse.targetX - rect.left;
-						const mY = rawMouse.targetY - rect.top;
+						const svgTop = data.absoluteTop - currentScrollY;
+						const svgLeft = data.absoluteLeft;
+						const mX = rawMouse.targetX - svgLeft;
+						const mY = rawMouse.targetY - svgTop;
 						
-						const localX = (mX / rect.width) * 320;
-						const localY = (mY / rect.height) * 80;
+						const localX = (mX / data.width) * 320;
+						const localY = (mY / data.height) * 80;
 						
 						data.nodeStates.forEach((ns: any) => {
 							const dx = localX - ns.bx;
 							const dy = localY - ns.by;
-							const dist = Math.sqrt(dx * dx + dy * dy);
+							const distSq = dx * dx + dy * dy;
 							const limit = 80;
 							
-							if (dist < limit) {
+							if (distSq < limit * limit) {
+								const dist = Math.sqrt(distSq);
 								const pull = (1 - dist / limit) * 8 * proximity;
 								const angle = Math.atan2(dy, dx);
 								ns.x.target = ns.bx + Math.cos(angle) * pull;
@@ -921,10 +987,11 @@
 
 								const dx = localX - px;
 								const dy = localY - py;
-								const dist = Math.sqrt(dx * dx + dy * dy);
+								const distSq = dx * dx + dy * dy;
 								const limit = 75;
 								
-								if (dist < limit) {
+								if (distSq < limit * limit) {
+									const dist = Math.sqrt(distSq);
 									const pull = (1 - dist / limit) * 9 * proximity;
 									const angle = Math.atan2(dy, dx);
 									ps.springs[i].target = px + Math.cos(angle) * pull;
@@ -1024,6 +1091,7 @@
 					}
 
 					document.body.classList.remove("loading");
+					document.dispatchEvent(new CustomEvent("nxs-boot-complete"));
 
 					const nav = document.querySelector("nav");
 					if (nav) {
@@ -1042,6 +1110,14 @@
 		}
 
 		document.body.classList.add("loading");
+
+		// Start the ecosystem loop
 		requestAnimationFrame(tick);
-	});
+	};
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", initEcosystem);
+	} else {
+		initEcosystem();
+	}
 </script>
