@@ -3,186 +3,138 @@
 ---
 <!-- ABOUT -->
 <section id="about">
-	<h2 class="section-title reveal">About <span>Me</span></h2>
-	<div class="title-bar reveal"></div>
+	<h2 class="section-title reveal">About</h2>
+	<div class="title-divider reveal"></div>
+	
 	<div class="about-grid">
-		<!-- Left Editorial Panel -->
-		<div class="about-sidebar reveal">
-			<p class="about-name">Yathin G</p>
-			<p class="about-role">Software Builder & Developer</p>
-			<p class="about-loc">
-				<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-				Mysuru, Karnataka 🇮🇳
+		<!-- Left: Professional human summary statement -->
+		<div class="about-bio-container reveal">
+			<p class="about-bio">
+				I’m a CSE student from Mysuru who likes building complete products, not just UI mockups. Most of my work sits around AI tools, fintech ideas, and interfaces that are simple enough for real people to use. I learn by shipping projects, improving them, and turning rough ideas into usable products.
 			</p>
 		</div>
 		
-		<!-- Right Content Panel -->
-		<div class="about-content-wrapper">
-			<div class="about-status-badge reveal">
-				<span class="badge-text">Biography</span>
-			</div>
-			<div class="about-bio-card reveal">
-				<p class="about-bio">
-					I’m a Computer Science & Engineering student based in Mysuru, dedicated to building practical AI tools and high-quality web applications. I focus on creating useful software that solves real-world challenges, prioritizing clean backend logic and responsive user interfaces.
-					<br /><br />
-					Python first. Interfaces second. Execution always.
-				</p>
+		<!-- Right/Bottom: 3 Clean Premium cards -->
+		<div class="about-cards-grid reveal">
+			<div class="card-premium about-card">
+				<div class="card-icon icon-yellow">
+					<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+				</div>
+				<h3 class="card-title">Builder mindset</h3>
+				<p class="card-text">I learn by shipping.</p>
 			</div>
 			
-			<!-- Stats Grid -->
-			<div class="stats-grid reveal">
-				<div class="glass stat-card">
-					<span class="stat-number">4+</span>
-					<p class="stat-label">Featured Projects</p>
+			<div class="card-premium about-card">
+				<div class="card-icon icon-blue">
+					<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
 				</div>
-				<div class="glass stat-card">
-					<span class="stat-number">CSE</span>
-					<p class="stat-label">Engineering Degree</p>
+				<h3 class="card-title">Current focus</h3>
+				<p class="card-text">AI tools, fintech, and clean interfaces.</p>
+			</div>
+			
+			<div class="card-premium about-card">
+				<div class="card-icon icon-green">
+					<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
 				</div>
-				<div class="glass stat-card">
-					<span class="stat-number">Mysuru</span>
-					<p class="stat-label">Location</p>
-				</div>
+				<h3 class="card-title">Favorite stack</h3>
+				<p class="card-text">Python, Next.js, Supabase.</p>
 			</div>
 		</div>
 	</div>
 </section>
 
 <style>
-	/* ABOUT */
-	.about-grid {
-		display: grid;
-		grid-template-columns: 1fr 2fr;
-		gap: 4rem;
-		align-items: start;
-	}
-
-	.about-sidebar {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 0.5rem;
-	}
-
-	.about-name {
-		font-family: var(--font-display);
-		font-weight: 800;
-		font-size: 2.2rem;
-		letter-spacing: -0.03em;
-		color: #f5f5f5;
-	}
-
-	.about-role {
-		color: var(--accent);
-		font-size: 1rem;
-		font-weight: 600;
-		font-family: var(--font-tech);
-		letter-spacing: 0.05em;
-		text-transform: uppercase;
-	}
-
-	.about-loc {
-		color: #8a8a8a;
-		font-size: 0.9rem;
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		margin-top: 1rem;
-	}
-
-	/* About Content Box */
-	.about-content-wrapper {
-		display: flex;
-		flex-direction: column;
-		gap: 2rem;
-	}
-
-	.about-status-badge {
-		display: inline-flex;
-		align-items: center;
-		padding: 0.4rem 1rem;
-		background: rgba(255, 255, 255, 0.03);
-		border: 1px solid var(--glass-border);
-		border-radius: 4px;
-		color: var(--accent);
-		font-family: var(--font-tech);
-		font-size: 0.75rem;
-		font-weight: 700;
-		letter-spacing: 0.15em;
-		text-transform: uppercase;
-		align-self: flex-start;
-	}
-
-	.about-bio-card {
+	#about {
 		position: relative;
-		background: #111111;
-		border: 1px solid var(--glass-border);
-		border-radius: 12px;
-		padding: 2.5rem;
-		box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+	}
+
+	.title-divider {
+		width: 40px;
+		height: 3px;
+		background: var(--accent-blue);
+		border-radius: 2px;
+		margin-bottom: 2.5rem;
+	}
+
+	.about-grid {
+		display: flex;
+		flex-direction: column;
+		gap: 3.5rem;
+	}
+
+	.about-bio-container {
+		max-width: 800px;
 	}
 
 	.about-bio {
-		line-height: 1.8;
-		color: #cbd5e1;
-		font-size: 1.05rem;
+		font-family: var(--font-sans);
+		font-size: clamp(1.15rem, 2.5vw, 1.4rem);
+		line-height: 1.6;
+		color: var(--text-primary);
+		font-weight: 450;
 	}
 
-	.stats-grid {
+	.about-cards-grid {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
+		gap: 2rem;
+	}
+
+	.about-card {
+		padding: 2.2rem;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
 		gap: 1.2rem;
 	}
 
-	.stat-card {
-		padding: 1.8rem 1.2rem;
-		text-align: center;
-		border-radius: 12px;
-		background: #111111;
-		border: 1px solid var(--glass-border);
-		transition: var(--transition-medium);
-	}
-	.stat-card:hover {
-		transform: translateY(-4px);
-		border-color: rgba(249, 115, 22, 0.3);
+	.card-icon {
+		width: 40px;
+		height: 40px;
+		border-radius: 8px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
-	.stat-number {
-		font-family: var(--font-tech);
-		font-size: 2rem;
-		font-weight: 800;
-		color: var(--accent);
-		display: block;
-		letter-spacing: -0.02em;
-		margin-bottom: 0.4rem;
+	.icon-yellow {
+		background: rgba(251, 188, 4, 0.08);
+		color: var(--accent-yellow);
 	}
 
-	.stat-label {
-		font-size: 0.75rem;
-		color: #8a8a8a;
-		font-weight: 600;
-		letter-spacing: 0.05em;
-		text-transform: uppercase;
+	.icon-blue {
+		background: rgba(26, 115, 232, 0.08);
+		color: var(--accent-blue);
+	}
+
+	.icon-green {
+		background: rgba(24, 128, 56, 0.08);
+		color: var(--accent-green);
+	}
+
+	.card-title {
+		font-family: var(--font-display);
+		font-size: 1.15rem;
+		font-weight: 700;
+		color: var(--text-primary);
+		letter-spacing: -0.01em;
+	}
+
+	.card-text {
 		font-family: var(--font-sans);
+		font-size: 0.95rem;
+		color: var(--text-muted);
+		line-height: 1.5;
 	}
 
 	@media (max-width: 768px) {
-		.about-grid {
+		.about-cards-grid {
 			grid-template-columns: 1fr;
-			gap: 3rem;
+			gap: 1.5rem;
 		}
-		.stats-grid {
-			grid-template-columns: repeat(3, 1fr);
-			gap: 0.8rem;
-		}
-		.stat-card {
-			padding: 1.2rem 0.8rem;
-		}
-		.stat-number {
-			font-size: 1.5rem;
-		}
-		.stat-label {
-			font-size: 0.65rem;
+
+		.about-card {
+			padding: 1.8rem;
 		}
 	}
 </style>

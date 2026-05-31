@@ -1,13 +1,12 @@
 ---
 // Yathin — Portfolio
-import PersistentEnvironment from '../components/PersistentEnvironment.astro';
 import SEO from '../components/SEO.astro';
-import CinematicLoader from '../components/CinematicLoader.astro';
 import Navbar from '../components/Navbar.astro';
 import Hero from '../components/Hero.astro';
 import About from '../components/About.astro';
 import Projects from '../components/Projects.astro';
 import Skills from '../components/Skills.astro';
+import Playground from '../components/Playground.astro';
 import Contact from '../components/Contact.astro';
 
 import '../styles/global.css';
@@ -20,14 +19,8 @@ import '../styles/global.css';
 	</head>
 
 	<body>
-		<!-- Unified Spatial Ecosystem Canvas Layer (Modular and Persistent) -->
-		<PersistentEnvironment />
-
-		<!-- World-Class Cinematic Preloader Overlay -->
-		<CinematicLoader />
-
 		<!-- MAIN CONTENT WRAPPER -->
-		<div id="main-content" style="opacity: 0; pointer-events: none; transition: opacity var(--motion-duration-cinematic) var(--motion-ease-cinematic), transform var(--motion-duration-cinematic) var(--motion-ease-cinematic); transform: translateY(24px);">
+		<div id="main-content" style="opacity: 0; transition: opacity 0.4s ease;">
 
 			<Navbar />
 
@@ -39,17 +32,19 @@ import '../styles/global.css';
 
 			<Skills />
 
+			<Playground />
+
 			<Contact />
 
 			<!-- FOOTER -->
-			<footer style="content-visibility: auto; text-align: center; padding: 4rem 2rem; border-top: 1px solid var(--glass-border); background: #0a0a0a;">
-				<p style="color: #f5f5f5; font-size: 0.95rem; font-weight: 500;">
-					Designed and engineered by <span class="footer-name" style="color: var(--accent); font-weight: 700;">Yathin G</span>
+			<footer style="content-visibility: auto; text-align: center; padding: 4rem 2rem; border-top: 1px solid var(--border); background: var(--bg-soft);">
+				<p style="color: var(--text-primary); font-size: 0.95rem; font-weight: 600;">
+					Designed and engineered by <span class="footer-name" style="color: var(--accent-blue); font-weight: 700;">Yathin G</span>
 				</p>
-				<p class="footer-stack" style="color: #8a8a8a; font-size: 0.8rem; margin-top: 0.5rem;">
+				<p class="footer-stack" style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.5rem;">
 					Powered by Astro · Vanilla CSS · Deployed on Vercel
 				</p>
-				<p class="footer-copy" style="color: #666; font-size: 0.75rem; margin-top: 1rem;">
+				<p class="footer-copy" style="color: var(--text-muted); font-size: 0.75rem; margin-top: 1rem;">
 					© 2026 Yathin G. All rights reserved.
 				</p>
 			</footer>
@@ -83,7 +78,7 @@ import '../styles/global.css';
 			// ── Lenis Smooth Scroll & Navbar Synchronization ──────────
 			const highlightNav = () => {
 				const sections = document.querySelectorAll("section[id]");
-				const navLinks = document.querySelectorAll(".nav-links a");
+				const navLinks = document.querySelectorAll(".nav-links a.nav-item");
 				let scrollY = window.scrollY;
 
 				sections.forEach((current) => {
@@ -103,31 +98,30 @@ import '../styles/global.css';
 				});
 			};
 
-			const updateNavbarBg = (y: number) => {
-				const nav = document.querySelector("nav");
-				if (nav) {
-					nav.style.background =
-						y > 50 ? "rgba(7,7,7,0.95)" : "transparent";
-				}
-			};
-
 			runOnInit(() => {
+				// Make main-content instantly visible to prevent flash/layout shifts
+				const mainContent = document.getElementById("main-content");
+				if (mainContent) {
+					mainContent.style.opacity = "1";
+				}
+
 				const lenis = new Lenis({
 					autoRaf: false,
-					lerp: 0.08, // Premium smooth snappy deceleration feel
+					lerp: 0.08, // Premium smooth snappy scrolling
 					smoothWheel: true,
+					wheelMultiplier: 0.9,
+					touchMultiplier: 1.2
 				});
 				(window as any).lenis = lenis;
 
-				// Hook Lenis into GSAP ticker for perfect synchronization of animations
+				// Hook Lenis into GSAP ticker
 				gsap.ticker.add((time) => {
 					lenis.raf(time * 1000);
 				});
 
-				// Connect ScrollTrigger updates and active states with Lenis scroll event
+				// Connect ScrollTrigger updates and active states
 				lenis.on('scroll', (e: any) => {
 					ScrollTrigger.update();
-					updateNavbarBg(e.scroll);
 					highlightNav();
 				});
 
@@ -139,7 +133,7 @@ import '../styles/global.css';
 						if (targetId) {
 							const target = document.querySelector(targetId);
 							if (target) {
-								lenis.scrollTo(target as HTMLElement, { offset: -100 });
+								lenis.scrollTo(target as HTMLElement, { offset: -80 });
 							}
 						}
 					});
@@ -153,108 +147,162 @@ import '../styles/global.css';
 						throw new Error("GSAP or ScrollTrigger was not loaded correctly.");
 					}
 
-					// Coordinated Hero entrance synced with preloader boot event
-					document.addEventListener("nxs-boot-complete", () => {
-						const tl = gsap.timeline({
-							defaults: { ease: "power3.out", duration: 0.6 }
-						});
-
-						tl.fromTo(".hero-name", { opacity: 0, y: 15 }, { opacity: 1, y: 0 })
-						  .fromTo(".hero-tagline", { opacity: 0, y: 15 }, { opacity: 1, y: 0 }, "-=0.4")
-						  .fromTo(".hero-sub", { opacity: 0, y: 15 }, { opacity: 1, y: 0 }, "-=0.4")
-						  .fromTo(".hero-btns", { opacity: 0, y: 15 }, { opacity: 1, y: 0 }, "-=0.4")
-						  .fromTo(".scroll-indicator-wrap", { opacity: 0 }, { opacity: 1 }, "-=0.3");
+					// Snappy Hero Entrance Animation (no boot preloader delay)
+					const tl = gsap.timeline({
+						defaults: { ease: "power3.out", duration: 0.8 }
 					});
 
-					// Projects staggered fade-in reveal with premium subtle scale
-					gsap.fromTo("#projects .project-card", 
-						{ opacity: 0, y: 24, scale: 0.98 },
-						{
-							opacity: 1,
-							y: 0,
-							scale: 1,
-							duration: 0.6,
-							stagger: 0.1,
-							ease: "power2.out",
-							scrollTrigger: {
-								trigger: "#projects .secondary-projects-grid",
-								start: "top 90%",
-								toggleActions: "play none none none"
-							}
-						}
-					);
+					// Navbar fade down
+					tl.fromTo("#site-header", { opacity: 0, y: -20 }, { opacity: 1, y: 0 })
+					  // Hero staggers
+					  .fromTo(".hero-title", { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, "-=0.5")
+					  .fromTo(".hero-tagline", { opacity: 0, y: 20 }, { opacity: 1, y: 0 }, "-=0.6")
+					  .fromTo(".hero-sub", { opacity: 0, y: 20 }, { opacity: 1, y: 0 }, "-=0.6")
+					  .fromTo(".hero-actions", { opacity: 0, y: 20 }, { opacity: 1, y: 0 }, "-=0.6")
+					  // Side card enters with subtle slide and scale
+					  .fromTo(".status-card", { opacity: 0, x: 20, scale: 0.95 }, { opacity: 1, x: 0, scale: 1, duration: 1 }, "-=0.6");
 
-					// General scroll-reveal fallback for standard elements (fade up only)
-					document.querySelectorAll(".reveal").forEach((el) => {
-						if (el.classList.contains("project-card")) {
-							return; // already stagger-revealed above
-						}
-
-						gsap.fromTo(el, 
+					// Section reveals
+					document.querySelectorAll("section").forEach((section) => {
+						// Animating section titles and dividers
+						gsap.fromTo(section.querySelectorAll(".section-title, .title-divider, .section-subtitle, .about-bio, .playground-title, .playground-text, .contact-heading, .contact-sub"), 
 							{ opacity: 0, y: 20 },
 							{
 								opacity: 1,
 								y: 0,
-								duration: 0.5,
-								ease: "power2.out",
+								duration: 0.6,
+								stagger: 0.1,
+								ease: "power3.out",
 								scrollTrigger: {
-									trigger: el,
-									start: "top 92%",
+									trigger: section,
+									start: "top 85%",
 									toggleActions: "play none none none"
 								}
 							}
 						);
+
+						// Stagger project cards
+						if (section.id === "projects") {
+							gsap.fromTo(section.querySelectorAll(".project-card"),
+								{ opacity: 0, y: 30 },
+								{
+									opacity: 1,
+									y: 0,
+									duration: 0.7,
+									stagger: 0.12,
+									ease: "power3.out",
+									scrollTrigger: {
+										trigger: ".featured-projects-container",
+										start: "top 80%",
+										toggleActions: "play none none none"
+									}
+								}
+							);
+						}
+
+						// Stagger stack cards & badges
+						if (section.id === "skills") {
+							gsap.fromTo(section.querySelectorAll(".skill-category-card"),
+								{ opacity: 0, y: 20 },
+								{
+									opacity: 1,
+									y: 0,
+									duration: 0.6,
+									stagger: 0.1,
+									ease: "power3.out",
+									scrollTrigger: {
+										trigger: ".skills-grid",
+										start: "top 80%",
+										toggleActions: "play none none none"
+									}
+								}
+							);
+						}
+
+						// Stagger about bio cards
+						if (section.id === "about") {
+							gsap.fromTo(section.querySelectorAll(".about-card"),
+								{ opacity: 0, y: 20 },
+								{
+									opacity: 1,
+									y: 0,
+									duration: 0.6,
+									stagger: 0.08,
+									ease: "power3.out",
+									scrollTrigger: {
+										trigger: ".about-cards-grid",
+										start: "top 80%",
+										toggleActions: "play none none none"
+									}
+								}
+							);
+						}
+
+						// Playground card reveal
+						if (section.id === "playground") {
+							gsap.fromTo(section.querySelectorAll(".playground-card"),
+								{ opacity: 0, y: 30 },
+								{
+									opacity: 1,
+									y: 0,
+									duration: 0.7,
+									ease: "power3.out",
+									scrollTrigger: {
+										trigger: section,
+										start: "top 80%",
+										toggleActions: "play none none none"
+									}
+								}
+							);
+						}
+
+						// Stagger contact cards & form
+						if (section.id === "contact") {
+							gsap.fromTo(section.querySelectorAll(".contact-card"),
+								{ opacity: 0, y: 20 },
+								{
+									opacity: 1,
+									y: 0,
+									duration: 0.6,
+									stagger: 0.08,
+									ease: "power3.out",
+									scrollTrigger: {
+										trigger: ".contact-grid",
+										start: "top 80%",
+										toggleActions: "play none none none"
+									}
+								}
+							);
+
+							gsap.fromTo(section.querySelectorAll(".contact-form-container"),
+								{ opacity: 0, y: 25 },
+								{
+									opacity: 1,
+									y: 0,
+									duration: 0.7,
+									ease: "power3.out",
+									scrollTrigger: {
+										trigger: ".contact-form-container",
+										start: "top 80%",
+										toggleActions: "play none none none"
+									}
+								}
+							);
+						}
 					});
+
 				} catch (err) {
 					console.error("GSAP Animations failed to initialize. Triggering fallbacks.", err);
 					
-					// Fail-safe fallback to make everything visible immediately so user doesn't get stuck
-					document.querySelectorAll(".reveal").forEach(el => {
+					// Fail-safe fallback to make everything visible
+					document.querySelectorAll("section, .project-card, .skill-category-card, .about-card, .contact-card, .contact-form-container, .status-card, .playground-card").forEach(el => {
 						if (el instanceof HTMLElement) {
 							el.style.opacity = "1";
 							el.style.transform = "none";
 						}
 					});
-					document.querySelectorAll(".hero-name, .hero-tagline, .hero-sub, .hero-btns, .scroll-indicator-wrap").forEach(el => {
-						if (el instanceof HTMLElement) {
-							el.style.opacity = "1";
-							el.style.transform = "none";
-						}
-					});
-					
-					// Trigger loader completion if it was waiting for boot completion event
-					const loaderOverlayEl = document.getElementById("cinematic-loader");
-					const mainContentEl = document.getElementById("main-content");
-					if (loaderOverlayEl) {
-						loaderOverlayEl.style.opacity = "0";
-						loaderOverlayEl.style.pointerEvents = "none";
-					}
-					if (mainContentEl) {
-						mainContentEl.style.opacity = "1";
-						mainContentEl.style.transform = "none";
-						mainContentEl.style.filter = "none";
-						mainContentEl.style.pointerEvents = "all";
-					}
-					document.body.classList.remove("loading");
 				}
 			});
-
-			// ── Navbar opacity on scroll fallback ──────────────────
-			window.addEventListener("scroll", () => {
-				if (!(window as any).lenis) {
-					updateNavbarBg(window.scrollY);
-					highlightNav();
-				}
-			});
-
-			const checkLenisNav = setInterval(() => {
-				if ((window as any).lenis) {
-					clearInterval(checkLenisNav);
-					(window as any).lenis.on('scroll', (e: any) => {
-						updateNavbarBg(e.scroll);
-					});
-				}
-			}, 100);
 		</script>
 	</body>
 </html>

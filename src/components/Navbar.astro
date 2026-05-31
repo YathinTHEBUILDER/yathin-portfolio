@@ -3,37 +3,48 @@
 ---
 <!-- Mobile Menu -->
 <div class="mobile-menu" id="mobileMenu">
-	<button class="mobile-close" onclick="closeMobileMenu()">✕</button>
-	<a href="#home" onclick="closeMobileMenu()">Home</a>
+	<button class="mobile-close" onclick="closeMobileMenu()" aria-label="Close menu">✕</button>
+	<a href="#projects" onclick="closeMobileMenu()">Work</a>
 	<a href="#about" onclick="closeMobileMenu()">About</a>
-	<a href="#projects" onclick="closeMobileMenu()">Projects</a>
-	<a href="#skills" onclick="closeMobileMenu()">Skills</a>
+	<a href="#skills" onclick="closeMobileMenu()">Stack</a>
 	<a href="#contact" onclick="closeMobileMenu()">Contact</a>
-	<a href="/terminal" onclick="closeMobileMenu()" style="color: var(--accent); display: flex; align-items: center; gap: 0.5rem;"><span style="font-family: monospace;">>_</span> Terminal</a>
+	<a href="https://github.com/YathinTHEBUILDER" target="_blank" rel="noopener">GitHub</a>
+	<a href="https://www.linkedin.com/in/yathin-gnaneshwar-5133b4367" target="_blank" rel="noopener">LinkedIn</a>
+	<a href="/terminal" onclick="closeMobileMenu()" class="mobile-terminal-link">
+		<span>&gt;_</span> Terminal
+	</a>
 </div>
 
 <!-- NAVBAR -->
-<nav>
-	<ul class="nav-links">
-		<li><a href="#about">About</a></li>
-		<li><a href="#projects">Projects</a></li>
-		<li><a href="#skills">Skills</a></li>
-		<li><a href="#contact">Contact</a></li>
-		<li>
-			<a href="/terminal" class="nav-terminal-btn" style="display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--accent); color: var(--accent); padding: 0.4rem 0.8rem; border-radius: 8px; background: rgba(249, 115, 22, 0.1); box-shadow: 0 0 10px rgba(249, 115, 22, 0.2); font-family: var(--font-tech); font-weight: 700; letter-spacing: 0.05em;">
-				<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
-				TERMINAL
-			</a>
-		</li>
-	</ul>
-	<button
-		class="hamburger"
-		onclick="openMobileMenu()"
-		aria-label="Menu"
-	>
-		<span></span><span></span><span></span>
-	</button>
-</nav>
+<header id="site-header">
+	<nav class="nav-container">
+		<a href="#home" class="nav-logo">Yathin G</a>
+		
+		<ul class="nav-links">
+			<li><a href="#projects" class="nav-item">Work</a></li>
+			<li><a href="#about" class="nav-item">About</a></li>
+			<li><a href="#skills" class="nav-item">Stack</a></li>
+			<li><a href="#contact" class="nav-item">Contact</a></li>
+			<li class="nav-divider"></li>
+			<li><a href="https://github.com/YathinTHEBUILDER" target="_blank" rel="noopener" class="nav-social" aria-label="GitHub">GitHub</a></li>
+			<li><a href="https://www.linkedin.com/in/yathin-gnaneshwar-5133b4367" target="_blank" rel="noopener" class="nav-social" aria-label="LinkedIn">LinkedIn</a></li>
+			<li>
+				<a href="/terminal" class="nav-terminal-btn" aria-label="Terminal Playground">
+					<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+					Playground
+				</a>
+			</li>
+		</ul>
+
+		<button
+			class="hamburger"
+			onclick="openMobileMenu()"
+			aria-label="Toggle menu"
+		>
+			<span></span><span></span><span></span>
+		</button>
+	</nav>
+</header>
 
 <script is:inline>
 	function openMobileMenu() {
@@ -45,11 +56,16 @@
 </script>
 
 <script>
+	import gsap from 'gsap';
+
+	const header = document.getElementById("site-header");
 	const updateNavbarBg = (y: number) => {
-		const nav = document.querySelector("nav");
-		if (nav) {
-			nav.style.background =
-				y > 50 ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.2)";
+		if (header) {
+			if (y > 30) {
+				header.classList.add("scrolled");
+			} else {
+				header.classList.remove("scrolled");
+			}
 		}
 	};
 
@@ -67,81 +83,144 @@
 			});
 		}
 	}, 100);
+
+	// GSAP smooth active indicators on navigation links
+	const navItems = document.querySelectorAll(".nav-item");
+	navItems.forEach(item => {
+		item.addEventListener("mouseenter", () => {
+			gsap.to(item, {
+				color: "#1a73e8",
+				duration: 0.2,
+				ease: "power2.out"
+			});
+		});
+
+		item.addEventListener("mouseleave", () => {
+			if (!item.classList.contains("active")) {
+				gsap.to(item, {
+					color: "#5f6368",
+					duration: 0.2,
+					ease: "power2.out"
+				});
+			}
+		});
+	});
 </script>
 
 <style>
 	/* NAVBAR */
-	nav {
+	#site-header {
 		position: sticky;
 		top: 0;
 		z-index: 100;
-		background: linear-gradient(180deg, rgba(5,5,5,0.9) 0%, rgba(5,5,5,0.4) 100%);
-		backdrop-filter: blur(20px);
-		border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-		padding: 1rem 2rem;
+		background: rgba(255, 255, 255, 0);
+		border-bottom: 1px solid rgba(0, 0, 0, 0);
+		padding: 1.2rem 2rem;
+		transition: background 0.3s var(--motion-ease-cinematic), border-color 0.3s var(--motion-ease-cinematic), box-shadow 0.3s var(--motion-ease-cinematic), padding 0.3s var(--motion-ease-cinematic);
+		width: 100%;
+	}
+
+	#site-header.scrolled {
+		background: rgba(255, 255, 255, 0.85);
+		backdrop-filter: blur(16px);
+		-webkit-backdrop-filter: blur(16px);
+		border-bottom: 1px solid var(--border);
+		box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
+		padding: 0.8rem 2rem;
+	}
+
+	.nav-container {
+		max-width: 1200px;
+		margin: 0 auto;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		animation: slideDown 0.6s ease-out;
-		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 	}
 
-	@keyframes slideDown {
-		from {
-			transform: translateY(-100%);
-			opacity: 0;
-		}
-		to {
-			transform: translateY(0);
-			opacity: 1;
-		}
+	.nav-logo {
+		font-family: var(--font-display);
+		font-size: 1.15rem;
+		font-weight: 700;
+		color: var(--text-primary);
+		text-decoration: none;
+		letter-spacing: -0.02em;
+		transition: var(--transition-fast);
 	}
+
+	.nav-logo:hover {
+		color: var(--accent-blue);
+	}
+
 	.nav-links {
 		display: flex;
-		gap: 1rem;
+		align-items: center;
+		gap: 0.4rem;
 		list-style: none;
 	}
-	.nav-links a {
-		color: #94a3b8;
+
+	.nav-item {
+		color: var(--text-muted);
 		text-decoration: none;
 		font-size: 0.9rem;
+		font-weight: 500;
+		transition: var(--transition-fast);
+		padding: 0.5rem 0.9rem;
+		border-radius: 6px;
+		display: block;
+	}
+
+	.nav-item:hover,
+	.nav-item.active {
+		color: var(--accent-blue);
+	}
+
+	.nav-item.active {
+		background: var(--accent-glow);
 		font-weight: 600;
-		letter-spacing: 0.05em;
-		transition: all 0.3s ease;
-		position: relative;
-		padding: 0.5rem 1rem;
-		border-radius: 8px;
 	}
-	.nav-links a:hover,
-	.nav-links a.active {
-		color: #fff;
-		background: rgba(255, 255, 255, 0.05);
-		text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+
+	.nav-divider {
+		width: 1px;
+		height: 14px;
+		background: var(--border);
+		margin: 0 0.6rem;
 	}
-	.nav-links a::after {
-		content: '';
-		position: absolute;
-		bottom: 0;
-		left: 50%;
-		width: 0;
-		height: 2px;
-		background: var(--accent);
-		box-shadow: 0 0 8px var(--accent-glow);
-		transition: width 0.3s ease;
-		transform: translateX(-50%);
+
+	.nav-social {
+		color: var(--text-muted);
+		text-decoration: none;
+		font-size: 0.85rem;
+		font-weight: 400;
+		transition: var(--transition-fast);
+		padding: 0.4rem 0.6rem;
 	}
-	.nav-links a:hover::after,
-	.nav-links a.active::after {
-		width: 60%;
+
+	.nav-social:hover {
+		color: var(--text-primary);
 	}
-	.nav-links a.nav-terminal-btn::after {
-		display: none;
+
+	.nav-terminal-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		border: 1px solid var(--border);
+		color: var(--text-primary);
+		padding: 0.45rem 0.85rem;
+		border-radius: 6px;
+		background: var(--bg);
+		font-family: var(--font-tech);
+		font-size: 0.75rem;
+		font-weight: 600;
+		text-decoration: none;
+		transition: var(--transition-fast);
+		margin-left: 0.5rem;
+		box-shadow: var(--shadow-sm);
 	}
-	.nav-links a.nav-terminal-btn:hover {
-		background: rgba(249, 115, 22, 0.25);
-		color: #fff;
-		box-shadow: 0 0 15px var(--accent-glow);
-		transform: translateY(-2px);
+
+	.nav-terminal-btn:hover {
+		background: var(--bg-soft);
+		border-color: var(--text-primary);
+		transform: translateY(-1px);
 	}
 
 	.hamburger {
@@ -151,51 +230,62 @@
 		cursor: pointer;
 		background: none;
 		border: none;
+		padding: 4px;
 	}
+
 	.hamburger span {
 		display: block;
-		width: 24px;
+		width: 20px;
 		height: 2px;
-		background: #fff;
+		background: var(--text-primary);
 		border-radius: 2px;
 		transition: 0.3s;
 	}
 
+	/* Mobile Menu */
 	.mobile-menu {
 		display: none;
 		position: fixed;
 		inset: 0;
-		background: rgba(0, 0, 0, 0.95);
-		backdrop-filter: blur(20px);
+		background: var(--bg);
 		z-index: 200;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		gap: 2.5rem;
+		gap: 2rem;
 	}
+
 	.mobile-menu.open {
 		display: flex;
 	}
+
 	.mobile-menu a {
-		color: #fff;
+		color: var(--text-primary);
 		text-decoration: none;
 		font-family: var(--font-display);
 		font-size: 1.5rem;
-		font-weight: 700;
+		font-weight: 600;
 		transition: color 0.2s;
 	}
+
 	.mobile-menu a:hover {
-		color: var(--accent);
+		color: var(--accent-blue);
 	}
+
 	.mobile-close {
 		position: absolute;
 		top: 1.5rem;
 		right: 2rem;
 		background: none;
 		border: none;
-		color: #fff;
-		font-size: 2rem;
+		color: var(--text-primary);
+		font-size: 1.8rem;
 		cursor: pointer;
+	}
+
+	.mobile-terminal-link {
+		font-family: var(--font-tech) !important;
+		color: var(--accent-blue) !important;
 	}
 
 	@media (max-width: 768px) {

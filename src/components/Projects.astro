@@ -3,10 +3,9 @@ import ProjectCard from './ProjectCard.astro';
 ---
 <!-- PROJECTS -->
 <section id="projects">
-	<h2 class="section-title reveal">Featured <span>Work</span></h2>
-	<div class="title-bar reveal"></div>
-	<p style="color:#8a8a8a;margin-bottom:3.5rem;font-size:0.95rem;" class="reveal">
-		Practical software and AI tools engineered to solve real problems.
+	<h2 class="section-title reveal">Featured work</h2>
+	<p class="section-subtitle reveal">
+		Projects I’ve built while learning, experimenting, and shipping.
 	</p>
 	
 	<div class="featured-projects-container">
@@ -14,19 +13,17 @@ import ProjectCard from './ProjectCard.astro';
 		<div class="hero-project-wrap">
 			<ProjectCard
 				name="InvoiceFlow"
-				badge="Active"
-				fullname="MSME Invoice Financing Platform"
+				badge="Active prototype"
+				fullname="MSME invoice financing platform for Indian businesses."
 				githubUrl="https://github.com/YathinTHEBUILDER/InvoiceFlow"
+				statusType="blue"
 			>
-				<svg slot="icon" viewBox="0 0 24 24" width="1em" height="1em" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-					<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-				</svg>
 				<div slot="details">
-					<p><strong>Problem:</strong> Indian MSMEs suffer severe working capital blockages due to delayed invoice payments from large corporate buyers.</p>
-					<p><strong>Solution:</strong> Engineered a fractional invoice discounting engine that enables retail investors to collectively fund GST-verified invoices with secure automated settlement.</p>
+					<p><strong>Problem:</strong> MSMEs often wait too long for invoice payments, which affects working capital.</p>
+					<p><strong>What I built:</strong> A role-based platform with MSME, investor, and admin workflows for invoice upload, verification, funding, and dashboard management.</p>
 				</div>
-				<a slot="tech" href="https://nextjs.org/" target="_blank" rel="noopener" class="tech-badge">Next.js</a>
-				<a slot="tech" href="https://supabase.com/" target="_blank" rel="noopener" class="tech-badge">Supabase</a>
+				<span slot="tech" class="tech-badge">Next.js</span>
+				<span slot="tech" class="tech-badge">Supabase</span>
 				<span slot="tech" class="tech-badge">TypeScript</span>
 				<span slot="tech" class="tech-badge">Vercel</span>
 			</ProjectCard>
@@ -38,15 +35,13 @@ import ProjectCard from './ProjectCard.astro';
 			<ProjectCard
 				name="Skillqore"
 				badge="Stable"
-				fullname="AI Career & Resume Platform"
+				fullname="AI resume and career roadmap platform."
 				githubUrl="https://github.com/YathinTHEBUILDER/Skillqore"
+				statusType="green"
 			>
-				<svg slot="icon" viewBox="0 0 24 24" width="1em" height="1em" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-					<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20M4 19.5V3A2.5 2.5 0 0 1 6.5.5H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5z"/>
-				</svg>
 				<div slot="details">
 					<p><strong>Problem:</strong> Hackathon developers and students struggle to dynamically align learning goals and analyze skills gaps relative to live job profiles.</p>
-					<p><strong>Solution:</strong> Developed an AI pipeline that extracts resumes, benchmarks capabilities, and maps out targeted learning pathways.</p>
+					<p><strong>What I built:</strong> An AI pipeline that extracts resumes, benchmarks capabilities, and maps out targeted learning pathways.</p>
 				</div>
 				<span slot="tech" class="tech-badge">React</span>
 				<span slot="tech" class="tech-badge">Supabase</span>
@@ -58,15 +53,13 @@ import ProjectCard from './ProjectCard.astro';
 			<ProjectCard
 				name="J.A.R.V.I.S"
 				badge="Stable"
-				fullname="Conversational AI Assistant"
+				fullname="Personal AI assistant experiment."
 				githubUrl="https://github.com/YathinTHEBUILDER/J.A.R.V.I.S_Stable"
+				statusType="yellow"
 			>
-				<svg slot="icon" viewBox="0 0 24 24" width="1em" height="1em" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-					<rect width="16" height="16" x="4" y="4" rx="2" /><rect width="6" height="6" x="9" y="9" rx="1" /><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 15h3M1 9h3M1 15h3"/>
-				</svg>
 				<div slot="details">
 					<p><strong>Problem:</strong> Standard desktop AI agents have high latency and lack up-to-the-minute web indexing for engineering questions.</p>
-					<p><strong>Solution:</strong> Designed a conversational local agent integrating Tavily live search with ultra-low latency Groq LPU inference for instant feedback loops.</p>
+					<p><strong>What I built:</strong> A conversational local agent integrating Tavily live search with ultra-low latency Groq LPU inference for instant feedback loops.</p>
 				</div>
 				<span slot="tech" class="tech-badge">Python</span>
 				<span slot="tech" class="tech-badge">Groq API</span>
@@ -78,15 +71,13 @@ import ProjectCard from './ProjectCard.astro';
 			<ProjectCard
 				name="F.R.I.D.A.Y"
 				badge="Stable"
-				fullname="Multimodal Voice Assistant"
+				fullname="Realtime multimodal assistant experiment."
 				githubUrl="https://github.com/YathinTHEBUILDER/F.R.I.D.A.Y_Stable"
+				statusType="red"
 			>
-				<svg slot="icon" viewBox="0 0 24 24" width="1em" height="1em" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-					<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/>
-				</svg>
 				<div slot="details">
 					<p><strong>Problem:</strong> Digital assistants are mostly single-mode text portals, lacking situational computer vision or live vocal reasoning capabilities.</p>
-					<p><strong>Solution:</strong> Built a multimodal agent utilizing Gemini API to process live webcam streams and audio feeds simultaneously for natural voice interactions.</p>
+					<p><strong>What I built:</strong> A multimodal agent utilizing Gemini API to process live webcam streams and audio feeds simultaneously for natural voice interactions.</p>
 				</div>
 				<span slot="tech" class="tech-badge">Python</span>
 				<span slot="tech" class="tech-badge">Gemini API</span>
@@ -103,13 +94,13 @@ import ProjectCard from './ProjectCard.astro';
 			rel="noopener"
 			class="btn-secondary"
 		>
-			View on GitHub →
+			<span>Explore more on GitHub</span>
+			<span>→</span>
 		</a>
 	</div>
 </section>
 
 <style>
-	/* PROJECTS */
 	#projects {
 		position: relative;
 	}
@@ -117,39 +108,38 @@ import ProjectCard from './ProjectCard.astro';
 	.featured-projects-container {
 		display: flex;
 		flex-direction: column;
-		gap: 2.5rem;
+		gap: 3rem;
 	}
 
 	.secondary-projects-grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-		gap: 2.5rem;
+		gap: 3rem;
 	}
 
 	.more-projects {
 		text-align: center;
-		margin-top: 3.5rem;
+		margin-top: 4rem;
 	}
 
-	/* Surrounding Dimming Effects */
+	/* Elegant grid staggers hover effect: fade other cards when hovering one */
 	.secondary-projects-grid:has(:hover) :global(.project-card:not(:hover)) {
-		opacity: 0.45;
+		opacity: 0.5;
 		transform: scale(0.98);
-		transition: var(--transition-slow);
 	}
 
 	/* Premium 2-Column Hero layout for desktop */
 	@media (min-width: 1024px) {
 		.hero-project-wrap :global(.project-card) {
 			display: grid;
-			grid-template-columns: 3fr 2fr;
-			gap: 3rem;
+			grid-template-columns: 1.5fr 1fr;
+			gap: 3.5rem;
 		}
 		.hero-project-wrap :global(.project-footer) {
 			border-top: none;
 			padding-top: 0;
-			border-left: 1px solid rgba(255, 255, 255, 0.06);
-			padding-left: 3rem;
+			border-left: 1px solid var(--border);
+			padding-left: 3.5rem;
 			margin-top: 0;
 			justify-content: center;
 		}
