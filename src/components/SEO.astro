@@ -10,14 +10,6 @@ const {
 } = Astro.props;
 ---
 <meta charset="UTF-8" />
-<script is:inline>
-	window.addEventListener('error', (event) => {
-		alert('GLOBAL ERROR: ' + event.message + ' at ' + event.filename + ':' + event.lineno);
-	});
-	window.addEventListener('unhandledrejection', (event) => {
-		alert('UNHANDLED REJECTION: ' + event.reason);
-	});
-</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>{title}</title>
 <meta name="description" content={description} />
