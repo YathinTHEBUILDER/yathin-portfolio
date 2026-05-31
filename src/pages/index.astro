@@ -80,7 +80,37 @@ import '../styles/global.css';
 				}
 			};
 
-			// ── Lenis Smooth Scroll ──────────────────────────────────
+			// ── Lenis Smooth Scroll & Navbar Synchronization ──────────
+			const highlightNav = () => {
+				const sections = document.querySelectorAll("section[id]");
+				const navLinks = document.querySelectorAll(".nav-links a");
+				let scrollY = window.scrollY;
+
+				sections.forEach((current) => {
+					const el = current as HTMLElement;
+					const sectionHeight = el.offsetHeight;
+					const sectionTop = el.offsetTop - 150;
+					const sectionId = current.getAttribute("id");
+
+					if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+						navLinks.forEach((link) => {
+							link.classList.remove("active");
+							if (link.getAttribute("href") === `#${sectionId}`) {
+								link.classList.add("active");
+							}
+						});
+					}
+				});
+			};
+
+			const updateNavbarBg = (y: number) => {
+				const nav = document.querySelector("nav");
+				if (nav) {
+					nav.style.background =
+						y > 50 ? "rgba(7,7,7,0.95)" : "transparent";
+				}
+			};
+
 			runOnInit(() => {
 				const lenis = new Lenis({
 					autoRaf: false,
@@ -94,8 +124,12 @@ import '../styles/global.css';
 					lenis.raf(time * 1000);
 				});
 
-				// Connect ScrollTrigger updates with Lenis scroll event
-				lenis.on('scroll', ScrollTrigger.update);
+				// Connect ScrollTrigger updates and active states with Lenis scroll event
+				lenis.on('scroll', (e: any) => {
+					ScrollTrigger.update();
+					updateNavbarBg(e.scroll);
+					highlightNav();
+				});
 
 				// Hook all internal anchor links to smooth scroll
 				document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
@@ -132,17 +166,18 @@ import '../styles/global.css';
 						  .fromTo(".scroll-indicator-wrap", { opacity: 0 }, { opacity: 1 }, "-=0.3");
 					});
 
-					// Projects staggered fade-in reveal (no Z transform, low duration)
+					// Projects staggered fade-in reveal with premium subtle scale
 					gsap.fromTo("#projects .project-card", 
-						{ opacity: 0, y: 24 },
+						{ opacity: 0, y: 24, scale: 0.98 },
 						{
 							opacity: 1,
 							y: 0,
+							scale: 1,
 							duration: 0.6,
 							stagger: 0.1,
 							ease: "power2.out",
 							scrollTrigger: {
-								trigger: "#projects .projects-grid",
+								trigger: "#projects .secondary-projects-grid",
 								start: "top 90%",
 								toggleActions: "play none none none"
 							}
@@ -204,18 +239,11 @@ import '../styles/global.css';
 				}
 			});
 
-			// ── Navbar opacity on scroll ──────────────────────────
-			const updateNavbarBg = (y: number) => {
-				const nav = document.querySelector("nav");
-				if (nav) {
-					nav.style.background =
-						y > 50 ? "rgba(7,7,7,0.95)" : "transparent";
-				}
-			};
-
+			// ── Navbar opacity on scroll fallback ──────────────────
 			window.addEventListener("scroll", () => {
 				if (!(window as any).lenis) {
 					updateNavbarBg(window.scrollY);
+					highlightNav();
 				}
 			});
 
