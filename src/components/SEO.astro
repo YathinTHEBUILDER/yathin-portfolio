@@ -1,0 +1,38 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Yathin | Full Stack Developer & AI Engineer",
+  description = "Portfolio of Yathin — Full Stack Developer and AI Engineer exploring machine intelligence and modern web architectures."
+} = Astro.props;
+---
+<meta charset="UTF-8" />
+<script is:inline>
+	window.addEventListener('error', (event) => {
+		alert('GLOBAL ERROR: ' + event.message + ' at ' + event.filename + ':' + event.lineno);
+	});
+	window.addEventListener('unhandledrejection', (event) => {
+		alert('UNHANDLED REJECTION: ' + event.reason);
+	});
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="theme-color" content="#f97316" />
+
+<!-- Google Fonts: Premium AI & Engineering Pack -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+	rel="stylesheet"
+/>
+
+<!-- Typed.js -->
+<script src="https://cdn.jsdelivr.net/npm/typed.js@2.1.0/dist/typed.umd.js"></script>
+
+<!-- Vanilla Tilt -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>

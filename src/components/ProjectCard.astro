@@ -1,0 +1,354 @@
+---
+interface Props {
+  id: string;
+  status: string;
+  name: string;
+  badge: string;
+  fullname: string;
+  desc: string;
+  githubUrl: string;
+}
+
+const { id, status, name, badge, fullname, desc, githubUrl } = Astro.props;
+---
+<div class="glass project-card reveal" data-tilt data-tilt-max="8" data-tilt-glare="true" data-tilt-max-glare="0.2">
+	<div class="system-status-bar">
+		<span class="status-tag"><span class="status-dot"></span>{status}</span>
+		<span>ID: {id}</span>
+	</div>
+	<div class="project-info-wrap">
+		<div class="project-top">
+			<span class="project-icon">
+				<slot name="icon" />
+			</span>
+			<span class="project-name">{name}</span>
+			<span class="project-badge">{badge}</span>
+		</div>
+		<p class="project-fullname">{fullname}</p>
+		<p class="project-desc">{desc}</p>
+	</div>
+	<div class="system-blueprint">
+		<div class="grid-bg"></div>
+		<slot name="blueprint" />
+	</div>
+	<div class="tech-stack">
+		<slot name="tech" />
+	</div>
+	<div class="card-actions">
+		<a href={githubUrl} target="_blank" rel="noopener" class="btn-action">GitHub ↗</a>
+	</div>
+</div>
+
+<style>
+	/* Project Card as a Dynamic System Module */
+	.project-card {
+		position: relative;
+		padding: 2.2rem;
+		background: linear-gradient(145deg, rgba(20,20,20,0.8), rgba(5,5,5,0.9));
+		backdrop-filter: blur(20px);
+		border: 1px solid rgba(255,255,255,0.05);
+		border-radius: 20px;
+		transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		transform-style: preserve-3d;
+		perspective: 1000px;
+		cursor: default;
+	}
+
+	.project-card::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, transparent 100%);
+		opacity: 0;
+		transition: opacity 0.5s ease;
+		z-index: 0;
+		pointer-events: none;
+	}
+
+	.project-card:hover {
+		border-color: rgba(249, 115, 22, 0.5);
+		box-shadow: 
+			0 25px 50px rgba(0, 0, 0, 0.8),
+			0 0 40px rgba(249, 115, 22, 0.15),
+			inset 0 0 0 1px rgba(249, 115, 22, 0.1);
+		transform: translateY(-8px) scale(1.02);
+	}
+
+	.project-card:hover::before {
+		opacity: 1;
+	}
+
+	/* System Status Header */
+	.system-status-bar {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-family: var(--font-tech);
+		font-size: 0.72rem;
+		letter-spacing: 0.12em;
+		color: #666;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+		padding-bottom: 0.8rem;
+		z-index: 1;
+	}
+
+	.status-tag {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		font-weight: 700;
+	}
+
+	.status-dot {
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: #10b981;
+		box-shadow: 0 0 8px #10b981;
+		animation: statusPulse 1.8s infinite alternate;
+	}
+
+	.project-card:hover .status-dot {
+		background: var(--accent);
+		box-shadow: 0 0 10px var(--accent);
+		animation: statusPulseFast 0.8s infinite alternate;
+	}
+
+	@keyframes statusPulse {
+		0% { opacity: 0.4; }
+		100% { opacity: 1; }
+	}
+	@keyframes statusPulseFast {
+		0% { opacity: 0.5; transform: scale(0.9); }
+		100% { opacity: 1; transform: scale(1.2); }
+	}
+
+	/* Card Details Layout */
+	.project-info-wrap {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		z-index: 1;
+	}
+
+	.project-top {
+		display: flex;
+		align-items: center;
+		gap: 0.8rem;
+	}
+
+	.project-icon {
+		font-size: 1.8rem;
+		filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1));
+		transition: transform var(--motion-duration-medium) var(--motion-ease-cinematic);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.project-card:hover .project-icon {
+		transform: scale(1.15) rotate(5deg);
+	}
+
+	.project-name {
+		font-family: var(--font-display);
+		font-size: 1.5rem;
+		font-weight: 800;
+		color: #fff;
+		letter-spacing: -0.01em;
+		text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+	}
+
+	.project-badge {
+		background: rgba(249, 115, 22, 0.15);
+		border: 1px solid rgba(249, 115, 22, 0.4);
+		color: var(--accent);
+		font-size: 0.68rem;
+		padding: 0.3rem 0.8rem;
+		border-radius: 6px;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		font-family: var(--font-tech);
+		margin-left: auto;
+		box-shadow: 0 0 10px rgba(249, 115, 22, 0.1);
+	}
+
+	.project-fullname {
+		color: #cbd5e1;
+		font-size: 0.85rem;
+		font-weight: 500;
+	}
+
+	.project-desc {
+		color: #94a3b8;
+		font-size: 0.95rem;
+		line-height: 1.7;
+		z-index: 1;
+	}
+
+	/* Visual System Blueprint Preview */
+	.system-blueprint {
+		position: relative;
+		height: 110px;
+		width: 100%;
+		background: rgba(0, 0, 0, 0.4);
+		border: 1px solid rgba(255, 255, 255, 0.05);
+		border-radius: 12px;
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 1;
+		transition: border-color 0.4s ease;
+	}
+
+	.project-card:hover .system-blueprint {
+		border-color: rgba(249, 115, 22, 0.25);
+		box-shadow: inset 0 0 20px rgba(249, 115, 22, 0.05);
+	}
+
+	.grid-bg {
+		position: absolute;
+		inset: 0;
+		background-image: 
+			linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+		background-size: 15px 15px;
+		pointer-events: none;
+	}
+
+	:global(.blueprint-svg) {
+		width: 90%;
+		height: 80%;
+		overflow: visible;
+	}
+
+	:global(.connection-path) {
+		fill: none;
+		stroke: rgba(255, 255, 255, 0.08);
+		stroke-width: 1.5;
+		transition: stroke 0.4s ease;
+	}
+
+	.project-card:hover :global(.connection-path) {
+		stroke: rgba(249, 115, 22, 0.3);
+	}
+
+	:global(.signal-pulse) {
+		fill: none;
+		stroke: var(--accent);
+		stroke-width: 2.5;
+		stroke-linecap: round;
+		stroke-dasharray: 8 35;
+		stroke-dashoffset: 0;
+		animation: signalFlow 2s infinite linear;
+		opacity: 0.4;
+		transition: opacity 0.4s ease;
+	}
+
+	.project-card:hover :global(.signal-pulse) {
+		opacity: 1;
+		animation-duration: 1.2s;
+	}
+
+	@keyframes signalFlow {
+		to {
+			stroke-dashoffset: -43;
+		}
+	}
+
+	:global(.blueprint-node) {
+		transition: all 0.4s ease;
+	}
+
+	:global(.node-dot) {
+		fill: #1a1a1a;
+		stroke: rgba(255, 255, 255, 0.3);
+		stroke-width: 1.5;
+		transition: all 0.4s ease;
+	}
+
+	:global(.node-text) {
+		font-family: var(--font-tech);
+		font-size: 8px;
+		fill: #666;
+		font-weight: 600;
+		letter-spacing: 0.05em;
+		transition: fill 0.4s ease;
+	}
+
+	.project-card:hover :global(.node-dot) {
+		stroke: var(--accent);
+		fill: rgba(249, 115, 22, 0.2);
+		filter: drop-shadow(0 0 6px var(--accent-glow));
+	}
+
+	.project-card:hover :global(.node-text) {
+		fill: #e2e8f0;
+	}
+
+	/* Tech Stack Badges */
+	.tech-stack {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+		z-index: 1;
+	}
+
+	:global(.tech-badge) {
+		background: rgba(255, 255, 255, 0.03);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		backdrop-filter: blur(5px);
+		color: #cbd5e1;
+		font-size: 0.75rem;
+		padding: 0.35rem 0.9rem;
+		border-radius: 8px;
+		transition: all 0.3s ease;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	:global(.tech-badge:hover) {
+		border-color: rgba(249, 115, 22, 0.4);
+		background: rgba(249, 115, 22, 0.1);
+		color: #fff;
+		transform: translateY(-2px);
+		box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+	}
+
+	/* Controls / Action Buttons */
+	.card-actions {
+		display: flex;
+		gap: 0.8rem;
+		margin-top: auto;
+		z-index: 1;
+	}
+
+	.btn-action {
+		flex: 1;
+		padding: 0.6rem 1rem;
+		border: 1px solid var(--glass-border);
+		border-radius: 8px;
+		color: #bbb;
+		text-decoration: none;
+		font-family: var(--font-tech);
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-align: center;
+		transition: var(--transition-medium);
+		cursor: pointer;
+		background: transparent;
+	}
+
+	.btn-action:hover {
+		border-color: var(--accent);
+		color: var(--accent);
+		box-shadow: 0 0 15px var(--accent-glow);
+		transform: translateY(-2px);
+	}
+</style>

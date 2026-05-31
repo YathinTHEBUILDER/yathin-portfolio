@@ -1,0 +1,363 @@
+---
+// About.astro
+---
+<!-- ABOUT -->
+<section id="about">
+	<h2 class="section-title reveal">About <span>Me</span></h2>
+	<div class="title-bar reveal"></div>
+	<div class="about-grid">
+		<div class="about-avatar-wrap reveal">
+
+			<p class="about-name">Yathin</p>
+			<p class="about-role">Full Stack Developer & AI Engineer</p>
+			<p class="about-loc">
+				<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+				Mysuru, Karnataka 🇮🇳
+			</p>
+		</div>
+		<div class="about-content-wrapper">
+			<div class="about-status-badge reveal">
+				<span class="pulse-dot-inner"></span>
+				<span class="badge-text">SYS.ARCHITECT // FULL STACK</span>
+				<span class="badge-scanner"></span>
+			</div>
+			<div class="about-bio-card reveal">
+				<div class="about-bio-accent"></div>
+				<div class="hud-box top-left"></div>
+				<div class="hud-box top-right"></div>
+				<div class="hud-box bottom-left"></div>
+				<div class="hud-box bottom-right"></div>
+				<p class="about-bio">
+					Operating at the crossroads of intelligent software and robust system architecture, I am a Full Stack Developer focused on building high-performance digital infrastructure. I engineer responsive, full-stack applications and integrate advanced AI models to execute complex tasks with precision. For me, development isn't just about writing code—it's about architecting sophisticated, scalable solutions that command attention and deliver results.
+				</p>
+			</div>
+			<div class="stats-grid reveal">
+				<div class="glass stat-card">
+					<div class="hud-box top-left"></div>
+					<div class="hud-box top-right"></div>
+					<span class="stat-number">3+</span>
+					<p class="stat-label">Active Prototypes</p>
+				</div>
+				<div class="glass stat-card">
+					<div class="hud-box top-left"></div>
+					<div class="hud-box top-right"></div>
+					<span class="stat-number">6+</span>
+					<p class="stat-label">System Integrations</p>
+				</div>
+				<div class="glass stat-card">
+					<div class="hud-box top-left"></div>
+					<div class="hud-box top-right"></div>
+					<span class="stat-number">AI</span>
+					<p class="stat-label">Engineer</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	/* ABOUT */
+	.about-grid {
+		display: grid;
+		grid-template-columns: 1fr 2fr;
+		gap: 4rem;
+		align-items: start;
+	}
+
+	.about-avatar-wrap {
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.about-avatar-container {
+		position: relative;
+		width: 200px;
+		height: 200px;
+		margin: 0 auto 2.5rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.about-avatar-inner {
+		position: relative;
+		width: 150px;
+		height: 150px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+	}
+	.about-avatar-glow {
+		position: absolute;
+		inset: -20px;
+		background: radial-gradient(circle at center, rgba(249, 115, 22, 0.25) 0%, transparent 70%);
+		border-radius: 50%;
+		filter: blur(15px);
+		transition: all 0.5s ease;
+	}
+	.about-avatar-inner:hover .about-avatar-glow {
+		background: radial-gradient(circle at center, rgba(249, 115, 22, 0.45) 0%, transparent 75%);
+		filter: blur(20px);
+		transform: scale(1.1);
+	}
+	.about-avatar-ring-1 {
+		position: absolute;
+		inset: -8px;
+		border-radius: 50%;
+		background: conic-gradient(from 0deg, transparent 0%, rgba(249, 115, 22, 0.8) 25%, transparent 50%);
+		animation: spin-slow 5s linear infinite;
+		z-index: 0;
+		transition: inset 0.4s ease;
+	}
+	.about-avatar-ring-1::before {
+		content: '';
+		position: absolute;
+		inset: 2px;
+		border-radius: 50%;
+		background: #050505;
+	}
+	.about-avatar-ring-2 {
+		position: absolute;
+		inset: -18px;
+		border-radius: 50%;
+		border: 1px dashed rgba(249, 115, 22, 0.35);
+		animation: spin-slow 12s linear infinite reverse;
+		z-index: 0;
+		transition: inset 0.4s ease, border-color 0.4s ease;
+	}
+	.about-avatar-ring-3 {
+		position: absolute;
+		inset: -28px;
+		border-radius: 50%;
+		border: 1px solid rgba(255, 255, 255, 0.05);
+		animation: spin-slow 20s linear infinite;
+		z-index: 0;
+		transition: inset 0.4s ease;
+	}
+	.about-avatar-inner:hover .about-avatar-ring-1 { inset: -12px; }
+	.about-avatar-inner:hover .about-avatar-ring-2 { inset: -24px; border-color: rgba(249, 115, 22, 0.6); }
+	.about-avatar-inner:hover .about-avatar-ring-3 { inset: -36px; border-color: rgba(255, 255, 255, 0.15); }
+
+	.about-avatar {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		border-radius: 50%;
+		overflow: hidden;
+		z-index: 2;
+		box-shadow: 0 0 30px rgba(249, 115, 22, 0.3), inset 0 0 20px rgba(0,0,0,0.5);
+		border: 2px solid rgba(255, 255, 255, 0.15);
+		transition: border-color 0.4s ease, transform 0.4s ease;
+	}
+	.about-avatar-inner:hover .about-avatar {
+		border-color: var(--accent);
+		transform: scale(1.03);
+	}
+
+	.about-name {
+		font-family: var(--font-display);
+		font-weight: 700;
+		font-size: 1.5rem;
+		margin-bottom: 0.4rem;
+		letter-spacing: -0.01em;
+		text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+	}
+
+	.about-role {
+		color: var(--accent);
+		font-size: 0.95rem;
+		margin-bottom: 0.8rem;
+		font-weight: 600;
+		font-family: var(--font-tech);
+		letter-spacing: 0.05em;
+	}
+	.about-loc {
+		color: #888;
+		font-size: 0.85rem;
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		background: rgba(255, 255, 255, 0.03);
+		padding: 0.4rem 0.9rem;
+		border-radius: 20px;
+		border: 1px solid rgba(255, 255, 255, 0.08);
+	}
+
+	/* About Content Box */
+	.about-content-wrapper {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+	}
+
+	.about-status-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6rem;
+		padding: 0.45rem 1.4rem;
+		background: rgba(249, 115, 22, 0.08);
+		border: 1px solid rgba(249, 115, 22, 0.3);
+		border-radius: 30px;
+		color: var(--accent);
+		font-family: var(--font-tech);
+		font-size: 0.8rem;
+		font-weight: 700;
+		letter-spacing: 0.25em;
+		text-transform: uppercase;
+		backdrop-filter: blur(12px);
+		box-shadow: 0 0 20px rgba(249, 115, 22, 0.15);
+		position: relative;
+		overflow: hidden;
+		align-self: flex-start;
+	}
+	.badge-scanner {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		width: 20px;
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+		animation: badge-scan 3s ease-in-out infinite;
+		transform: skewX(-20deg);
+	}
+	@keyframes badge-scan {
+		0% { left: -30%; }
+		100% { left: 130%; }
+	}
+	.pulse-dot-inner {
+		width: 6px;
+		height: 6px;
+		background: var(--accent);
+		border-radius: 50%;
+		box-shadow: 0 0 10px var(--accent);
+		animation: dot-pulse-fast-about 1.5s infinite alternate;
+	}
+
+	@keyframes dot-pulse-fast-about {
+		0% { opacity: 0.4; box-shadow: 0 0 4px var(--accent); }
+		100% { opacity: 1; box-shadow: 0 0 12px var(--accent), 0 0 20px rgba(249, 115, 22, 0.5); }
+	}
+
+	.about-bio-card {
+		position: relative;
+		background: linear-gradient(145deg, rgba(20,20,20,0.6), rgba(10,10,10,0.8));
+		backdrop-filter: blur(20px);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 20px;
+		padding: 2.5rem;
+		box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.05);
+		transition: border-color 0.4s ease, box-shadow 0.4s ease;
+	}
+	.about-bio-card:hover {
+		border-color: rgba(249, 115, 22, 0.4);
+		box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 30px rgba(249, 115, 22, 0.1), inset 0 1px 1px rgba(255,255,255,0.1);
+	}
+	.about-bio-accent {
+		position: absolute;
+		top: 0;
+		left: 2.5rem;
+		width: 60px;
+		height: 3px;
+		background: var(--accent);
+		box-shadow: 0 0 15px var(--accent-glow);
+		border-radius: 0 0 3px 3px;
+	}
+
+	.about-bio {
+		line-height: 2;
+		color: #e2e8f0;
+		font-size: 1.05rem;
+		letter-spacing: 0.01em;
+	}
+
+	.stats-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1.2rem;
+	}
+
+	.stat-card {
+		position: relative;
+		padding: 1.8rem 1.2rem;
+		text-align: center;
+		border-radius: 16px;
+		background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+		border: 1px solid rgba(255,255,255,0.05);
+		backdrop-filter: blur(10px);
+		transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+		overflow: hidden;
+	}
+	.stat-card:hover {
+		transform: translateY(-5px);
+		border-color: rgba(249, 115, 22, 0.5);
+		box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 20px rgba(249, 115, 22, 0.1);
+	}
+
+	.stat-number {
+		font-family: var(--font-tech);
+		font-size: 2.5rem;
+		font-weight: 800;
+		color: var(--accent);
+		display: block;
+		letter-spacing: -0.02em;
+		margin-bottom: 0.4rem;
+		text-shadow: 0 0 15px var(--accent-glow);
+	}
+
+	.stat-label {
+		font-size: 0.8rem;
+		color: #94a3b8;
+		font-weight: 600;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		font-family: var(--font-sans);
+	}
+
+	/* Orbital Trackers */
+	.orbit-tracker {
+		position: absolute;
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: var(--accent);
+		box-shadow: 0 0 10px var(--accent);
+		z-index: 3;
+	}
+	.tracker-1 {
+		top: 10px;
+		left: 50%;
+		transform-origin: 0 90px;
+		animation: spin-slow 8s linear infinite;
+	}
+	.tracker-2 {
+		bottom: 10px;
+		right: 50%;
+		transform-origin: 0 -90px;
+		animation: spin-slow 12s linear infinite reverse;
+	}
+
+	@keyframes spin-slow {
+		100% { transform: rotate(360deg); }
+	}
+
+	@media (max-width: 768px) {
+		.about-grid {
+			grid-template-columns: 1fr;
+			gap: 3rem;
+		}
+		.stats-grid {
+			grid-template-columns: repeat(3, 1fr);
+			gap: 0.8rem;
+		}
+		.stat-card {
+			padding: 1.2rem 0.8rem;
+		}
+		.stat-number {
+			font-size: 1.8rem;
+		}
+		.stat-label {
+			font-size: 0.7rem;
+		}
+	}
+</style>

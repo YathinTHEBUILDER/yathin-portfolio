@@ -1,0 +1,435 @@
+---
+// CinematicLoader.astro
+---
+<!-- World-Class Cinematic Preloader Overlay -->
+<div id="cinematic-loader" class="loader-active">
+	<div class="loader-overlay-gradient"></div>
+	<div class="loader-grid-overlay"></div>
+	<div class="loader-scanline"></div>
+	
+	<!-- Perfect Symmetric Screen Border Frame -->
+	<div class="loader-viewport-frame">
+		<div class="loader-frame-bottom-left">[DIAGNOSTICS_ACTIVE]</div>
+		<div class="loader-frame-bottom-right" id="loader-hud-encryption">AUTH_STAGES: OK</div>
+	</div>
+	
+	<!-- Spacious Central Console Card -->
+	<div id="loader-ui" class="loader-ui">
+		<div class="holo-ring-container">
+			<svg class="holo-ring" viewBox="0 0 200 200">
+				<!-- Deep Outer Glow Ring -->
+				<circle class="ring-glow-back" cx="100" cy="100" r="95"></circle>
+				<!-- Concentric Circular Ticks -->
+				<circle class="ring-outer" cx="100" cy="100" r="90"></circle>
+				<!-- Central Progress Indicator -->
+				<circle class="ring-progress" cx="100" cy="100" r="80"></circle>
+				<circle class="ring-core" cx="100" cy="100" r="12"></circle>
+				<!-- Active Orbit Nodes -->
+				<circle class="ring-orbit-1" cx="100" cy="100" r="50"></circle>
+				<circle class="ring-orbit-2" cx="100" cy="100" r="30"></circle>
+				<!-- Intricate Inner Technical Ring -->
+				<circle class="ring-tech-inner" cx="100" cy="100" r="65" stroke-dasharray="2 10"></circle>
+			</svg>
+			<!-- High-Tech Percentage Display -->
+			<div class="holo-percentage" id="loader-percent">00</div>
+		</div>
+
+		<div class="status-panel">
+			<div class="status-header">
+				<span class="status-indicator-dot"></span>
+				<span class="status-title" id="loader-status-title">SYSTEM INIT</span>
+			</div>
+			<!-- Clean, single-line typing ticker -->
+			<div class="status-ticker" id="loader-status-ticker">INITIATING DIAGNOSTIC HANDSHAKE...</div>
+			
+			<!-- Sleek Edge-to-Edge Oscilloscope Wave at bottom -->
+			<div class="loader-wave-container">
+				<svg viewBox="0 0 100 20" class="loader-wave-svg" preserveAspectRatio="none">
+					<path id="loader-wave-path" d="M 0,10 Q 25,10 50,10 T 100,10" fill="none" stroke="rgba(249, 115, 22, 0.4)" stroke-width="1"></path>
+				</svg>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	/* ── WORLD-CLASS CINEMATIC PRELOADER OVERLAY ── */
+	#cinematic-loader {
+		position: fixed;
+		inset: 0;
+		z-index: 9999;
+		background: #020202;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: opacity var(--motion-duration-cinematic) var(--motion-ease-cinematic), visibility var(--motion-duration-cinematic);
+		overflow: hidden;
+	}
+
+	/* Subtle Screen-Wide Scanning Glow */
+	.loader-scanline {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 2px;
+		background: linear-gradient(180deg, transparent, var(--accent) 50%, transparent);
+		opacity: 0.06;
+		pointer-events: none;
+		z-index: 5;
+		animation: scan-sweep 6s linear infinite;
+	}
+
+	@keyframes scan-sweep {
+		0% { transform: translateY(-10vh); }
+		100% { transform: translateY(110vh); }
+	}
+
+	.loader-overlay-gradient {
+		position: absolute;
+		inset: 0;
+		background: radial-gradient(circle at center, rgba(249, 115, 22, 0.035) 0%, transparent 65%);
+		pointer-events: none;
+		z-index: 1;
+	}
+
+	/* Extremely Subtle Matrix Grid Background */
+	.loader-grid-overlay {
+		position: absolute;
+		inset: 0;
+		background-image: 
+			radial-gradient(rgba(249, 115, 22, 0.08) 1px, transparent 1px);
+		background-size: 30px 30px;
+		background-position: center;
+		mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+		-webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+		pointer-events: none;
+		z-index: 2;
+		transition: transform var(--motion-duration-cinematic) var(--motion-ease-cinematic);
+	}
+
+	/* Perfect Symmetric Screen Border Frame */
+	.loader-viewport-frame {
+		position: absolute;
+		inset: 2rem;
+		border: 1px solid rgba(249, 115, 22, 0.04);
+		pointer-events: none;
+		z-index: 4;
+		transition: opacity var(--motion-duration-cinematic) var(--motion-ease-cinematic), transform var(--motion-duration-cinematic) var(--motion-ease-cinematic);
+	}
+
+	/* Corner Static Telemetries inside the frame */
+	.loader-viewport-frame::before {
+		content: "[SYS.NEXUS_CORE // DIAG_ACTIVE]";
+		position: absolute;
+		top: 1rem;
+		left: 1rem;
+		font-family: var(--font-tech);
+		font-size: 0.58rem;
+		letter-spacing: 0.25em;
+		color: rgba(255, 255, 255, 0.35);
+	}
+
+	.loader-viewport-frame::after {
+		content: "[LINK.ESTABLISHED // SECURE_KEY]";
+		position: absolute;
+		top: 1rem;
+		right: 1rem;
+		font-family: var(--font-tech);
+		font-size: 0.58rem;
+		letter-spacing: 0.25em;
+		color: rgba(255, 255, 255, 0.35);
+	}
+
+	.loader-frame-bottom-left {
+		position: absolute;
+		bottom: 1rem;
+		left: 1rem;
+		font-family: var(--font-tech);
+		font-size: 0.58rem;
+		letter-spacing: 0.25em;
+		color: rgba(255, 255, 255, 0.35);
+	}
+
+	.loader-frame-bottom-right {
+		position: absolute;
+		bottom: 1rem;
+		right: 1rem;
+		font-family: var(--font-tech);
+		font-size: 0.58rem;
+		letter-spacing: 0.25em;
+		color: var(--accent);
+		text-shadow: 0 0 6px var(--accent-glow);
+		opacity: 0.85;
+	}
+
+	/* Spacious, Geometric Central Console Dashboard */
+	.loader-ui {
+		position: relative;
+		width: 380px;
+		height: 380px;
+		background: rgba(10, 10, 10, 0.5);
+		border: 1px solid rgba(255, 255, 255, 0.04);
+		border-radius: 16px;
+		padding: 3rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: flex-start;
+		backdrop-filter: blur(25px);
+		-webkit-backdrop-filter: blur(25px);
+		z-index: 10;
+		box-shadow: 
+			0 30px 80px rgba(0, 0, 0, 0.9), 
+			inset 0 1px 1px rgba(255, 255, 255, 0.03);
+		transition: all var(--motion-duration-cinematic) var(--motion-ease-cinematic);
+	}
+
+	/* Elegant corner highlights for the card */
+	.loader-ui::before {
+		content: "";
+		position: absolute;
+		top: -1px;
+		left: 15px;
+		right: 15px;
+		height: 1px;
+		background: linear-gradient(90deg, transparent, rgba(249, 115, 22, 0.25), transparent);
+	}
+
+	/* Concentric High-Tech Ring Visuals */
+	.holo-ring-container {
+		position: relative;
+		width: 170px;
+		height: 170px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 2.2rem;
+	}
+
+	.holo-ring {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		transform: rotate(-90deg);
+	}
+
+	/* Deep glowing technical arcs */
+	.ring-glow-back {
+		fill: none;
+		stroke: var(--accent);
+		stroke-width: 1;
+		opacity: 0.15;
+		transition: opacity 0.5s ease;
+	}
+
+	.ring-outer {
+		fill: none;
+		stroke: rgba(255, 255, 255, 0.04);
+		stroke-width: 2;
+		stroke-dasharray: 4 8;
+	}
+
+	.ring-progress {
+		fill: none;
+		stroke: var(--accent);
+		stroke-width: 2;
+		stroke-linecap: round;
+		stroke-dasharray: 502.65; /* Circumference of r=80 circle */
+		stroke-dashoffset: 502.65;
+		filter: drop-shadow(0 0 6px var(--accent-glow));
+		transition: stroke-dashoffset 0.08s ease-out;
+	}
+
+	.ring-tech-inner {
+		fill: none;
+		stroke: rgba(249, 115, 22, 0.2);
+		stroke-width: 1;
+		stroke-dasharray: 2 12;
+		animation: tech-ring-spin 18s linear infinite;
+		transform-origin: center;
+	}
+
+	@keyframes tech-ring-spin {
+		to { transform: rotate(360deg); }
+	}
+
+	.ring-core {
+		fill: rgba(249, 115, 22, 0.05);
+		stroke: rgba(249, 115, 22, 0.2);
+		stroke-width: 1;
+	}
+
+	.ring-orbit-1 {
+		fill: none;
+		stroke: rgba(255, 255, 255, 0.03);
+		stroke-width: 1;
+		stroke-dasharray: 100 20;
+		animation: orbit-rotate-cw 12s linear infinite;
+		transform-origin: center;
+	}
+
+	.ring-orbit-2 {
+		fill: none;
+		stroke: rgba(249, 115, 22, 0.08);
+		stroke-width: 1;
+		stroke-dasharray: 40 40;
+		animation: orbit-rotate-ccw 8s linear infinite;
+		transform-origin: center;
+	}
+
+	@keyframes orbit-rotate-cw {
+		to { transform: rotate(360deg); }
+	}
+
+	@keyframes orbit-rotate-ccw {
+		to { transform: rotate(-360deg); }
+	}
+
+	/* large, clean, high-tech percentage */
+	.holo-percentage {
+		font-family: var(--font-tech);
+		font-size: 1.85rem;
+		font-weight: 700;
+		color: #ffffff;
+		letter-spacing: -0.02em;
+		text-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
+		z-index: 2;
+		display: flex;
+		align-items: baseline;
+	}
+
+	.holo-percentage::after {
+		content: "%";
+		font-size: 0.95rem;
+		color: var(--accent);
+		margin-left: 0.1rem;
+		opacity: 0.8;
+	}
+
+	/* Spacious central status panel */
+	.status-panel {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		margin-top: auto;
+	}
+
+	.status-header {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		margin-bottom: 0.4rem;
+	}
+
+	.status-indicator-dot {
+		width: 4px;
+		height: 4px;
+		border-radius: 50%;
+		background: var(--accent);
+		box-shadow: 0 0 6px var(--accent-glow);
+		animation: dot-pulse-fast 1s infinite alternate;
+	}
+
+	@keyframes dot-pulse-fast {
+		0% { opacity: 0.3; }
+		100% { opacity: 1; filter: drop-shadow(0 0 4px var(--accent-glow)); }
+	}
+
+	.status-title {
+		font-family: var(--font-tech);
+		font-size: 0.68rem;
+		font-weight: 700;
+		letter-spacing: 0.25em;
+		color: rgba(255, 255, 255, 0.4);
+		text-transform: uppercase;
+	}
+
+	/* Clean, single-line typing ticker */
+	.status-ticker {
+		font-family: var(--font-tech);
+		font-size: 0.72rem;
+		font-weight: 600;
+		color: var(--accent);
+		letter-spacing: 0.15em;
+		text-transform: uppercase;
+		height: 1rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-shadow: 0 0 6px var(--accent-glow);
+		margin-bottom: 1.4rem;
+		opacity: 0.95;
+	}
+
+	/* Sleek Edge-to-Edge Oscilloscope Wave at bottom */
+	.loader-wave-container {
+		width: 100%;
+		height: 20px;
+		border-top: 1px solid rgba(255, 255, 255, 0.03);
+		padding-top: 0.8rem;
+		margin-top: 0.5rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+	}
+
+	.loader-wave-svg {
+		width: 100%;
+		height: 100%;
+	}
+
+	/* Extreme Transition Wakestate Animations */
+	:global(.loader-waking) .ring-glow-back {
+		opacity: 0.8;
+	}
+	
+	:global(.loader-waking) .ring-core {
+		fill: #ffffff;
+		opacity: 0.85;
+		filter: drop-shadow(0 0 15px #ffffff), drop-shadow(0 0 25px var(--accent));
+	}
+
+	:global(.loader-waking) .holo-percentage {
+		color: #ffffff !important;
+		text-shadow: 0 0 15px #ffffff, 0 0 25px var(--accent);
+	}
+
+	:global(.loader-waking) {
+		box-shadow: 
+			0 30px 80px rgba(0, 0, 0, 0.95), 
+			0 0 60px rgba(249, 115, 22, 0.15), 
+			inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+		border-color: rgba(249, 115, 22, 0.4) !important;
+	}
+
+	/* Responsive Scaling */
+	@media (max-width: 768px) {
+		.loader-viewport-frame {
+			display: none !important;
+		}
+		.loader-scanline {
+			display: none !important;
+		}
+		.loader-ui {
+			width: 290px;
+			height: 310px;
+			padding: 2.2rem 1.8rem;
+		}
+		.holo-ring-container {
+			width: 120px;
+			height: 120px;
+			margin-bottom: 1.4rem;
+		}
+		.holo-percentage {
+			font-size: 1.4rem;
+		}
+		.status-ticker {
+			font-size: 0.65rem;
+			margin-bottom: 0.8rem;
+		}
+	}
+</style>
