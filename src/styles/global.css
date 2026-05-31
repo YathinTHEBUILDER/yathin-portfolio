@@ -45,7 +45,7 @@ body.loading {
 
 section {
 	scroll-margin-top: 100px;
-	padding: 8rem 0; /* Expanded editorial whitespace */
+	padding: 7rem 0; /* Expanded editorial whitespace */
 }
 
 /* ── Lenis Smooth Scroll CSS Overrides ── */
@@ -99,11 +99,11 @@ body {
 	background: var(--accent);
 }
 ::selection {
-	background: rgba(259, 115, 22, 0.2);
+	background: rgba(249, 115, 22, 0.2);
 	color: #fff;
 }
 
-/* Glass utility */
+/* Glass utility - Flat Premium Editorial Card */
 .glass {
 	background: var(--glass);
 	border: 1px solid var(--glass-border);
@@ -155,7 +155,6 @@ body {
 .btn-primary:hover {
 	background: transparent;
 	color: var(--accent);
-	box-shadow: 0 10px 20px rgba(249, 115, 22, 0.08);
 	transform: translateY(-2px);
 }
 .btn-primary:hover .btn-arrow {
@@ -216,43 +215,26 @@ body {
 /* SCROLL REVEAL FALLBACKS */
 .reveal {
 	opacity: 0;
-	transform: translateY(30px);
+	transform: translateY(24px); /* Simple translation */
 	will-change: transform, opacity;
 }
-#main-content {
-	perspective: 1000px;
-}
 
-/* DOM Elements Proximity Styling */
-.project-card, .skill-badge, .btn-primary, .btn-ghost, .contact-card {
-	--mouse-x: 50%;
-	--mouse-y: 50%;
-	--proximity: 0;
-	position: relative;
-}
+/* prefers-reduced-motion CSS media query */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.001ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.001ms !important;
+		scroll-behavior: auto !important;
+	}
 
-/* Subtle proximity card hover styling */
-.project-card, .contact-card {
-	transition: var(--transition-medium);
-}
-
-.project-card::after, .contact-card::after {
-	content: '';
-	position: absolute;
-	inset: -1px;
-	border-radius: inherit;
-	padding: 1px;
-	background: radial-gradient(
-		circle 100px at var(--mouse-x) var(--mouse-y), 
-		rgba(249, 115, 22, calc(var(--proximity) * 0.15)), 
-		transparent 70%
-	);
-	-webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-	mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-	-webkit-mask-composite: xor;
-	mask-composite: exclude;
-	pointer-events: none;
-	z-index: 2;
-	opacity: calc(0.3 + 0.7 * var(--proximity));
-	transition: opacity var(--motion-duration-fast) var(--motion-ease-standard);
+	.particle-background-canvas,
+	.cursor-trail-canvas,
+	.neon-cursor-system,
+	.infrastructure-grid,
+	.ambient-glow {
+		display: none !important;
+	}
 }

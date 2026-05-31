@@ -27,7 +27,7 @@ import '../styles/global.css';
 		<CinematicLoader />
 
 		<!-- MAIN CONTENT WRAPPER -->
-		<div id="main-content" style="opacity: 0; pointer-events: none; transition: opacity var(--motion-duration-cinematic) var(--motion-ease-cinematic), transform var(--motion-duration-cinematic) var(--motion-ease-cinematic), filter var(--motion-duration-cinematic) var(--motion-ease-cinematic); transform: translateY(30px); filter: blur(20px);">
+		<div id="main-content" style="opacity: 0; pointer-events: none; transition: opacity var(--motion-duration-cinematic) var(--motion-ease-cinematic), transform var(--motion-duration-cinematic) var(--motion-ease-cinematic); transform: translateY(24px);">
 
 			<Navbar />
 
@@ -42,15 +42,15 @@ import '../styles/global.css';
 			<Contact />
 
 			<!-- FOOTER -->
-			<footer>
-				<p>
-					Designed and engineered by <span class="footer-name">Yathin</span>
+			<footer style="content-visibility: auto; text-align: center; padding: 4rem 2rem; border-top: 1px solid var(--glass-border); background: #0a0a0a;">
+				<p style="color: #f5f5f5; font-size: 0.95rem; font-weight: 500;">
+					Designed and engineered by <span class="footer-name" style="color: var(--accent); font-weight: 700;">Yathin G</span>
 				</p>
-				<p class="footer-stack">
+				<p class="footer-stack" style="color: #8a8a8a; font-size: 0.8rem; margin-top: 0.5rem;">
 					Powered by Astro · Vanilla CSS · Deployed on Vercel
 				</p>
-				<p class="footer-copy">
-					© 2025 Yathin. All rights reserved.
+				<p class="footer-copy" style="color: #666; font-size: 0.75rem; margin-top: 1rem;">
+					© 2026 Yathin G. All rights reserved.
 				</p>
 			</footer>
 		</div> <!-- Closes #main-content -->
@@ -66,12 +66,8 @@ import '../styles/global.css';
 				console.error("GSAP ScrollTrigger plugin registration failed:", e);
 			}
 
-			declare var Typed: any;
-			declare var VanillaTilt: any;
-
 			declare global {
 				interface Window {
-					VanillaTilt: any;
 					Lenis: any;
 				}
 			}
@@ -88,10 +84,8 @@ import '../styles/global.css';
 			runOnInit(() => {
 				const lenis = new Lenis({
 					autoRaf: false,
-					lerp: 0.06, // Slightly lower lerp for a smoother, premium deceleration feel
+					lerp: 0.08, // Premium smooth snappy deceleration feel
 					smoothWheel: true,
-					wheelMultiplier: 1.0,
-					touchMultiplier: 1.5,
 				});
 				(window as any).lenis = lenis;
 
@@ -99,9 +93,6 @@ import '../styles/global.css';
 				gsap.ticker.add((time) => {
 					lenis.raf(time * 1000);
 				});
-
-				// Disable lag smoothing in GSAP to prevent visual jumps/stutters
-				gsap.ticker.lagSmoothing(0);
 
 				// Connect ScrollTrigger updates with Lenis scroll event
 				lenis.on('scroll', ScrollTrigger.update);
@@ -114,22 +105,11 @@ import '../styles/global.css';
 						if (targetId) {
 							const target = document.querySelector(targetId);
 							if (target) {
-								lenis.scrollTo(target as HTMLElement, { offset: -85 });
+								lenis.scrollTo(target as HTMLElement, { offset: -100 });
 							}
 						}
 					});
 				});
-			});
-
-			// ── Vanilla Tilt ──────────────────────────────────────
-			runOnInit(() => {
-				if (window.VanillaTilt) {
-					VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
-						max: 8,
-						glare: true,
-						"max-glare": 0.2,
-					});
-				}
 			});
 
 			// ── GSAP Scroll-Reveal & Entrance Timelines ───────────
@@ -142,110 +122,49 @@ import '../styles/global.css';
 					// Coordinated Hero entrance synced with preloader boot event
 					document.addEventListener("nxs-boot-complete", () => {
 						const tl = gsap.timeline({
-							defaults: { ease: "power4.out", duration: 1.2 }
+							defaults: { ease: "power3.out", duration: 0.6 }
 						});
 
-						tl.fromTo(".hero-hud-decorator", { opacity: 0, y: -20 }, { opacity: 1, y: 0 })
-						  .fromTo(".hero-name", { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, "-=0.9")
-						  .fromTo(".hero-typewriter-box", { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, "-=1.0")
-						  .fromTo(".hero-sub", { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, "-=1.0")
-						  .fromTo(".hero-btns", { opacity: 0, y: 35 }, { opacity: 1, y: 0 }, "-=1.0")
-						  .fromTo(".scroll-indicator-wrap", { opacity: 0, y: 20 }, { opacity: 1, y: 0 }, "-=0.9");
+						tl.fromTo(".hero-name", { opacity: 0, y: 15 }, { opacity: 1, y: 0 })
+						  .fromTo(".hero-tagline", { opacity: 0, y: 15 }, { opacity: 1, y: 0 }, "-=0.4")
+						  .fromTo(".hero-sub", { opacity: 0, y: 15 }, { opacity: 1, y: 0 }, "-=0.4")
+						  .fromTo(".hero-btns", { opacity: 0, y: 15 }, { opacity: 1, y: 0 }, "-=0.4")
+						  .fromTo(".scroll-indicator-wrap", { opacity: 0 }, { opacity: 1 }, "-=0.3");
 					});
 
-					// Projects staggered fade-in reveal
+					// Projects staggered fade-in reveal (no Z transform, low duration)
 					gsap.fromTo("#projects .project-card", 
-						{ opacity: 0, y: 55, z: -50 },
+						{ opacity: 0, y: 24 },
 						{
 							opacity: 1,
 							y: 0,
-							z: 0,
-							duration: 1.0,
-							stagger: 0.15,
-							ease: "power4.out",
+							duration: 0.6,
+							stagger: 0.1,
+							ease: "power2.out",
 							scrollTrigger: {
 								trigger: "#projects .projects-grid",
-								start: "top 85%",
-								toggleActions: "play none none none"
-							}
-						}
-					);
-
-					// Skills categories staggered fade-in reveal
-					gsap.fromTo("#skills .skill-category-card", 
-						{ opacity: 0, y: 50, z: -50 },
-						{
-							opacity: 1,
-							y: 0,
-							z: 0,
-							duration: 1.0,
-							stagger: 0.18,
-							ease: "power4.out",
-							scrollTrigger: {
-								trigger: "#skills .skills-categories",
-								start: "top 85%",
-								toggleActions: "play none none none"
-							}
-						}
-					);
-
-					// Contact channel cards staggered reveal
-					gsap.fromTo("#contact .contact-card", 
-						{ opacity: 0, y: 40, z: -40 },
-						{
-							opacity: 1,
-							y: 0,
-							z: 0,
-							duration: 0.8,
-							stagger: 0.1,
-							ease: "power4.out",
-							scrollTrigger: {
-								trigger: "#contact .contact-grid",
-								start: "top 88%",
-								toggleActions: "play none none none"
-							}
-						}
-					);
-
-					// About section stats counters staggered reveal
-					gsap.fromTo("#about .stat-card", 
-						{ opacity: 0, y: 40 },
-						{
-							opacity: 1,
-							y: 0,
-							duration: 0.8,
-							stagger: 0.1,
-							ease: "power4.out",
-							scrollTrigger: {
-								trigger: "#about .stats-grid",
 								start: "top 90%",
 								toggleActions: "play none none none"
 							}
 						}
 					);
 
-					// General scroll-reveal fallback for standard elements
+					// General scroll-reveal fallback for standard elements (fade up only)
 					document.querySelectorAll(".reveal").forEach((el) => {
-						if (
-							el.classList.contains("project-card") || 
-							el.classList.contains("skill-category-card") || 
-							el.classList.contains("contact-card") || 
-							el.classList.contains("stat-card")
-						) {
+						if (el.classList.contains("project-card")) {
 							return; // already stagger-revealed above
 						}
 
 						gsap.fromTo(el, 
-							{ opacity: 0, y: 40, z: -30 },
+							{ opacity: 0, y: 20 },
 							{
 								opacity: 1,
 								y: 0,
-								z: 0,
-								duration: 0.9,
-								ease: "power4.out",
+								duration: 0.5,
+								ease: "power2.out",
 								scrollTrigger: {
 									trigger: el,
-									start: "top 88%",
+									start: "top 92%",
 									toggleActions: "play none none none"
 								}
 							}
@@ -261,7 +180,7 @@ import '../styles/global.css';
 							el.style.transform = "none";
 						}
 					});
-					document.querySelectorAll(".hero-name, .hero-typewriter-box, .hero-sub, .hero-btns, .scroll-indicator-wrap, .hero-hud-decorator").forEach(el => {
+					document.querySelectorAll(".hero-name, .hero-tagline, .hero-sub, .hero-btns, .scroll-indicator-wrap").forEach(el => {
 						if (el instanceof HTMLElement) {
 							el.style.opacity = "1";
 							el.style.transform = "none";
@@ -290,7 +209,7 @@ import '../styles/global.css';
 				const nav = document.querySelector("nav");
 				if (nav) {
 					nav.style.background =
-						y > 50 ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.2)";
+						y > 50 ? "rgba(7,7,7,0.95)" : "transparent";
 				}
 			};
 

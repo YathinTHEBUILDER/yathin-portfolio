@@ -41,7 +41,7 @@ const { name, badge, fullname, githubUrl } = Astro.props;
 <style>
 	.project-card {
 		padding: 2.2rem;
-		background: #111111;
+		background: #101010;
 		border: 1px solid var(--glass-border);
 		border-radius: 12px;
 		transition: var(--transition-medium);
@@ -52,8 +52,7 @@ const { name, badge, fullname, githubUrl } = Astro.props;
 	}
 
 	.project-card:hover {
-		border-color: rgba(249, 115, 22, 0.35);
-		box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+		border-color: var(--accent);
 		transform: translateY(-4px);
 	}
 
